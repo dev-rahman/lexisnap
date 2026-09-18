@@ -5,6 +5,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
+import '../../../core/widgets/app_brand_header.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import 'forgot_password_controller.dart';
@@ -51,6 +52,8 @@ class _ForgotPasswordForm extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const AppBrandHeader(iconSize: 40),
+            const SizedBox(height: AppSpacing.md),
             Text('Reset your password', style: AppTextStyles.heading1),
             const SizedBox(height: AppSpacing.sm),
             Text(

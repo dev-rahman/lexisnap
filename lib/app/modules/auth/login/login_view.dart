@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
+import '../../../core/widgets/app_brand_header.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/or_divider.dart';
@@ -27,6 +28,8 @@ class LoginView extends GetView<LoginController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const AppBrandHeader(),
+                const SizedBox(height: AppSpacing.lg),
                 Text('Welcome back', style: AppTextStyles.heading1),
                 const SizedBox(height: AppSpacing.sm),
                 Text(

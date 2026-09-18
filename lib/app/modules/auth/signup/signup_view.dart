@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
+import '../../../core/widgets/app_brand_header.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import 'signup_controller.dart';
@@ -31,6 +32,8 @@ class SignupView extends GetView<SignupController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const AppBrandHeader(iconSize: 40),
+                const SizedBox(height: AppSpacing.md),
                 Text('Create an account', style: AppTextStyles.heading1),
                 const SizedBox(height: AppSpacing.sm),
                 Text(

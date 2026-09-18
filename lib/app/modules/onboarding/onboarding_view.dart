@@ -25,7 +25,7 @@ class OnboardingView extends GetView<OnboardingController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('assets/images/lexisnap_wordmark.png', height: 24),
+                  Image.asset('assets/images/lexisnap_wordmark.png', height: 36),
                   TextButton(
                     onPressed: controller.complete,
                     child: const Text('Skip'),
