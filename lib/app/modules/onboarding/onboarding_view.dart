@@ -25,7 +25,10 @@ class OnboardingView extends GetView<OnboardingController> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset('assets/images/lexisnap_wordmark.png', height: 36),
+                  Image.asset(
+                    'assets/images/lexisnap_wordmark.png',
+                    height: 56,
+                  ),
                   TextButton(
                     onPressed: controller.complete,
                     child: const Text('Skip'),
@@ -41,7 +44,9 @@ class OnboardingView extends GetView<OnboardingController> {
                 itemBuilder: (context, index) {
                   final page = OnboardingController.pages[index];
                   return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                    ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -69,7 +74,8 @@ class OnboardingView extends GetView<OnboardingController> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   OnboardingController.pages.length,
-                  (index) => _PageDot(isActive: controller.currentPage.value == index),
+                  (index) =>
+                      _PageDot(isActive: controller.currentPage.value == index),
                 ),
               ),
             ),

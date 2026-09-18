@@ -36,6 +36,13 @@ class OnboardingController extends GetxController {
           'and lets you choose which ones to keep.',
     ),
     OnboardingPageData(
+      icon: Icons.auto_awesome_outlined,
+      title: 'Add example sentences anytime',
+      description:
+          'Generate an example sentence for any word and add it to the '
+          "card's details - context makes it stick.",
+    ),
+    OnboardingPageData(
       icon: Icons.style_outlined,
       title: 'Your deck, ready to study',
       description:
