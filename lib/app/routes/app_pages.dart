@@ -8,6 +8,8 @@ import '../modules/auth/signup/signup_binding.dart';
 import '../modules/auth/signup/signup_view.dart';
 import '../modules/home/home_binding.dart';
 import '../modules/home/home_view.dart';
+import '../modules/onboarding/onboarding_binding.dart';
+import '../modules/onboarding/onboarding_view.dart';
 import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import 'app_routes.dart';
@@ -23,6 +25,11 @@ class AppPages {
       name: AppRoutes.splash,
       page: () => const SplashView(),
       binding: SplashBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.onboarding,
+      page: () => const OnboardingView(),
+      binding: OnboardingBinding(),
     ),
     GetPage(
       name: AppRoutes.login,

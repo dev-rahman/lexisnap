@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_spacing.dart';
+
 enum AppButtonVariant { filled, outlined, text }
 
 /// Reusable button used across the whole app. Handles its own loading
@@ -44,7 +46,7 @@ class AppButton extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   icon!,
-                  const SizedBox(width: 10),
+                  const SizedBox(width: AppSpacing.sm),
                   Text(label),
                 ],
               );

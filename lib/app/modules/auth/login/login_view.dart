@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
@@ -17,19 +18,22 @@ class LoginView extends GetView<LoginController> {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.lg,
+          ),
           child: Form(
             key: controller.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Welcome back', style: AppTextStyles.heading1),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   'Sign in to continue',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.lg),
                 AppTextField(
                   label: 'Email',
                   controller: controller.emailController,
@@ -40,7 +44,7 @@ class LoginView extends GetView<LoginController> {
                   prefixIcon: Icons.mail_outline,
                   validator: Validators.email,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 AppTextField(
                   label: 'Password',
                   controller: controller.passwordController,
@@ -58,7 +62,7 @@ class LoginView extends GetView<LoginController> {
                     child: const Text('Forgot password?'),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Obx(
                   () => AppButton(
                     label: 'Log in',
@@ -66,9 +70,9 @@ class LoginView extends GetView<LoginController> {
                     onPressed: controller.submitEmailLogin,
                   ),
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.lg),
                 const OrDivider(),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.lg),
                 Obx(
                   () => SocialSignInButton(
                     provider: SocialProvider.google,
@@ -77,7 +81,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                 ),
                 if (GetPlatform.isIOS) ...[
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.sm),
                   Obx(
                     () => SocialSignInButton(
                       provider: SocialProvider.apple,
@@ -86,7 +90,7 @@ class LoginView extends GetView<LoginController> {
                     ),
                   ),
                 ],
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.lg),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

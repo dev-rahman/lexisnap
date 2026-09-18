@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme/app_colors.dart';
+import '../theme/app_radius.dart';
+import '../theme/app_spacing.dart';
 
 enum SocialProvider { google, apple }
 
@@ -26,7 +28,7 @@ class SocialSignInButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final disabled = isLoading || onPressed == null;
     final backgroundColor = _isApple ? Colors.black : Colors.white;
-    final foregroundColor = _isApple ? Colors.white : AppColors.textPrimary;
+    final foregroundColor = _isApple ? Colors.white : AppColors.ink;
 
     return SizedBox(
       height: 52,
@@ -36,7 +38,7 @@ class SocialSignInButton extends StatelessWidget {
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
           side: _isApple ? BorderSide.none : const BorderSide(color: AppColors.border),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
         ),
         child: isLoading
             ? SizedBox(
@@ -53,7 +55,7 @@ class SocialSignInButton extends StatelessWidget {
                   _isApple
                       ? Icon(Icons.apple, size: 22, color: foregroundColor)
                       : SvgPicture.asset('assets/icons/google_logo.svg', width: 20, height: 20),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.sm),
                   Text(
                     _isApple ? 'Continue with Apple' : 'Continue with Google',
                     style: TextStyle(fontWeight: FontWeight.w600, color: foregroundColor),

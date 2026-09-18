@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import 'home_controller.dart';
@@ -15,12 +16,12 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: const EdgeInsets.all(AppSpacing.lg),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text("You're signed in", style: AppTextStyles.heading1),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               user?.fullName?.isNotEmpty == true
                   ? 'Welcome, ${user!.fullName}'

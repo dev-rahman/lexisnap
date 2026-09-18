@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
@@ -21,19 +22,22 @@ class SignupView extends GetView<SignupController> {
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           child: Form(
             key: controller.formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Create an account', style: AppTextStyles.heading1),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Text(
                   'Sign up with your email to get started',
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.lg),
                 AppTextField(
                   label: 'Full name',
                   controller: controller.fullNameController,
@@ -43,7 +47,7 @@ class SignupView extends GetView<SignupController> {
                   prefixIcon: Icons.person_outline,
                   validator: (v) => Validators.required(v, message: 'Name is required'),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 AppTextField(
                   label: 'Email',
                   controller: controller.emailController,
@@ -54,7 +58,7 @@ class SignupView extends GetView<SignupController> {
                   prefixIcon: Icons.mail_outline,
                   validator: Validators.email,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 AppTextField(
                   label: 'Password',
                   controller: controller.passwordController,
@@ -64,7 +68,7 @@ class SignupView extends GetView<SignupController> {
                   prefixIcon: Icons.lock_outline,
                   validator: Validators.password,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
                 AppTextField(
                   label: 'Confirm password',
                   controller: controller.confirmPasswordController,
@@ -77,7 +81,7 @@ class SignupView extends GetView<SignupController> {
                   ),
                   onFieldSubmitted: (_) => controller.submit(),
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.lg),
                 Obx(
                   () => AppButton(
                     label: 'Sign up',
@@ -85,7 +89,7 @@ class SignupView extends GetView<SignupController> {
                     onPressed: controller.submit,
                   ),
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.md),
               ],
             ),
           ),

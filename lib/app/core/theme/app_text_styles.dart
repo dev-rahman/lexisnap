@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+/// LexiSnap type scale. Space Grotesk carries the display sizes (screen
+/// titles, deck names) - distinctive enough to double as the wordmark face.
+/// Everything else uses the native system font stack, which keeps
+/// flashcard content fast and legible on both iOS and Android.
 class AppTextStyles {
   AppTextStyles._();
 
-  static const TextStyle heading1 = TextStyle(
-    fontSize: 28,
-    fontWeight: FontWeight.w700,
-    height: 1.2,
-  );
+  static TextStyle get heading1 => GoogleFonts.spaceGrotesk(
+        fontSize: 28,
+        fontWeight: FontWeight.w700,
+        height: 1.2,
+      );
 
-  static const TextStyle heading2 = TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.w700,
-    height: 1.25,
-  );
+  static TextStyle get heading2 => GoogleFonts.spaceGrotesk(
+        fontSize: 22,
+        fontWeight: FontWeight.w700,
+        height: 1.25,
+      );
 
   static const TextStyle body = TextStyle(
     fontSize: 15,

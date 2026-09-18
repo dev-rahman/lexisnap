@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_button.dart';
@@ -22,7 +23,10 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md,
+          ),
           child: Obx(
             () => controller.emailSent.value
                 ? _SentConfirmation(email: controller.emailController.text)
@@ -48,12 +52,12 @@ class _ForgotPasswordForm extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('Reset your password', style: AppTextStyles.heading1),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               "Enter your email and we'll send you a link to reset your password.",
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.lg),
             AppTextField(
               label: 'Email',
               controller: controller.emailController,
@@ -65,7 +69,7 @@ class _ForgotPasswordForm extends StatelessWidget {
               validator: Validators.email,
               onFieldSubmitted: (_) => controller.submit(),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: AppSpacing.lg),
             Obx(
               () => AppButton(
                 label: 'Send reset link',
@@ -90,16 +94,16 @@ class _SentConfirmation extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.mark_email_read_outlined, size: 64, color: AppColors.primary),
-        const SizedBox(height: 24),
+        const Icon(Icons.mark_email_read_outlined, size: 64, color: AppColors.accent),
+        const SizedBox(height: AppSpacing.lg),
         Text('Check your email', style: AppTextStyles.heading2, textAlign: TextAlign.center),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.sm),
         Text(
           "We've sent a password reset link to $email",
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
-        const SizedBox(height: 24),
+        const SizedBox(height: AppSpacing.lg),
         AppButton(
           label: 'Back to login',
           variant: AppButtonVariant.outlined,

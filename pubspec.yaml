@@ -41,6 +41,8 @@ dependencies:
   flutter_dotenv: ^6.0.1
   crypto: ^3.0.7
   flutter_svg: ^2.3.0
+  google_fonts: ^8.2.1
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +54,14 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  flutter_launcher_icons: ^0.14.4
+
+flutter_launcher_icons:
+  image_path: "assets/icon/icon.png"
+  android: true
+  ios: true
+  remove_alpha_channel: true
+  min_sdk_android: 21
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -62,6 +72,8 @@ flutter:
   assets:
     - .env
     - assets/icons/
+    - assets/icon/
+    - assets/images/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

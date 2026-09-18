@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import 'auth/auth_service.dart';
 import 'auth/supabase_auth_service.dart';
+import 'onboarding/onboarding_service.dart';
 
 /// Registers every app-wide service.
 ///
@@ -14,5 +15,6 @@ class ServiceLocator {
 
   static Future<void> init() async {
     Get.put<AuthService>(SupabaseAuthService(), permanent: true);
+    Get.put<OnboardingService>(OnboardingService(), permanent: true);
   }
 }

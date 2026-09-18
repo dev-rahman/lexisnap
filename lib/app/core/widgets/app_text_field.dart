@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_spacing.dart';
+
 /// Reusable text field with a label, optional obscure-text toggle (for
 /// passwords), and the app's shared input styling from [AppTheme].
 class AppTextField extends StatefulWidget {
@@ -41,7 +43,7 @@ class _AppTextFieldState extends State<AppTextField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.label, style: Theme.of(context).textTheme.bodyMedium),
-        const SizedBox(height: 8),
+        const SizedBox(height: AppSpacing.sm),
         TextFormField(
           controller: widget.controller,
           obscureText: _obscured,
