@@ -97,9 +97,17 @@ class _SentConfirmation extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const Icon(Icons.mark_email_read_outlined, size: 64, color: AppColors.accent),
+        const Icon(
+          Icons.mark_email_read_outlined,
+          size: 64,
+          color: AppColors.accent,
+        ),
         const SizedBox(height: AppSpacing.lg),
-        Text('Check your email', style: AppTextStyles.heading2, textAlign: TextAlign.center),
+        Text(
+          'Check your email',
+          style: AppTextStyles.heading2,
+          textAlign: TextAlign.center,
+        ),
         const SizedBox(height: AppSpacing.sm),
         Text(
           "We've sent a password reset link to $email",

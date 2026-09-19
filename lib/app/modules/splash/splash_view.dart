@@ -16,7 +16,9 @@ class SplashView extends GetView<SplashController> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg * 2),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg * 2,
+              ),
               child: Image.asset('assets/images/lexisnap_banner.png'),
             ),
             const SizedBox(height: AppSpacing.lg * 2),

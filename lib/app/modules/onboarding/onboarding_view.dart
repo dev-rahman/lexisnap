@@ -6,6 +6,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_top_safe_area.dart';
 import 'onboarding_controller.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
@@ -15,80 +16,84 @@ class OnboardingView extends GetView<OnboardingController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.sm,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.asset(
-                    'assets/images/lexisnap_wordmark.png',
-                    height: 56,
-                  ),
-                  TextButton(
-                    onPressed: controller.complete,
-                    child: const Text('Skip'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: PageView.builder(
-                controller: controller.pageController,
-                onPageChanged: controller.onPageChanged,
-                itemCount: OnboardingController.pages.length,
-                itemBuilder: (context, index) {
-                  final page = OnboardingController.pages[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.lg,
+        top: false,
+        child: AppTopSafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.sm,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Image.asset(
+                      'assets/images/lexisnap_wordmark.png',
+                      height: 56,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _OnboardingIllustration(icon: page.icon),
-                        const SizedBox(height: AppSpacing.lg),
-                        Text(
-                          page.title,
-                          textAlign: TextAlign.center,
-                          style: AppTextStyles.heading1,
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Text(
-                          page.description,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
+                    TextButton(
+                      onPressed: controller.complete,
+                      child: const Text('Skip'),
                     ),
-                  );
-                },
-              ),
-            ),
-            Obx(
-              () => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  OnboardingController.pages.length,
-                  (index) =>
-                      _PageDot(isActive: controller.currentPage.value == index),
+                  ],
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(AppSpacing.lg),
-              child: Obx(
-                () => AppButton(
-                  label: controller.isLastPage ? 'Get started' : 'Next',
-                  onPressed: controller.next,
+              Expanded(
+                child: PageView.builder(
+                  controller: controller.pageController,
+                  onPageChanged: controller.onPageChanged,
+                  itemCount: OnboardingController.pages.length,
+                  itemBuilder: (context, index) {
+                    final page = OnboardingController.pages[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _OnboardingIllustration(icon: page.icon),
+                          const SizedBox(height: AppSpacing.lg),
+                          Text(
+                            page.title,
+                            textAlign: TextAlign.center,
+                            style: AppTextStyles.heading1,
+                          ),
+                          const SizedBox(height: AppSpacing.sm),
+                          Text(
+                            page.description,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 ),
               ),
-            ),
-          ],
+              Obx(
+                () => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    OnboardingController.pages.length,
+                    (index) => _PageDot(
+                      isActive: controller.currentPage.value == index,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(AppSpacing.lg),
+                child: Obx(
+                  () => AppButton(
+                    label: controller.isLastPage ? 'Get started' : 'Next',
+                    onPressed: controller.next,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -105,15 +110,15 @@ class _OnboardingIllustration extends StatelessWidget {
     return Container(
       height: 220,
       width: 220,
-      decoration: const BoxDecoration(
-        color: AppColors.surface,
+      decoration: BoxDecoration(
+        color: context.colorSurface,
         shape: BoxShape.circle,
       ),
       child: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, size: 72, color: AppColors.ink),
+            Icon(icon, size: 72, color: context.colorInk),
             const SizedBox(height: AppSpacing.md),
             Container(
               height: 6,
@@ -143,7 +148,7 @@ class _PageDot extends StatelessWidget {
       height: 8,
       width: isActive ? 24 : 8,
       decoration: BoxDecoration(
-        color: isActive ? AppColors.accent : AppColors.border,
+        color: isActive ? AppColors.accent : context.colorBorder,
         borderRadius: BorderRadius.circular(AppRadius.sm),
       ),
     );

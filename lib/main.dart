@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/core/config/env.dart';
 import 'app/core/services/service_locator.dart';
+import 'app/core/services/theme/theme_service.dart';
+import 'app/core/theme/app_system_ui.dart';
 import 'app/core/theme/app_theme.dart';
 import 'app/routes/app_pages.dart';
 
@@ -28,14 +31,22 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'LexiSnap',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
-      themeMode: ThemeMode.system,
-      initialRoute: AppPages.initial,
-      getPages: AppPages.routes,
+    return Obx(
+      () => GetMaterialApp(
+        title: 'LexiSnap',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        themeMode: Get.find<ThemeService>().themeMode.value,
+        initialRoute: AppPages.initial,
+        getPages: AppPages.routes,
+        builder: (context, child) {
+          return AnnotatedRegion<SystemUiOverlayStyle>(
+            value: AppSystemUi.forBrightness(Theme.of(context).brightness),
+            child: child!,
+          );
+        },
+      ),
     );
   }
 }

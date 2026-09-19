@@ -23,7 +23,7 @@ class AppBottomNavBar extends StatelessWidget {
   });
 
   static const double barHeight = 64;
-  static const double bottomMargin = AppSpacing.lg;
+  static const double bottomMargin = AppSpacing.sm;
   static const double scanButtonSize = 64;
 
   /// Reserve this much bottom space in scrollable tab content so it never
@@ -83,19 +83,23 @@ class _StockAndroidNavBar extends StatelessWidget {
       top: false,
       child: NavigationBarTheme(
         data: NavigationBarThemeData(
-          backgroundColor: AppColors.paper,
+          backgroundColor: context.colorPaper,
           indicatorColor: AppColors.accent.withValues(alpha: 0.16),
           surfaceTintColor: Colors.transparent,
           labelTextStyle: WidgetStateProperty.resolveWith(
             (states) => TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: states.contains(WidgetState.selected) ? AppColors.accent : AppColors.inkMuted,
+              color: states.contains(WidgetState.selected)
+                  ? AppColors.accent
+                  : context.colorInkMuted,
             ),
           ),
           iconTheme: WidgetStateProperty.resolveWith(
             (states) => IconThemeData(
-              color: states.contains(WidgetState.selected) ? AppColors.accent : AppColors.inkMuted,
+              color: states.contains(WidgetState.selected)
+                  ? AppColors.accent
+                  : context.colorInkMuted,
             ),
           ),
         ),
@@ -158,7 +162,8 @@ class _LiquidTabBar extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onScanTap;
 
-  double get _barHeight => isMinimized ? _minimizedBarHeight : AppBottomNavBar.barHeight;
+  double get _barHeight =>
+      isMinimized ? _minimizedBarHeight : AppBottomNavBar.barHeight;
 
   double get _scanButtonSize =>
       isMinimized ? _minimizedScanButtonSize : AppBottomNavBar.scanButtonSize;
@@ -169,7 +174,8 @@ class _LiquidTabBar extends StatelessWidget {
     final barBottom = AppBottomNavBar.bottomMargin + bottomInset;
 
     return SizedBox(
-      height: AppBottomNavBar.bottomMargin +
+      height:
+          AppBottomNavBar.bottomMargin +
           AppBottomNavBar.barHeight +
           (AppBottomNavBar.scanButtonSize / 2) +
           bottomInset,
@@ -235,12 +241,14 @@ class _GlassPill extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           decoration: BoxDecoration(
-            color: AppColors.paper.withValues(alpha: 0.72),
+            color: context.colorPaper.withValues(alpha: 0.72),
             borderRadius: BorderRadius.circular(32),
-            border: Border.all(color: AppColors.border.withValues(alpha: 0.6)),
+            border: Border.all(
+              color: context.colorBorder.withValues(alpha: 0.6),
+            ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.ink.withValues(alpha: 0.08),
+                color: context.colorInk.withValues(alpha: 0.08),
                 blurRadius: 24,
                 offset: const Offset(0, 8),
               ),
@@ -271,7 +279,7 @@ class _ScanButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.accent,
           shape: BoxShape.circle,
-          border: Border.all(color: AppColors.paper, width: 3),
+          border: Border.all(color: context.colorPaper, width: 3),
           boxShadow: [
             BoxShadow(
               color: AppColors.accent.withValues(alpha: 0.4),
@@ -280,7 +288,11 @@ class _ScanButton extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(Icons.document_scanner_rounded, color: Colors.white, size: size * 0.4),
+        child: Icon(
+          Icons.document_scanner_rounded,
+          color: Colors.white,
+          size: size * 0.4,
+        ),
       ),
     );
   }
@@ -305,7 +317,7 @@ class _NavItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final color = isActive ? AppColors.accent : AppColors.inkMuted;
+    final color = isActive ? AppColors.accent : context.colorInkMuted;
 
     return GestureDetector(
       onTap: onTap,
@@ -323,7 +335,11 @@ class _NavItem extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       label,
-                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: color,
+                      ),
                     ),
                   )
                 : const SizedBox.shrink(),

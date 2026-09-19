@@ -9,7 +9,7 @@ import 'app_routes.dart';
 /// straight to /home).
 class AuthMiddleware extends GetMiddleware {
   AuthMiddleware({required this.requiresAuth, int priority = 0})
-      : super(priority: priority);
+    : super(priority: priority);
 
   final bool requiresAuth;
 

@@ -26,6 +26,11 @@ class Env {
   static String get googleServerClientId =>
       dotenv.env['GOOGLE_SERVER_CLIENT_ID'] ?? '';
 
+  /// Inbox that "Contact support" messages are addressed to (opens the
+  /// user's own mail app via a `mailto:` link - no backend required).
+  static String get supportEmail =>
+      dotenv.env['SUPPORT_EMAIL'] ?? 'support@lexisnap.app';
+
   static String _require(String key) {
     final value = dotenv.env[key];
     if (value == null || value.isEmpty) {

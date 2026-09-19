@@ -27,6 +27,10 @@ abstract class AuthService {
 
   Future<void> sendPasswordResetEmail({required String email});
 
+  /// Updates the signed-in user's profile fields. Pass only what should
+  /// change; omitted fields are left as-is.
+  Future<void> updateProfile({String? fullName});
+
   /// Available on both Android and iOS.
   Future<void> signInWithGoogle();
 

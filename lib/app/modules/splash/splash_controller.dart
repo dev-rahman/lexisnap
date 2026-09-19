@@ -22,7 +22,8 @@ class SplashController extends GetxController {
       return;
     }
 
-    final hasSeenOnboarding = await Get.find<OnboardingService>().hasSeenOnboarding();
+    final hasSeenOnboarding = await Get.find<OnboardingService>()
+        .hasSeenOnboarding();
     Get.offAllNamed(hasSeenOnboarding ? AppRoutes.login : AppRoutes.onboarding);
   }
 }

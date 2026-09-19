@@ -17,6 +17,7 @@ class AppTextField extends StatefulWidget {
     this.autofillHints,
     this.onFieldSubmitted,
     this.prefixIcon,
+    this.maxLines = 1,
   });
 
   final String label;
@@ -29,6 +30,7 @@ class AppTextField extends StatefulWidget {
   final Iterable<String>? autofillHints;
   final void Function(String)? onFieldSubmitted;
   final IconData? prefixIcon;
+  final int maxLines;
 
   @override
   State<AppTextField> createState() => _AppTextFieldState();
@@ -52,6 +54,7 @@ class _AppTextFieldState extends State<AppTextField> {
           validator: widget.validator,
           autofillHints: widget.autofillHints,
           onFieldSubmitted: widget.onFieldSubmitted,
+          maxLines: widget.obscureText ? 1 : widget.maxLines,
           decoration: InputDecoration(
             hintText: widget.hintText,
             prefixIcon: widget.prefixIcon != null
@@ -60,7 +63,9 @@ class _AppTextFieldState extends State<AppTextField> {
             suffixIcon: widget.obscureText
                 ? IconButton(
                     icon: Icon(
-                      _obscured ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                      _obscured
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
                       size: 20,
                     ),
                     onPressed: () => setState(() => _obscured = !_obscured),

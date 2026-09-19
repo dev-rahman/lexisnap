@@ -9,16 +9,16 @@ class AppTextStyles {
   AppTextStyles._();
 
   static TextStyle get heading1 => GoogleFonts.spaceGrotesk(
-        fontSize: 28,
-        fontWeight: FontWeight.w700,
-        height: 1.2,
-      );
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+  );
 
   static TextStyle get heading2 => GoogleFonts.spaceGrotesk(
-        fontSize: 22,
-        fontWeight: FontWeight.w700,
-        height: 1.25,
-      );
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    height: 1.25,
+  );
 
   static const TextStyle body = TextStyle(
     fontSize: 15,

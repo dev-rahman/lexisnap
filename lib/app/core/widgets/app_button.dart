@@ -47,21 +47,23 @@ class AppButton extends StatelessWidget {
             ),
           )
         : icon == null
-            ? Text(label)
-            : Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  icon!,
-                  const SizedBox(width: AppSpacing.sm),
-                  Text(label),
-                ],
-              );
+        ? Text(label)
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icon!,
+              const SizedBox(width: AppSpacing.sm),
+              Text(label),
+            ],
+          );
 
     switch (variant) {
       case AppButtonVariant.filled:
         return ElevatedButton(
           onPressed: _disabled ? null : onPressed,
-          style: color == null ? null : ElevatedButton.styleFrom(backgroundColor: color),
+          style: color == null
+              ? null
+              : ElevatedButton.styleFrom(backgroundColor: color),
           child: child,
         );
       case AppButtonVariant.outlined:
@@ -69,13 +71,18 @@ class AppButton extends StatelessWidget {
           onPressed: _disabled ? null : onPressed,
           style: color == null
               ? null
-              : OutlinedButton.styleFrom(foregroundColor: color, side: BorderSide(color: color!)),
+              : OutlinedButton.styleFrom(
+                  foregroundColor: color,
+                  side: BorderSide(color: color!),
+                ),
           child: child,
         );
       case AppButtonVariant.text:
         return TextButton(
           onPressed: _disabled ? null : onPressed,
-          style: color == null ? null : TextButton.styleFrom(foregroundColor: color),
+          style: color == null
+              ? null
+              : TextButton.styleFrom(foregroundColor: color),
           child: child,
         );
     }

@@ -26,14 +26,26 @@ class AppBrandHeader extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  TextSpan(text: 'Lexi', style: AppTextStyles.heading2.copyWith(color: AppColors.ink)),
-                  TextSpan(text: 'Snap', style: AppTextStyles.heading2.copyWith(color: AppColors.accent)),
+                  TextSpan(
+                    text: 'Lexi',
+                    style: AppTextStyles.heading2.copyWith(
+                      color: context.colorInk,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Snap',
+                    style: AppTextStyles.heading2.copyWith(
+                      color: AppColors.accent,
+                    ),
+                  ),
                 ],
               ),
             ),
             Text(
               'AI flashcards from anything you scan',
-              style: AppTextStyles.caption.copyWith(color: AppColors.inkMuted),
+              style: AppTextStyles.caption.copyWith(
+                color: context.colorInkMuted,
+              ),
             ),
           ],
         ),

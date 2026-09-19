@@ -13,11 +13,7 @@ class AppLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(size * 0.22),
-      child: Image.asset(
-        'assets/icon/icon.png',
-        width: size,
-        height: size,
-      ),
+      child: Image.asset('assets/icon/icon.png', width: size, height: size),
     );
   }
 }

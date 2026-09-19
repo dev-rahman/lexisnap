@@ -13,4 +13,7 @@ abstract class AppRoutes {
 
   /// Full-screen scan flow, pushed on top of [main].
   static const scan = '/scan';
+
+  /// Help & support, pushed from Profile.
+  static const help = '/help';
 }

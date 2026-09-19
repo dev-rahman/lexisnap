@@ -37,8 +37,12 @@ class SocialSignInButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           backgroundColor: backgroundColor,
           foregroundColor: foregroundColor,
-          side: _isApple ? BorderSide.none : const BorderSide(color: AppColors.border),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadius.md)),
+          side: _isApple
+              ? BorderSide.none
+              : const BorderSide(color: AppColors.border),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+          ),
         ),
         child: isLoading
             ? SizedBox(
@@ -54,11 +58,18 @@ class SocialSignInButton extends StatelessWidget {
                 children: [
                   _isApple
                       ? Icon(Icons.apple, size: 22, color: foregroundColor)
-                      : SvgPicture.asset('assets/icons/google_logo.svg', width: 20, height: 20),
+                      : SvgPicture.asset(
+                          'assets/icons/google_logo.svg',
+                          width: 20,
+                          height: 20,
+                        ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
                     _isApple ? 'Continue with Apple' : 'Continue with Google',
-                    style: TextStyle(fontWeight: FontWeight.w600, color: foregroundColor),
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: foregroundColor,
+                    ),
                   ),
                 ],
               ),

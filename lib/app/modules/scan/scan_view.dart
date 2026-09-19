@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 
 /// Placeholder for the scan flow (camera capture -> OCR -> word selection
@@ -12,6 +14,13 @@ class ScanView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: AppSystemUi.onDarkSurface,
+      child: _scaffold(),
+    );
+  }
+
+  Widget _scaffold() {
     return Scaffold(
       backgroundColor: AppColors.ink,
       appBar: AppBar(
@@ -34,7 +43,11 @@ class ScanView extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.08),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.document_scanner_outlined, color: Colors.white, size: 40),
+              child: const Icon(
+                Icons.document_scanner_outlined,
+                color: Colors.white,
+                size: 40,
+              ),
             ),
             const SizedBox(height: 24),
             Text(

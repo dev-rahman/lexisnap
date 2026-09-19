@@ -48,7 +48,8 @@ class SignupView extends GetView<SignupController> {
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.name],
                   prefixIcon: Icons.person_outline,
-                  validator: (v) => Validators.required(v, message: 'Name is required'),
+                  validator: (v) =>
+                      Validators.required(v, message: 'Name is required'),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppTextField(

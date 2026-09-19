@@ -6,6 +6,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_bottom_nav_bar.dart';
+import '../../core/widgets/app_top_safe_area.dart';
 import 'home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -16,10 +17,11 @@ class HomeView extends GetView<HomeController> {
     return Scaffold(
       body: SafeArea(
         bottom: false,
+        top: false,
         child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
+          padding: EdgeInsets.fromLTRB(
             AppSpacing.lg,
-            AppSpacing.lg,
+            AppTopSafeArea.height(context),
             AppSpacing.lg,
             AppBottomNavBar.clearance,
           ),
@@ -35,7 +37,6 @@ class HomeView extends GetView<HomeController> {
                 'Ready to learn something new?',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
-
               const SizedBox(height: AppSpacing.lg),
               _ScanCta(onTap: controller.goToScan),
               const SizedBox(height: AppSpacing.lg * 1.5),
@@ -43,20 +44,40 @@ class HomeView extends GetView<HomeController> {
               const SizedBox(height: AppSpacing.md),
               const _EmptyDecksState(),
 
+              Text(
+                'Ready to learn something new?',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: AppSpacing.lg),
               _ScanCta(onTap: controller.goToScan),
               const SizedBox(height: AppSpacing.lg * 1.5),
               Text('Your decks', style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
               const _EmptyDecksState(),
-
+              Text(
+                'Ready to learn something new?',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: AppSpacing.lg),
               _ScanCta(onTap: controller.goToScan),
               const SizedBox(height: AppSpacing.lg * 1.5),
               Text('Your decks', style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
               const _EmptyDecksState(),
-
+              Text(
+                'Ready to learn something new?',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              _ScanCta(onTap: controller.goToScan),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              Text('Your decks', style: AppTextStyles.heading2),
+              const SizedBox(height: AppSpacing.md),
+              const _EmptyDecksState(),
+              Text(
+                'Ready to learn something new?',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
               const SizedBox(height: AppSpacing.lg),
               _ScanCta(onTap: controller.goToScan),
               const SizedBox(height: AppSpacing.lg * 1.5),
@@ -143,7 +164,7 @@ class _EmptyDecksState extends StatelessWidget {
         horizontal: AppSpacing.lg,
       ),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: context.colorSurface,
         borderRadius: BorderRadius.circular(AppRadius.lg),
       ),
       child: Column(
@@ -151,20 +172,20 @@ class _EmptyDecksState extends StatelessWidget {
           Container(
             height: 64,
             width: 64,
-            decoration: const BoxDecoration(
-              color: AppColors.paper,
+            decoration: BoxDecoration(
+              color: context.colorPaper,
               shape: BoxShape.circle,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.style_outlined,
-              color: AppColors.inkMuted,
+              color: context.colorInkMuted,
               size: 28,
             ),
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
             'No decks yet',
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.ink),
+            style: AppTextStyles.bodyMedium.copyWith(color: context.colorInk),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(

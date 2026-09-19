@@ -23,9 +23,8 @@ class SupabaseAuthService implements AuthService {
   sb.GoTrueClient get _auth => sb.Supabase.instance.client.auth;
 
   @override
-  Stream<AppUser?> get authStateChanges => _auth.onAuthStateChange.map(
-        (state) => _mapUser(state.session?.user),
-      );
+  Stream<AppUser?> get authStateChanges =>
+      _auth.onAuthStateChange.map((state) => _mapUser(state.session?.user));
 
   @override
   AppUser? get currentUser => _mapUser(_auth.currentUser);
@@ -82,16 +81,29 @@ class SupabaseAuthService implements AuthService {
     }
   }
 
+  @override
+  Future<void> updateProfile({String? fullName}) async {
+    try {
+      await _auth.updateUser(
+        sb.UserAttributes(data: {if (fullName != null) 'full_name': fullName}),
+      );
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
   /// `GoogleSignIn.instance.initialize` must be called exactly once, and
   /// awaited, before any other GoogleSignIn method is used.
   Future<void> _ensureGoogleInitialized() {
     return _googleInitFuture ??= GoogleSignIn.instance.initialize(
-      clientId: defaultTargetPlatform == TargetPlatform.iOS &&
+      clientId:
+          defaultTargetPlatform == TargetPlatform.iOS &&
               Env.googleIosClientId.isNotEmpty
           ? Env.googleIosClientId
           : null,
-      serverClientId:
-          Env.googleServerClientId.isNotEmpty ? Env.googleServerClientId : null,
+      serverClientId: Env.googleServerClientId.isNotEmpty
+          ? Env.googleServerClientId
+          : null,
     );
   }
 
@@ -187,7 +199,9 @@ class SupabaseAuthService implements AuthService {
     const charset =
         '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
     final random = Random.secure();
-    return List.generate(length, (_) => charset[random.nextInt(charset.length)])
-        .join();
+    return List.generate(
+      length,
+      (_) => charset[random.nextInt(charset.length)],
+    ).join();
   }
 }

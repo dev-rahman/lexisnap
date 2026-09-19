@@ -38,11 +38,28 @@ class AppColors {
   static const Color alert = Color(0xFFA33B2A);
   static const Color confirm = Color(0xFF3D7A57);
 
-  // Dark-mode variants. The brief only specifies a light system so far;
-  // these are a reasonable first pass, not part of the spec yet.
+  // Dark-mode variants of the neutrals above. accent/accent600/success/
+  // error/alert/confirm are used as-is in both themes.
   static const Color inkDark = Color(0xFFF3F1EA);
   static const Color inkMutedDark = Color(0xFFB4B7C8);
   static const Color paperDark = Color(0xFF14162A);
   static const Color surfaceDark = Color(0xFF1E2138);
   static const Color borderDark = Color(0xFF343854);
+}
+
+/// Theme-aware access to the neutral tokens above (ink/paper/surface/
+/// border all have light + dark variants). Any custom widget that shows
+/// one of these colors must read it through here, not through the
+/// [AppColors] constants directly - those are always the light values and
+/// would stay wrong in dark mode.
+extension AppColorsContext on BuildContext {
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+
+  Color get colorInk => isDarkMode ? AppColors.inkDark : AppColors.ink;
+  Color get colorInkMuted =>
+      isDarkMode ? AppColors.inkMutedDark : AppColors.inkMuted;
+  Color get colorPaper => isDarkMode ? AppColors.paperDark : AppColors.paper;
+  Color get colorSurface =>
+      isDarkMode ? AppColors.surfaceDark : AppColors.surface;
+  Color get colorBorder => isDarkMode ? AppColors.borderDark : AppColors.border;
 }
