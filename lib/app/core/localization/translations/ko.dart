@@ -110,6 +110,39 @@ const Map<String, String> ko = {
   LocaleKeys.helpNoEmailAppError: '이 기기에 설정된 이메일 앱이 없어요.',
   LocaleKeys.helpMailSubject: 'LexiSnap 지원 요청',
 
-  LocaleKeys.scanComingSoonTitle: '스캔 기능이 곧 제공될 예정이에요',
-  LocaleKeys.scanComingSoonBody: '텍스트가 있는 곳에 카메라를 비추면 덱을 만들 수 있어요.',
+  LocaleKeys.scanSourceTitle: '텍스트 스캔',
+  LocaleKeys.scanSourceSubtitle: '사진을 찍거나 갤러리에서 선택해서 새로운 단어를 찾아보세요.',
+  LocaleKeys.scanTakePhoto: '사진 촬영',
+  LocaleKeys.scanChooseFromGallery: '갤러리에서 선택',
+  LocaleKeys.scanRetake: '다시 촬영',
+  LocaleKeys.scanUsePhoto: '이 사진 사용',
+  LocaleKeys.scanReadingText: '텍스트를 읽는 중…',
+  LocaleKeys.scanSelectWordsTitle: '학습할 단어를 선택하세요',
+  LocaleKeys.scanSelectWordsSubtitle: '플래시카드로 만들 단어를 눌러 선택하세요.',
+  LocaleKeys.scanSelectAll: '전체 선택',
+  LocaleKeys.scanDeselectAll: '전체 선택 해제',
+  LocaleKeys.scanSelectedCount: '@count개 선택됨',
+  LocaleKeys.scanContinueButton: '계속',
+  LocaleKeys.scanNoTextFoundTitle: '텍스트를 찾지 못했어요',
+  LocaleKeys.scanNoTextFoundBody:
+      '이 사진에서 읽을 수 있는 텍스트를 찾지 못했어요. 더 선명하고 밝은 사진으로 다시 시도해보세요.',
+  LocaleKeys.scanTryAgain: '다시 시도',
+  LocaleKeys.scanProcessingError: '사진을 읽지 못했어요. 다시 시도해주세요.',
+  LocaleKeys.scanWordsCapturedSuccess:
+      '단어 @count개를 담았어요! 플래시카드 만들기 기능은 곧 제공될 예정이에요.',
+
+  LocaleKeys.permissionCameraTitle: '카메라 접근을 허용해주세요',
+  LocaleKeys.permissionCameraBody:
+      'LexiSnap이 책, 메뉴판, 표지판 등에서 텍스트를 스캔하려면 카메라 접근 권한이 필요해요.',
+  LocaleKeys.permissionGalleryTitle: '사진 접근을 허용해주세요',
+  LocaleKeys.permissionGalleryBody:
+      '갤러리에서 사진을 선택하면 LexiSnap이 그 안의 텍스트를 추출해드려요.',
+  LocaleKeys.permissionAllow: '허용',
+  LocaleKeys.permissionNotNow: '나중에',
+  LocaleKeys.permissionDeniedTitle: '권한이 필요해요',
+  LocaleKeys.permissionCameraDeniedBody:
+      'LexiSnap의 카메라 접근 권한이 꺼져 있어요. 설정에서 켜면 카메라로 스캔할 수 있어요.',
+  LocaleKeys.permissionGalleryDeniedBody:
+      'LexiSnap의 사진 접근 권한이 꺼져 있어요. 설정에서 켜면 사진을 선택할 수 있어요.',
+  LocaleKeys.permissionOpenSettings: '설정 열기',
 };

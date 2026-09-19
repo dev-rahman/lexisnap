@@ -113,7 +113,35 @@ const Map<String, String> en = {
   LocaleKeys.helpNoEmailAppError: 'No email app is set up on this device.',
   LocaleKeys.helpMailSubject: 'LexiSnap support request',
 
-  LocaleKeys.scanComingSoonTitle: 'Scanning is coming soon',
-  LocaleKeys.scanComingSoonBody:
-      'Point your camera at anything with text to build a deck.',
+  LocaleKeys.scanSourceTitle: 'Scan text',
+  LocaleKeys.scanSourceSubtitle: 'Capture a photo or choose one from your gallery to pull out new vocabulary.',
+  LocaleKeys.scanTakePhoto: 'Take photo',
+  LocaleKeys.scanChooseFromGallery: 'Choose from gallery',
+  LocaleKeys.scanRetake: 'Retake',
+  LocaleKeys.scanUsePhoto: 'Use photo',
+  LocaleKeys.scanReadingText: 'Reading text…',
+  LocaleKeys.scanSelectWordsTitle: 'Select words to learn',
+  LocaleKeys.scanSelectWordsSubtitle:
+      'Tap the words you want to turn into flashcards.',
+  LocaleKeys.scanSelectAll: 'Select all',
+  LocaleKeys.scanDeselectAll: 'Deselect all',
+  LocaleKeys.scanSelectedCount: '@count selected',
+  LocaleKeys.scanContinueButton: 'Continue',
+  LocaleKeys.scanNoTextFoundTitle: 'No text found',
+  LocaleKeys.scanNoTextFoundBody: "We couldn't find any readable text in that photo. Try a clearer, well-lit shot.",
+  LocaleKeys.scanTryAgain: 'Try again',
+  LocaleKeys.scanProcessingError: "Couldn't read that photo. Please try again.",
+  LocaleKeys.scanWordsCapturedSuccess:
+      '@count words captured! Flashcard creation is coming soon.',
+
+  LocaleKeys.permissionCameraTitle: 'Allow camera access',
+  LocaleKeys.permissionCameraBody: 'LexiSnap needs your camera to scan text from books, menus, signs, and more.',
+  LocaleKeys.permissionGalleryTitle: 'Allow photo access',
+  LocaleKeys.permissionGalleryBody: 'Choose a photo from your library and LexiSnap will pull the text out of it.',
+  LocaleKeys.permissionAllow: 'Allow',
+  LocaleKeys.permissionNotNow: 'Not now',
+  LocaleKeys.permissionDeniedTitle: 'Permission needed',
+  LocaleKeys.permissionCameraDeniedBody: 'Camera access is off for LexiSnap. Enable it in Settings to scan with your camera.',
+  LocaleKeys.permissionGalleryDeniedBody: 'Photo access is off for LexiSnap. Enable it in Settings to choose photos.',
+  LocaleKeys.permissionOpenSettings: 'Open Settings',
 };

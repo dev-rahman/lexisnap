@@ -6,7 +6,9 @@ plugins {
 
 android {
     namespace = "com.lexisnap.app"
-    compileSdk = flutter.compileSdkVersion
+    // permission_handler_android requires compiling against API 37 or
+    // later; flutter.compileSdkVersion (36) isn't there yet.
+    compileSdk = 37
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

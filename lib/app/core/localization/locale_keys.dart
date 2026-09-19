@@ -125,6 +125,34 @@ class LocaleKeys {
   static const helpMailSubject = 'help_mail_subject';
 
   // Scan
-  static const scanComingSoonTitle = 'scan_coming_soon_title';
-  static const scanComingSoonBody = 'scan_coming_soon_body';
+  static const scanSourceTitle = 'scan_source_title';
+  static const scanSourceSubtitle = 'scan_source_subtitle';
+  static const scanTakePhoto = 'scan_take_photo';
+  static const scanChooseFromGallery = 'scan_choose_from_gallery';
+  static const scanRetake = 'scan_retake';
+  static const scanUsePhoto = 'scan_use_photo';
+  static const scanReadingText = 'scan_reading_text';
+  static const scanSelectWordsTitle = 'scan_select_words_title';
+  static const scanSelectWordsSubtitle = 'scan_select_words_subtitle';
+  static const scanSelectAll = 'scan_select_all';
+  static const scanDeselectAll = 'scan_deselect_all';
+  static const scanSelectedCount = 'scan_selected_count';
+  static const scanContinueButton = 'scan_continue_button';
+  static const scanNoTextFoundTitle = 'scan_no_text_found_title';
+  static const scanNoTextFoundBody = 'scan_no_text_found_body';
+  static const scanTryAgain = 'scan_try_again';
+  static const scanProcessingError = 'scan_processing_error';
+  static const scanWordsCapturedSuccess = 'scan_words_captured_success';
+
+  // Permissions
+  static const permissionCameraTitle = 'permission_camera_title';
+  static const permissionCameraBody = 'permission_camera_body';
+  static const permissionGalleryTitle = 'permission_gallery_title';
+  static const permissionGalleryBody = 'permission_gallery_body';
+  static const permissionAllow = 'permission_allow';
+  static const permissionNotNow = 'permission_not_now';
+  static const permissionDeniedTitle = 'permission_denied_title';
+  static const permissionCameraDeniedBody = 'permission_camera_denied_body';
+  static const permissionGalleryDeniedBody = 'permission_gallery_denied_body';
+  static const permissionOpenSettings = 'permission_open_settings';
 }

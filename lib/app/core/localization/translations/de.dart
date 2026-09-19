@@ -116,6 +116,36 @@ const Map<String, String> de = {
       'Auf diesem Gerät ist keine E-Mail-App eingerichtet.',
   LocaleKeys.helpMailSubject: 'LexiSnap-Supportanfrage',
 
-  LocaleKeys.scanComingSoonTitle: 'Der Scanner kommt bald',
-  LocaleKeys.scanComingSoonBody: 'Richte deine Kamera auf einen beliebigen Text, um einen Stapel zu erstellen.',
+  LocaleKeys.scanSourceTitle: 'Text scannen',
+  LocaleKeys.scanSourceSubtitle: 'Mach ein Foto oder wähle eins aus deiner Galerie, um neue Vokabeln herauszuholen.',
+  LocaleKeys.scanTakePhoto: 'Foto aufnehmen',
+  LocaleKeys.scanChooseFromGallery: 'Aus Galerie wählen',
+  LocaleKeys.scanRetake: 'Erneut aufnehmen',
+  LocaleKeys.scanUsePhoto: 'Foto verwenden',
+  LocaleKeys.scanReadingText: 'Text wird gelesen …',
+  LocaleKeys.scanSelectWordsTitle: 'Wähle Wörter zum Lernen',
+  LocaleKeys.scanSelectWordsSubtitle:
+      'Tippe die Wörter an, aus denen du Karteikarten machen möchtest.',
+  LocaleKeys.scanSelectAll: 'Alle auswählen',
+  LocaleKeys.scanDeselectAll: 'Auswahl aufheben',
+  LocaleKeys.scanSelectedCount: '@count ausgewählt',
+  LocaleKeys.scanContinueButton: 'Weiter',
+  LocaleKeys.scanNoTextFoundTitle: 'Kein Text gefunden',
+  LocaleKeys.scanNoTextFoundBody: 'In diesem Foto konnten wir keinen lesbaren Text finden. Versuche es mit einem schärferen, besser beleuchteten Foto.',
+  LocaleKeys.scanTryAgain: 'Erneut versuchen',
+  LocaleKeys.scanProcessingError:
+      'Das Foto konnte nicht gelesen werden. Bitte versuche es erneut.',
+  LocaleKeys.scanWordsCapturedSuccess:
+      '@count Wörter erfasst! Die Erstellung von Karteikarten folgt bald.',
+
+  LocaleKeys.permissionCameraTitle: 'Kamerazugriff erlauben',
+  LocaleKeys.permissionCameraBody: 'LexiSnap braucht Zugriff auf deine Kamera, um Text aus Büchern, Speisekarten, Schildern und mehr zu scannen.',
+  LocaleKeys.permissionGalleryTitle: 'Fotozugriff erlauben',
+  LocaleKeys.permissionGalleryBody: 'Wähle ein Foto aus deiner Galerie und LexiSnap holt den Text daraus heraus.',
+  LocaleKeys.permissionAllow: 'Erlauben',
+  LocaleKeys.permissionNotNow: 'Nicht jetzt',
+  LocaleKeys.permissionDeniedTitle: 'Berechtigung erforderlich',
+  LocaleKeys.permissionCameraDeniedBody: 'Der Kamerazugriff ist für LexiSnap deaktiviert. Aktiviere ihn in den Einstellungen, um mit der Kamera zu scannen.',
+  LocaleKeys.permissionGalleryDeniedBody: 'Der Fotozugriff ist für LexiSnap deaktiviert. Aktiviere ihn in den Einstellungen, um Fotos auszuwählen.',
+  LocaleKeys.permissionOpenSettings: 'Einstellungen öffnen',
 };

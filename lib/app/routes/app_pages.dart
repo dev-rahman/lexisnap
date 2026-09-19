@@ -12,6 +12,7 @@ import '../modules/main/main_binding.dart';
 import '../modules/main/main_view.dart';
 import '../modules/onboarding/onboarding_binding.dart';
 import '../modules/onboarding/onboarding_view.dart';
+import '../modules/scan/scan_binding.dart';
 import '../modules/scan/scan_view.dart';
 import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
@@ -61,6 +62,7 @@ class AppPages {
     GetPage(
       name: AppRoutes.scan,
       page: () => const ScanView(),
+      binding: ScanBinding(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
     ),
     GetPage(

@@ -63,6 +63,12 @@
 			</array>
 		</dict>
 	</array>
+	<!-- Scan flow: capturing a photo of text to turn into flashcards, and
+	     picking an existing photo from the library to do the same. -->
+	<key>NSCameraUsageDescription</key>
+	<string>LexiSnap needs camera access to scan text from books, menus, signs, and more.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LexiSnap needs photo access so you can choose a picture to pull text from.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
