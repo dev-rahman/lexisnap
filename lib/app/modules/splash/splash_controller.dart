@@ -18,7 +18,7 @@ class SplashController extends GetxController {
 
     final isSignedIn = Get.find<AuthService>().currentUser != null;
     if (isSignedIn) {
-      Get.offAllNamed(AppRoutes.home);
+      Get.offAllNamed(AppRoutes.main);
       return;
     }
 

@@ -40,7 +40,7 @@ class SignupController extends GetxController {
       if (_authService.currentUser != null) {
         // Email confirmation is disabled on this Supabase project, so
         // sign-up returned an active session immediately.
-        Get.offAllNamed(AppRoutes.home);
+        Get.offAllNamed(AppRoutes.main);
       } else {
         // Email confirmation is required - Supabase already sent a
         // confirmation link.

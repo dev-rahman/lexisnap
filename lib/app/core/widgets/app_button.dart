@@ -15,6 +15,7 @@ class AppButton extends StatelessWidget {
     this.isLoading = false,
     this.variant = AppButtonVariant.filled,
     this.icon,
+    this.color,
   });
 
   final String label;
@@ -22,6 +23,11 @@ class AppButton extends StatelessWidget {
   final bool isLoading;
   final AppButtonVariant variant;
   final Widget? icon;
+
+  /// Overrides the button's theme color (background for [AppButtonVariant.filled],
+  /// foreground/border otherwise). Use sparingly - e.g. a destructive action
+  /// like sign-out that shouldn't use the ordinary accent color.
+  final Color? color;
 
   bool get _disabled => isLoading || onPressed == null;
 
@@ -36,7 +42,7 @@ class AppButton extends StatelessWidget {
               valueColor: AlwaysStoppedAnimation<Color>(
                 variant == AppButtonVariant.filled
                     ? Colors.white
-                    : Theme.of(context).colorScheme.primary,
+                    : color ?? Theme.of(context).colorScheme.primary,
               ),
             ),
           )
@@ -55,16 +61,21 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.filled:
         return ElevatedButton(
           onPressed: _disabled ? null : onPressed,
+          style: color == null ? null : ElevatedButton.styleFrom(backgroundColor: color),
           child: child,
         );
       case AppButtonVariant.outlined:
         return OutlinedButton(
           onPressed: _disabled ? null : onPressed,
+          style: color == null
+              ? null
+              : OutlinedButton.styleFrom(foregroundColor: color, side: BorderSide(color: color!)),
           child: child,
         );
       case AppButtonVariant.text:
         return TextButton(
           onPressed: _disabled ? null : onPressed,
+          style: color == null ? null : TextButton.styleFrom(foregroundColor: color),
           child: child,
         );
     }

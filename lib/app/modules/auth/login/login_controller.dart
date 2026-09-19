@@ -70,7 +70,7 @@ class LoginController extends GetxController {
   /// session actually landed.
   void _goHomeIfSignedIn() {
     if (_authService.currentUser != null) {
-      Get.offAllNamed(AppRoutes.home);
+      Get.offAllNamed(AppRoutes.main);
     }
   }
 

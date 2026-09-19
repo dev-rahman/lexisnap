@@ -37,4 +37,17 @@ class AppSnackbar {
       borderRadius: AppRadius.md,
     );
   }
+
+  /// Neutral toast for placeholder/not-yet-built features.
+  static void info(String message, {String title = 'Coming soon'}) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: AppColors.ink,
+      colorText: Colors.white,
+      snackPosition: SnackPosition.TOP,
+      margin: const EdgeInsets.all(AppSpacing.md),
+      borderRadius: AppRadius.md,
+    );
+  }
 }

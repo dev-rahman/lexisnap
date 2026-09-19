@@ -6,10 +6,11 @@ import '../modules/auth/login/login_binding.dart';
 import '../modules/auth/login/login_view.dart';
 import '../modules/auth/signup/signup_binding.dart';
 import '../modules/auth/signup/signup_view.dart';
-import '../modules/home/home_binding.dart';
-import '../modules/home/home_view.dart';
+import '../modules/main/main_binding.dart';
+import '../modules/main/main_view.dart';
 import '../modules/onboarding/onboarding_binding.dart';
 import '../modules/onboarding/onboarding_view.dart';
+import '../modules/scan/scan_view.dart';
 import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import 'app_routes.dart';
@@ -50,9 +51,14 @@ class AppPages {
       middlewares: [AuthMiddleware(requiresAuth: false)],
     ),
     GetPage(
-      name: AppRoutes.home,
-      page: () => const HomeView(),
-      binding: HomeBinding(),
+      name: AppRoutes.main,
+      page: () => const MainView(),
+      binding: MainBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.scan,
+      page: () => const ScanView(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
     ),
   ];

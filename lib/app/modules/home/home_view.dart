@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/theme/app_colors.dart';
+import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_bottom_nav_bar.dart';
 import 'home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -11,34 +13,166 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    final user = controller.user;
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("You're signed in", style: AppTextStyles.heading1),
-            const SizedBox(height: AppSpacing.sm),
-            Text(
-              user?.fullName?.isNotEmpty == true
-                  ? 'Welcome, ${user!.fullName}'
-                  : (user?.email ?? ''),
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const Spacer(),
-            Obx(
-              () => AppButton(
-                label: 'Sign out',
-                variant: AppButtonVariant.outlined,
-                isLoading: controller.isSigningOut.value,
-                onPressed: controller.signOut,
+      body: SafeArea(
+        bottom: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            AppSpacing.lg,
+            AppSpacing.lg,
+            AppBottomNavBar.clearance,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Hi, ${controller.greetingName}',
+                style: AppTextStyles.heading1,
               ),
-            ),
-          ],
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                'Ready to learn something new?',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+
+              const SizedBox(height: AppSpacing.lg),
+              _ScanCta(onTap: controller.goToScan),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              Text('Your decks', style: AppTextStyles.heading2),
+              const SizedBox(height: AppSpacing.md),
+              const _EmptyDecksState(),
+
+              const SizedBox(height: AppSpacing.lg),
+              _ScanCta(onTap: controller.goToScan),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              Text('Your decks', style: AppTextStyles.heading2),
+              const SizedBox(height: AppSpacing.md),
+              const _EmptyDecksState(),
+
+              const SizedBox(height: AppSpacing.lg),
+              _ScanCta(onTap: controller.goToScan),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              Text('Your decks', style: AppTextStyles.heading2),
+              const SizedBox(height: AppSpacing.md),
+              const _EmptyDecksState(),
+
+              const SizedBox(height: AppSpacing.lg),
+              _ScanCta(onTap: controller.goToScan),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              Text('Your decks', style: AppTextStyles.heading2),
+              const SizedBox(height: AppSpacing.md),
+              const _EmptyDecksState(),
+            ],
+          ),
         ),
+      ),
+    );
+  }
+}
+
+class _ScanCta extends StatelessWidget {
+  const _ScanCta({required this.onTap});
+
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: AppColors.accent,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Row(
+            children: [
+              Container(
+                height: 48,
+                width: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.18),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.document_scanner_rounded,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Scan something new',
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      'Turn any text into flashcards',
+                      style: AppTextStyles.caption.copyWith(
+                        color: Colors.white.withValues(alpha: 0.85),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_rounded, color: Colors.white),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _EmptyDecksState extends StatelessWidget {
+  const _EmptyDecksState();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(
+        vertical: AppSpacing.lg * 1.5,
+        horizontal: AppSpacing.lg,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.surface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+      ),
+      child: Column(
+        children: [
+          Container(
+            height: 64,
+            width: 64,
+            decoration: const BoxDecoration(
+              color: AppColors.paper,
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(
+              Icons.style_outlined,
+              color: AppColors.inkMuted,
+              size: 28,
+            ),
+          ),
+          const SizedBox(height: AppSpacing.md),
+          Text(
+            'No decks yet',
+            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.ink),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            'Scan something to create your first deck.',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
       ),
     );
   }

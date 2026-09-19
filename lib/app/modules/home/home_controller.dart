@@ -9,15 +9,13 @@ class HomeController extends GetxController {
 
   AppUser? get user => _authService.currentUser;
 
-  final isSigningOut = false.obs;
-
-  Future<void> signOut() async {
-    isSigningOut.value = true;
-    try {
-      await _authService.signOut();
-      Get.offAllNamed(AppRoutes.login);
-    } finally {
-      isSigningOut.value = false;
+  String get greetingName {
+    final user = this.user;
+    if (user?.fullName?.isNotEmpty == true) {
+      return user!.fullName!.split(' ').first;
     }
+    return user?.email?.split('@').first ?? 'there';
   }
+
+  void goToScan() => Get.toNamed(AppRoutes.scan);
 }

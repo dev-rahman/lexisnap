@@ -21,7 +21,7 @@ class AuthMiddleware extends GetMiddleware {
       return const RouteSettings(name: AppRoutes.login);
     }
     if (!requiresAuth && isSignedIn) {
-      return const RouteSettings(name: AppRoutes.home);
+      return const RouteSettings(name: AppRoutes.main);
     }
     return null;
   }
