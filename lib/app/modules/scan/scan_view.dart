@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -51,12 +52,12 @@ class ScanView extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'Scanning is coming soon',
+              LocaleKeys.scanComingSoonTitle.tr,
               style: AppTextStyles.heading2.copyWith(color: Colors.white),
             ),
             const SizedBox(height: 8),
             Text(
-              'Point your camera at anything with text to build a deck.',
+              LocaleKeys.scanComingSoonBody.tr,
               textAlign: TextAlign.center,
               style: AppTextStyles.body.copyWith(color: Colors.white70),
             ),

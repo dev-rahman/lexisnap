@@ -1,0 +1,119 @@
+import '../locale_keys.dart';
+
+const Map<String, String> es = {
+  LocaleKeys.commonEmail: 'Correo electrónico',
+  LocaleKeys.commonPassword: 'Contraseña',
+  LocaleKeys.commonFullName: 'Nombre completo',
+  LocaleKeys.commonOr: 'o',
+  LocaleKeys.commonSave: 'Guardar',
+  LocaleKeys.commonComingSoon: 'Próximamente',
+  LocaleKeys.commonSomethingWentWrong: 'Algo salió mal',
+  LocaleKeys.commonSuccess: 'Listo',
+
+  LocaleKeys.onboardingSkip: 'Omitir',
+  LocaleKeys.onboardingNext: 'Siguiente',
+  LocaleKeys.onboardingGetStarted: 'Empezar',
+  LocaleKeys.onboardingScanTitle: 'Escanea lo que sea',
+  LocaleKeys.onboardingScanBody: 'Apunta la cámara a la página de un libro, un menú, una señal - cualquier texto del que quieras aprender.',
+  LocaleKeys.onboardingWordsTitle: 'Encontramos las palabras nuevas',
+  LocaleKeys.onboardingWordsBody: 'LexiSnap identifica el vocabulario que vale la pena aprender de tu escaneo y te deja elegir cuáles conservar.',
+  LocaleKeys.onboardingSentencesTitle: 'Añade frases de ejemplo cuando quieras',
+  LocaleKeys.onboardingSentencesBody: 'Genera una frase de ejemplo para cualquier palabra y añádela a los detalles de la tarjeta - el contexto ayuda a recordar.',
+  LocaleKeys.onboardingDeckTitle: 'Tu mazo, listo para estudiar',
+  LocaleKeys.onboardingDeckBody: 'Las tarjetas se crean automáticamente, así que puedes empezar a repasar de inmediato.',
+
+  LocaleKeys.brandTagline:
+      'Tarjetas de estudio con IA a partir de lo que escanees',
+
+  LocaleKeys.loginWelcomeBack: 'Bienvenido de nuevo',
+  LocaleKeys.loginSubtitle: 'Inicia sesión para continuar',
+  LocaleKeys.loginForgotPassword: '¿Olvidaste tu contraseña?',
+  LocaleKeys.loginButton: 'Iniciar sesión',
+  LocaleKeys.loginContinueGoogle: 'Continuar con Google',
+  LocaleKeys.loginContinueApple: 'Continuar con Apple',
+  LocaleKeys.loginNoAccount: '¿No tienes una cuenta?',
+  LocaleKeys.loginSignUp: 'Regístrate',
+
+  LocaleKeys.signupTitle: 'Crear una cuenta',
+  LocaleKeys.signupSubtitle: 'Regístrate con tu correo para empezar',
+  LocaleKeys.signupConfirmPassword: 'Confirmar contraseña',
+  LocaleKeys.signupButton: 'Regístrate',
+  LocaleKeys.signupNameRequired: 'El nombre es obligatorio',
+  LocaleKeys.signupCheckInboxTitle: 'Ya casi está',
+  LocaleKeys.signupCheckInboxBody:
+      'Confirma tu correo desde tu bandeja de entrada antes de iniciar sesión.',
+
+  LocaleKeys.forgotPasswordTitle: 'Restablece tu contraseña',
+  LocaleKeys.forgotPasswordSubtitle: 'Escribe tu correo y te enviaremos un enlace para restablecer tu contraseña.',
+  LocaleKeys.forgotPasswordButton: 'Enviar enlace de restablecimiento',
+  LocaleKeys.forgotPasswordCheckEmailTitle: 'Revisa tu correo',
+  LocaleKeys.forgotPasswordCheckEmailBody:
+      'Hemos enviado un enlace para restablecer la contraseña a @email',
+  LocaleKeys.forgotPasswordBackToLogin: 'Volver a iniciar sesión',
+
+  LocaleKeys.validatorEmailRequired: 'El correo es obligatorio',
+  LocaleKeys.validatorEmailInvalid: 'Introduce una dirección de correo válida',
+  LocaleKeys.validatorPasswordRequired: 'La contraseña es obligatoria',
+  LocaleKeys.validatorPasswordTooShort:
+      'La contraseña debe tener al menos 8 caracteres',
+  LocaleKeys.validatorConfirmPasswordRequired: 'Confirma tu contraseña',
+  LocaleKeys.validatorPasswordsDontMatch: 'Las contraseñas no coinciden',
+  LocaleKeys.validatorFieldRequired: 'Este campo es obligatorio',
+  LocaleKeys.validatorNameRequired: 'Introduce un nombre',
+
+  LocaleKeys.homeGreeting: 'Hola, @name',
+  LocaleKeys.homeGreetingGeneric: '¡Hola!',
+  LocaleKeys.homeSubtitle: '¿Listo para aprender algo nuevo?',
+  LocaleKeys.homeScanCtaTitle: 'Escanear algo nuevo',
+  LocaleKeys.homeScanCtaSubtitle: 'Convierte cualquier texto en tarjetas',
+  LocaleKeys.homeYourDecks: 'Tus mazos',
+  LocaleKeys.homeNoDecksTitle: 'Aún no tienes mazos',
+  LocaleKeys.homeNoDecksBody: 'Escanea algo para crear tu primer mazo.',
+
+  LocaleKeys.navHome: 'Inicio',
+  LocaleKeys.navScan: 'Escanear',
+  LocaleKeys.navProfile: 'Perfil',
+
+  LocaleKeys.profileYourAccount: 'Tu cuenta',
+  LocaleKeys.profileNotifications: 'Notificaciones',
+  LocaleKeys.profileAppearance: 'Apariencia',
+  LocaleKeys.profileLanguage: 'Idioma',
+  LocaleKeys.profileHelpSupport: 'Ayuda y soporte',
+  LocaleKeys.profileAbout: 'Acerca de LexiSnap',
+  LocaleKeys.profileSignOut: 'Cerrar sesión',
+  LocaleKeys.profileEditName: 'Editar nombre',
+  LocaleKeys.profileNameUpdated: 'Tu nombre se ha actualizado.',
+  LocaleKeys.profileNotificationsComingSoon:
+      'La configuración de notificaciones llegará pronto.',
+  LocaleKeys.profileAboutComingSoon: 'La página Acerca de llegará pronto.',
+  LocaleKeys.themeSystem: 'Sistema',
+  LocaleKeys.themeLight: 'Claro',
+  LocaleKeys.themeDark: 'Oscuro',
+
+  LocaleKeys.helpTitle: 'Ayuda y soporte',
+  LocaleKeys.helpFaqTitle: 'Preguntas frecuentes',
+  LocaleKeys.helpFaq1Q: '¿Cómo inicio sesión?',
+  LocaleKeys.helpFaq1A: 'Usa tu correo y contraseña, o continúa con Google (Android y iOS) o Apple (solo iOS).',
+  LocaleKeys.helpFaq2Q: 'Olvidé mi contraseña. ¿Qué hago?',
+  LocaleKeys.helpFaq2A: 'En la pantalla de inicio de sesión, toca "¿Olvidaste tu contraseña?" y te enviaremos un enlace por correo.',
+  LocaleKeys.helpFaq3Q: '¿Mis datos están seguros?',
+  LocaleKeys.helpFaq3A: 'Sí. Tu cuenta se autentica a través de Supabase, y tu contraseña nunca se guarda en texto plano.',
+  LocaleKeys.helpFaq4Q: '¿Cómo cierro sesión?',
+  LocaleKeys.helpFaq4A: 'Abre la pestaña Perfil y toca "Cerrar sesión" abajo.',
+  LocaleKeys.helpFaq5Q: '¿Puedo cambiar mi nombre?',
+  LocaleKeys.helpFaq5A: 'Sí - ve a Perfil y toca tu nombre para actualizarlo.',
+  LocaleKeys.helpStillNeedHelp: '¿Necesitas más ayuda?',
+  LocaleKeys.helpSendMessageBody:
+      'Envíanos un mensaje y te responderemos por correo.',
+  LocaleKeys.helpYourMessage: 'Tu mensaje',
+  LocaleKeys.helpMessageHint: '¿En qué necesitas ayuda?',
+  LocaleKeys.helpEmailSupportButton: 'Contactar con soporte',
+  LocaleKeys.helpEmptyMessageError: 'Cuéntanos primero en qué necesitas ayuda.',
+  LocaleKeys.helpNoEmailAppError:
+      'Este dispositivo no tiene ninguna app de correo configurada.',
+  LocaleKeys.helpMailSubject: 'Solicitud de soporte de LexiSnap',
+
+  LocaleKeys.scanComingSoonTitle: 'El escáner llegará pronto',
+  LocaleKeys.scanComingSoonBody:
+      'Apunta la cámara a cualquier texto para crear un mazo.',
+};

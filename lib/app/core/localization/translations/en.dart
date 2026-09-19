@@ -1,0 +1,119 @@
+import '../locale_keys.dart';
+
+const Map<String, String> en = {
+  LocaleKeys.commonEmail: 'Email',
+  LocaleKeys.commonPassword: 'Password',
+  LocaleKeys.commonFullName: 'Full name',
+  LocaleKeys.commonOr: 'or',
+  LocaleKeys.commonSave: 'Save',
+  LocaleKeys.commonComingSoon: 'Coming soon',
+  LocaleKeys.commonSomethingWentWrong: 'Something went wrong',
+  LocaleKeys.commonSuccess: 'Success',
+
+  LocaleKeys.onboardingSkip: 'Skip',
+  LocaleKeys.onboardingNext: 'Next',
+  LocaleKeys.onboardingGetStarted: 'Get started',
+  LocaleKeys.onboardingScanTitle: 'Scan anything',
+  LocaleKeys.onboardingScanBody: 'Point your camera at a textbook page, a menu, a street sign - anything with text you want to learn from.',
+  LocaleKeys.onboardingWordsTitle: 'We find the new words',
+  LocaleKeys.onboardingWordsBody: 'LexiSnap picks out the vocabulary worth learning from your scan and lets you choose which ones to keep.',
+  LocaleKeys.onboardingSentencesTitle: 'Add example sentences anytime',
+  LocaleKeys.onboardingSentencesBody: "Generate an example sentence for any word and add it to the card's details - context makes it stick.",
+  LocaleKeys.onboardingDeckTitle: 'Your deck, ready to study',
+  LocaleKeys.onboardingDeckBody: 'Flashcards are built automatically, so you can start reviewing right away.',
+
+  LocaleKeys.brandTagline: 'AI flashcards from anything you scan',
+
+  LocaleKeys.loginWelcomeBack: 'Welcome back',
+  LocaleKeys.loginSubtitle: 'Sign in to continue',
+  LocaleKeys.loginForgotPassword: 'Forgot password?',
+  LocaleKeys.loginButton: 'Log in',
+  LocaleKeys.loginContinueGoogle: 'Continue with Google',
+  LocaleKeys.loginContinueApple: 'Continue with Apple',
+  LocaleKeys.loginNoAccount: "Don't have an account?",
+  LocaleKeys.loginSignUp: 'Sign up',
+
+  LocaleKeys.signupTitle: 'Create an account',
+  LocaleKeys.signupSubtitle: 'Sign up with your email to get started',
+  LocaleKeys.signupConfirmPassword: 'Confirm password',
+  LocaleKeys.signupButton: 'Sign up',
+  LocaleKeys.signupNameRequired: 'Name is required',
+  LocaleKeys.signupCheckInboxTitle: 'Almost there',
+  LocaleKeys.signupCheckInboxBody:
+      'Check your inbox to confirm your email before logging in.',
+
+  LocaleKeys.forgotPasswordTitle: 'Reset your password',
+  LocaleKeys.forgotPasswordSubtitle:
+      "Enter your email and we'll send you a link to reset your password.",
+  LocaleKeys.forgotPasswordButton: 'Send reset link',
+  LocaleKeys.forgotPasswordCheckEmailTitle: 'Check your email',
+  LocaleKeys.forgotPasswordCheckEmailBody:
+      "We've sent a password reset link to @email",
+  LocaleKeys.forgotPasswordBackToLogin: 'Back to login',
+
+  LocaleKeys.validatorEmailRequired: 'Email is required',
+  LocaleKeys.validatorEmailInvalid: 'Enter a valid email address',
+  LocaleKeys.validatorPasswordRequired: 'Password is required',
+  LocaleKeys.validatorPasswordTooShort:
+      'Password must be at least 8 characters',
+  LocaleKeys.validatorConfirmPasswordRequired: 'Please confirm your password',
+  LocaleKeys.validatorPasswordsDontMatch: 'Passwords do not match',
+  LocaleKeys.validatorFieldRequired: 'This field is required',
+  LocaleKeys.validatorNameRequired: 'Enter a name',
+
+  LocaleKeys.homeGreeting: 'Hi, @name',
+  LocaleKeys.homeGreetingGeneric: 'Hi there',
+  LocaleKeys.homeSubtitle: 'Ready to learn something new?',
+  LocaleKeys.homeScanCtaTitle: 'Scan something new',
+  LocaleKeys.homeScanCtaSubtitle: 'Turn any text into flashcards',
+  LocaleKeys.homeYourDecks: 'Your decks',
+  LocaleKeys.homeNoDecksTitle: 'No decks yet',
+  LocaleKeys.homeNoDecksBody: 'Scan something to create your first deck.',
+
+  LocaleKeys.navHome: 'Home',
+  LocaleKeys.navScan: 'Scan',
+  LocaleKeys.navProfile: 'Profile',
+
+  LocaleKeys.profileYourAccount: 'Your account',
+  LocaleKeys.profileNotifications: 'Notifications',
+  LocaleKeys.profileAppearance: 'Appearance',
+  LocaleKeys.profileLanguage: 'Language',
+  LocaleKeys.profileHelpSupport: 'Help & support',
+  LocaleKeys.profileAbout: 'About LexiSnap',
+  LocaleKeys.profileSignOut: 'Sign out',
+  LocaleKeys.profileEditName: 'Edit name',
+  LocaleKeys.profileNameUpdated: 'Your name has been updated.',
+  LocaleKeys.profileNotificationsComingSoon:
+      'Notification settings are on the way.',
+  LocaleKeys.profileAboutComingSoon: 'About page is on the way.',
+  LocaleKeys.themeSystem: 'System',
+  LocaleKeys.themeLight: 'Light',
+  LocaleKeys.themeDark: 'Dark',
+
+  LocaleKeys.helpTitle: 'Help & support',
+  LocaleKeys.helpFaqTitle: 'Frequently asked questions',
+  LocaleKeys.helpFaq1Q: 'How do I sign in?',
+  LocaleKeys.helpFaq1A: 'Use your email and password, or continue with Google on Android or iOS, or Apple on iOS.',
+  LocaleKeys.helpFaq2Q: 'I forgot my password. What now?',
+  LocaleKeys.helpFaq2A: "On the login screen, tap 'Forgot password?' and we'll email you a reset link.",
+  LocaleKeys.helpFaq3Q: 'Is my data secure?',
+  LocaleKeys.helpFaq3A: 'Yes. Your account is authenticated through Supabase, and your password is never stored in plain text.',
+  LocaleKeys.helpFaq4Q: 'How do I sign out?',
+  LocaleKeys.helpFaq4A:
+      "Open the Profile tab and tap 'Sign out' at the bottom.",
+  LocaleKeys.helpFaq5Q: 'Can I change my display name?',
+  LocaleKeys.helpFaq5A: 'Yes - go to Profile and tap your name to update it.',
+  LocaleKeys.helpStillNeedHelp: 'Still need help?',
+  LocaleKeys.helpSendMessageBody:
+      "Send us a message and we'll get back to you by email.",
+  LocaleKeys.helpYourMessage: 'Your message',
+  LocaleKeys.helpMessageHint: 'What do you need help with?',
+  LocaleKeys.helpEmailSupportButton: 'Email support',
+  LocaleKeys.helpEmptyMessageError: 'Tell us what you need help with first.',
+  LocaleKeys.helpNoEmailAppError: 'No email app is set up on this device.',
+  LocaleKeys.helpMailSubject: 'LexiSnap support request',
+
+  LocaleKeys.scanComingSoonTitle: 'Scanning is coming soon',
+  LocaleKeys.scanComingSoonBody:
+      'Point your camera at anything with text to build a deck.',
+};

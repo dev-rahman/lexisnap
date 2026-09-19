@@ -3,14 +3,16 @@ import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../core/config/env.dart';
+import '../../core/localization/locale_keys.dart';
 import '../../core/services/auth/auth_service.dart';
 import '../../core/utils/app_snackbar.dart';
 
 class FaqEntry {
-  const FaqEntry(this.question, this.answer);
+  const FaqEntry(this.questionKey, this.answerKey);
 
-  final String question;
-  final String answer;
+  /// [LocaleKeys] entries, resolved with `.tr` at the point of display.
+  final String questionKey;
+  final String answerKey;
 }
 
 class HelpController extends GetxController {
@@ -19,29 +21,11 @@ class HelpController extends GetxController {
   final isSendingMessage = false.obs;
 
   static const faqs = [
-    FaqEntry(
-      'How do I sign in?',
-      'Use your email and password, or continue with Google on Android or '
-          'iOS, or Apple on iOS.',
-    ),
-    FaqEntry(
-      "I forgot my password. What now?",
-      "On the login screen, tap 'Forgot password?' and we'll email you a "
-          'reset link.',
-    ),
-    FaqEntry(
-      'Is my data secure?',
-      "Yes. Your account is authenticated through Supabase, and your "
-          "password is never stored in plain text.",
-    ),
-    FaqEntry(
-      'How do I sign out?',
-      "Open the Profile tab and tap 'Sign out' at the bottom.",
-    ),
-    FaqEntry(
-      'Can I change my display name?',
-      'Yes - go to Profile and tap your name to update it.',
-    ),
+    FaqEntry(LocaleKeys.helpFaq1Q, LocaleKeys.helpFaq1A),
+    FaqEntry(LocaleKeys.helpFaq2Q, LocaleKeys.helpFaq2A),
+    FaqEntry(LocaleKeys.helpFaq3Q, LocaleKeys.helpFaq3A),
+    FaqEntry(LocaleKeys.helpFaq4Q, LocaleKeys.helpFaq4A),
+    FaqEntry(LocaleKeys.helpFaq5Q, LocaleKeys.helpFaq5A),
   ];
 
   void toggleFaq(int index) {
@@ -57,7 +41,7 @@ class HelpController extends GetxController {
   Future<void> contactSupport() async {
     final message = messageController.text.trim();
     if (message.isEmpty) {
-      AppSnackbar.error('Tell us what you need help with first.');
+      AppSnackbar.error(LocaleKeys.helpEmptyMessageError.tr);
       return;
     }
 
@@ -68,7 +52,7 @@ class HelpController extends GetxController {
         scheme: 'mailto',
         path: Env.supportEmail,
         query: _encodeQueryParameters({
-          'subject': 'LexiSnap support request',
+          'subject': LocaleKeys.helpMailSubject.tr,
           'body': 'From: $userEmail\n\n$message',
         }),
       );
@@ -77,7 +61,7 @@ class HelpController extends GetxController {
         await launchUrl(uri);
         messageController.clear();
       } else {
-        AppSnackbar.error('No email app is set up on this device.');
+        AppSnackbar.error(LocaleKeys.helpNoEmailAppError.tr);
       }
     } finally {
       isSendingMessage.value = false;

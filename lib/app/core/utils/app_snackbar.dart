@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../localization/locale_keys.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
@@ -16,7 +17,7 @@ class AppSnackbar {
 
   static void error(String message) {
     Get.snackbar(
-      'Something went wrong',
+      LocaleKeys.commonSomethingWentWrong.tr,
       message,
       backgroundColor: AppColors.alert,
       colorText: Colors.white,
@@ -26,9 +27,9 @@ class AppSnackbar {
     );
   }
 
-  static void success(String message, {String title = 'Success'}) {
+  static void success(String message, {String? title}) {
     Get.snackbar(
-      title,
+      title ?? LocaleKeys.commonSuccess.tr,
       message,
       backgroundColor: AppColors.confirm,
       colorText: Colors.white,
@@ -39,9 +40,9 @@ class AppSnackbar {
   }
 
   /// Neutral toast for placeholder/not-yet-built features.
-  static void info(String message, {String title = 'Coming soon'}) {
+  static void info(String message, {String? title}) {
     Get.snackbar(
-      title,
+      title ?? LocaleKeys.commonComingSoon.tr,
       message,
       backgroundColor: AppColors.ink,
       colorText: Colors.white,

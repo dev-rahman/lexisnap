@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -29,18 +30,22 @@ class HomeView extends GetView<HomeController> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Hi, ${controller.greetingName}',
+                controller.firstName != null
+                    ? LocaleKeys.homeGreeting.trParams({
+                        'name': controller.firstName!,
+                      })
+                    : LocaleKeys.homeGreetingGeneric.tr,
                 style: AppTextStyles.heading1,
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Ready to learn something new?',
+                LocaleKeys.homeSubtitle.tr,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
               _ScanCta(onTap: controller.goToScan),
               const SizedBox(height: AppSpacing.lg * 1.5),
-              Text('Your decks', style: AppTextStyles.heading2),
+              Text(LocaleKeys.homeYourDecks.tr, style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
               const _EmptyDecksState(),
             ],
@@ -86,7 +91,7 @@ class _ScanCta extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Scan something new',
+                      LocaleKeys.homeScanCtaTitle.tr,
                       style: AppTextStyles.bodyMedium.copyWith(
                         color: Colors.white,
                         fontSize: 16,
@@ -94,7 +99,7 @@ class _ScanCta extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      'Turn any text into flashcards',
+                      LocaleKeys.homeScanCtaSubtitle.tr,
                       style: AppTextStyles.caption.copyWith(
                         color: Colors.white.withValues(alpha: 0.85),
                       ),
@@ -143,12 +148,12 @@ class _EmptyDecksState extends StatelessWidget {
           ),
           const SizedBox(height: AppSpacing.md),
           Text(
-            'No decks yet',
+            LocaleKeys.homeNoDecksTitle.tr,
             style: AppTextStyles.bodyMedium.copyWith(color: context.colorInk),
           ),
           const SizedBox(height: AppSpacing.xs),
           Text(
-            'Scan something to create your first deck.',
+            LocaleKeys.homeNoDecksBody.tr,
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodyMedium,
           ),

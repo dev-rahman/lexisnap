@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/services/onboarding/onboarding_service.dart';
 import '../../routes/app_routes.dart';
 
 class OnboardingPageData {
   const OnboardingPageData({
     required this.icon,
-    required this.title,
-    required this.description,
+    required this.titleKey,
+    required this.descriptionKey,
   });
 
   final IconData icon;
-  final String title;
-  final String description;
+
+  /// [LocaleKeys] entries, not resolved text - resolve with `.tr` at the
+  /// point of display so they stay correct across locale changes.
+  final String titleKey;
+  final String descriptionKey;
 }
 
 class OnboardingController extends GetxController {
@@ -23,31 +27,23 @@ class OnboardingController extends GetxController {
   static const pages = [
     OnboardingPageData(
       icon: Icons.document_scanner_outlined,
-      title: 'Scan anything',
-      description:
-          'Point your camera at a textbook page, a menu, a street sign - '
-          'anything with text you want to learn from.',
+      titleKey: LocaleKeys.onboardingScanTitle,
+      descriptionKey: LocaleKeys.onboardingScanBody,
     ),
     OnboardingPageData(
       icon: Icons.spellcheck_outlined,
-      title: 'We find the new words',
-      description:
-          'LexiSnap picks out the vocabulary worth learning from your scan '
-          'and lets you choose which ones to keep.',
+      titleKey: LocaleKeys.onboardingWordsTitle,
+      descriptionKey: LocaleKeys.onboardingWordsBody,
     ),
     OnboardingPageData(
       icon: Icons.auto_awesome_outlined,
-      title: 'Add example sentences anytime',
-      description:
-          'Generate an example sentence for any word and add it to the '
-          "card's details - context makes it stick.",
+      titleKey: LocaleKeys.onboardingSentencesTitle,
+      descriptionKey: LocaleKeys.onboardingSentencesBody,
     ),
     OnboardingPageData(
       icon: Icons.style_outlined,
-      title: 'Your deck, ready to study',
-      description:
-          'Flashcards are built automatically, so you can start reviewing '
-          'right away.',
+      titleKey: LocaleKeys.onboardingDeckTitle,
+      descriptionKey: LocaleKeys.onboardingDeckBody,
     ),
   ];
 

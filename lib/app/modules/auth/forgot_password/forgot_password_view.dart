@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/localization/locale_keys.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
@@ -54,15 +55,18 @@ class _ForgotPasswordForm extends StatelessWidget {
           children: [
             const AppBrandHeader(iconSize: 40),
             const SizedBox(height: AppSpacing.md),
-            Text('Reset your password', style: AppTextStyles.heading1),
+            Text(
+              LocaleKeys.forgotPasswordTitle.tr,
+              style: AppTextStyles.heading1,
+            ),
             const SizedBox(height: AppSpacing.sm),
             Text(
-              "Enter your email and we'll send you a link to reset your password.",
+              LocaleKeys.forgotPasswordSubtitle.tr,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: AppSpacing.lg),
             AppTextField(
-              label: 'Email',
+              label: LocaleKeys.commonEmail.tr,
               controller: controller.emailController,
               hintText: 'you@example.com',
               keyboardType: TextInputType.emailAddress,
@@ -75,7 +79,7 @@ class _ForgotPasswordForm extends StatelessWidget {
             const SizedBox(height: AppSpacing.lg),
             Obx(
               () => AppButton(
-                label: 'Send reset link',
+                label: LocaleKeys.forgotPasswordButton.tr,
                 isLoading: controller.isLoading.value,
                 onPressed: controller.submit,
               ),
@@ -104,19 +108,19 @@ class _SentConfirmation extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.lg),
         Text(
-          'Check your email',
+          LocaleKeys.forgotPasswordCheckEmailTitle.tr,
           style: AppTextStyles.heading2,
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: AppSpacing.sm),
         Text(
-          "We've sent a password reset link to $email",
+          LocaleKeys.forgotPasswordCheckEmailBody.trParams({'email': email}),
           textAlign: TextAlign.center,
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         const SizedBox(height: AppSpacing.lg),
         AppButton(
-          label: 'Back to login',
+          label: LocaleKeys.forgotPasswordBackToLogin.tr,
           variant: AppButtonVariant.outlined,
           onPressed: Get.back,
         ),

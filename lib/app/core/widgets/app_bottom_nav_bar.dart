@@ -2,7 +2,9 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../localization/locale_keys.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 
@@ -132,21 +134,21 @@ class _StockAndroidNavBar extends StatelessWidget {
                 onProfileTap();
             }
           },
-          destinations: const [
+          destinations: [
             NavigationDestination(
-              icon: Icon(Icons.home_outlined),
-              selectedIcon: Icon(Icons.home_rounded),
-              label: 'Home',
+              icon: const Icon(Icons.home_outlined),
+              selectedIcon: const Icon(Icons.home_rounded),
+              label: LocaleKeys.navHome.tr,
             ),
             NavigationDestination(
-              icon: Icon(Icons.document_scanner_outlined),
-              selectedIcon: Icon(Icons.document_scanner_rounded),
-              label: 'Scan',
+              icon: const Icon(Icons.document_scanner_outlined),
+              selectedIcon: const Icon(Icons.document_scanner_rounded),
+              label: LocaleKeys.navScan.tr,
             ),
             NavigationDestination(
-              icon: Icon(Icons.person_outline_rounded),
-              selectedIcon: Icon(Icons.person_rounded),
-              label: 'Profile',
+              icon: const Icon(Icons.person_outline_rounded),
+              selectedIcon: const Icon(Icons.person_rounded),
+              label: LocaleKeys.navProfile.tr,
             ),
           ],
         ),
@@ -214,7 +216,7 @@ class _LiquidTabBar extends StatelessWidget {
                   _NavItem(
                     outlinedIcon: Icons.home_outlined,
                     filledIcon: Icons.home_rounded,
-                    label: 'Home',
+                    label: LocaleKeys.navHome.tr,
                     isActive: currentIndex == 0,
                     showLabel: !isMinimized,
                     onTap: onHomeTap,
@@ -223,7 +225,7 @@ class _LiquidTabBar extends StatelessWidget {
                   _NavItem(
                     outlinedIcon: Icons.person_outline_rounded,
                     filledIcon: Icons.person_rounded,
-                    label: 'Profile',
+                    label: LocaleKeys.navProfile.tr,
                     isActive: currentIndex == 1,
                     showLabel: !isMinimized,
                     onTap: onProfileTap,

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/localization/locale_keys.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
@@ -34,26 +35,28 @@ class SignupView extends GetView<SignupController> {
               children: [
                 const AppBrandHeader(iconSize: 40),
                 const SizedBox(height: AppSpacing.md),
-                Text('Create an account', style: AppTextStyles.heading1),
+                Text(LocaleKeys.signupTitle.tr, style: AppTextStyles.heading1),
                 const SizedBox(height: AppSpacing.sm),
                 Text(
-                  'Sign up with your email to get started',
+                  LocaleKeys.signupSubtitle.tr,
                   style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 AppTextField(
-                  label: 'Full name',
+                  label: LocaleKeys.commonFullName.tr,
                   controller: controller.fullNameController,
                   hintText: 'Jane Doe',
                   textInputAction: TextInputAction.next,
                   autofillHints: const [AutofillHints.name],
                   prefixIcon: Icons.person_outline,
-                  validator: (v) =>
-                      Validators.required(v, message: 'Name is required'),
+                  validator: (v) => Validators.required(
+                    v,
+                    message: LocaleKeys.signupNameRequired.tr,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppTextField(
-                  label: 'Email',
+                  label: LocaleKeys.commonEmail.tr,
                   controller: controller.emailController,
                   hintText: 'you@example.com',
                   keyboardType: TextInputType.emailAddress,
@@ -64,7 +67,7 @@ class SignupView extends GetView<SignupController> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppTextField(
-                  label: 'Password',
+                  label: LocaleKeys.commonPassword.tr,
                   controller: controller.passwordController,
                   obscureText: true,
                   textInputAction: TextInputAction.next,
@@ -74,7 +77,7 @@ class SignupView extends GetView<SignupController> {
                 ),
                 const SizedBox(height: AppSpacing.md),
                 AppTextField(
-                  label: 'Confirm password',
+                  label: LocaleKeys.signupConfirmPassword.tr,
                   controller: controller.confirmPasswordController,
                   obscureText: true,
                   textInputAction: TextInputAction.done,
@@ -88,7 +91,7 @@ class SignupView extends GetView<SignupController> {
                 const SizedBox(height: AppSpacing.lg),
                 Obx(
                   () => AppButton(
-                    label: 'Sign up',
+                    label: LocaleKeys.signupButton.tr,
                     isLoading: controller.isLoading.value,
                     onPressed: controller.submit,
                   ),

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import 'auth/auth_service.dart';
 import 'auth/supabase_auth_service.dart';
+import 'locale/locale_service.dart';
 import 'onboarding/onboarding_service.dart';
 import 'theme/theme_service.dart';
 
@@ -21,5 +22,9 @@ class ServiceLocator {
     final themeService = ThemeService();
     await themeService.init();
     Get.put<ThemeService>(themeService, permanent: true);
+
+    final localeService = LocaleService();
+    await localeService.init();
+    Get.put<LocaleService>(localeService, permanent: true);
   }
 }

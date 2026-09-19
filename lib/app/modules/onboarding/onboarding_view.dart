@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_top_safe_area.dart';
+import '../../core/widgets/language_selector.dart';
 import 'onboarding_controller.dart';
 
 class OnboardingView extends GetView<OnboardingController> {
@@ -32,9 +34,15 @@ class OnboardingView extends GetView<OnboardingController> {
                       'assets/images/lexisnap_wordmark.png',
                       height: 56,
                     ),
-                    TextButton(
-                      onPressed: controller.complete,
-                      child: const Text('Skip'),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const LanguageSelector(),
+                        TextButton(
+                          onPressed: controller.complete,
+                          child: Text(LocaleKeys.onboardingSkip.tr),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -56,13 +64,13 @@ class OnboardingView extends GetView<OnboardingController> {
                           _OnboardingIllustration(icon: page.icon),
                           const SizedBox(height: AppSpacing.lg),
                           Text(
-                            page.title,
+                            page.titleKey.tr,
                             textAlign: TextAlign.center,
                             style: AppTextStyles.heading1,
                           ),
                           const SizedBox(height: AppSpacing.sm),
                           Text(
-                            page.description,
+                            page.descriptionKey.tr,
                             textAlign: TextAlign.center,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
@@ -87,7 +95,9 @@ class OnboardingView extends GetView<OnboardingController> {
                 padding: const EdgeInsets.all(AppSpacing.lg),
                 child: Obx(
                   () => AppButton(
-                    label: controller.isLastPage ? 'Get started' : 'Next',
+                    label: controller.isLastPage
+                        ? LocaleKeys.onboardingGetStarted.tr
+                        : LocaleKeys.onboardingNext.tr,
                     onPressed: controller.next,
                   ),
                 ),

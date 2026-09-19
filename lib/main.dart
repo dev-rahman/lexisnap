@@ -5,6 +5,9 @@ import 'package:get/get.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/core/config/env.dart';
+import 'app/core/localization/app_locales.dart';
+import 'app/core/localization/app_translations.dart';
+import 'app/core/services/locale/locale_service.dart';
 import 'app/core/services/service_locator.dart';
 import 'app/core/services/theme/theme_service.dart';
 import 'app/core/theme/app_system_ui.dart';
@@ -38,6 +41,9 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.light,
         darkTheme: AppTheme.dark,
         themeMode: Get.find<ThemeService>().themeMode.value,
+        translations: AppTranslations(),
+        locale: Get.find<LocaleService>().locale.value,
+        fallbackLocale: AppLocales.fallback,
         initialRoute: AppPages.initial,
         getPages: AppPages.routes,
         builder: (context, child) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/errors/auth_exception.dart';
+import '../../../core/localization/locale_keys.dart';
 import '../../../core/services/auth/auth_service.dart';
 import '../../../core/utils/app_snackbar.dart';
 import '../../../routes/app_routes.dart';
@@ -45,8 +46,8 @@ class SignupController extends GetxController {
         // Email confirmation is required - Supabase already sent a
         // confirmation link.
         AppSnackbar.success(
-          'Check your inbox to confirm your email before logging in.',
-          title: 'Almost there',
+          LocaleKeys.signupCheckInboxBody.tr,
+          title: LocaleKeys.signupCheckInboxTitle.tr,
         );
         Get.offNamed(AppRoutes.login);
       }

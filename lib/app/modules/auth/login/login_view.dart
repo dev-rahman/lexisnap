@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/localization/locale_keys.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
@@ -8,6 +9,7 @@ import '../../../core/widgets/app_brand_header.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/app_text_field.dart';
 import '../../../core/widgets/app_top_safe_area.dart';
+import '../../../core/widgets/language_selector.dart';
 import '../../../core/widgets/or_divider.dart';
 import '../../../core/widgets/social_sign_in_button.dart';
 import 'login_controller.dart';
@@ -33,17 +35,26 @@ class LoginView extends GetView<LoginController> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const AppBrandHeader(),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Expanded(child: AppBrandHeader()),
+                      const LanguageSelector(),
+                    ],
+                  ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text('Welcome back', style: AppTextStyles.heading1),
+                  Text(
+                    LocaleKeys.loginWelcomeBack.tr,
+                    style: AppTextStyles.heading1,
+                  ),
                   const SizedBox(height: AppSpacing.sm),
                   Text(
-                    'Sign in to continue',
+                    LocaleKeys.loginSubtitle.tr,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   AppTextField(
-                    label: 'Email',
+                    label: LocaleKeys.commonEmail.tr,
                     controller: controller.emailController,
                     hintText: 'you@example.com',
                     keyboardType: TextInputType.emailAddress,
@@ -54,7 +65,7 @@ class LoginView extends GetView<LoginController> {
                   ),
                   const SizedBox(height: AppSpacing.md),
                   AppTextField(
-                    label: 'Password',
+                    label: LocaleKeys.commonPassword.tr,
                     controller: controller.passwordController,
                     obscureText: true,
                     textInputAction: TextInputAction.done,
@@ -67,13 +78,13 @@ class LoginView extends GetView<LoginController> {
                     alignment: Alignment.centerRight,
                     child: TextButton(
                       onPressed: controller.goToForgotPassword,
-                      child: const Text('Forgot password?'),
+                      child: Text(LocaleKeys.loginForgotPassword.tr),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.sm),
                   Obx(
                     () => AppButton(
-                      label: 'Log in',
+                      label: LocaleKeys.loginButton.tr,
                       isLoading: controller.isEmailLoading.value,
                       onPressed: controller.submitEmailLogin,
                     ),
@@ -102,10 +113,10 @@ class LoginView extends GetView<LoginController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Don't have an account?"),
+                      Text(LocaleKeys.loginNoAccount.tr),
                       TextButton(
                         onPressed: controller.goToSignUp,
-                        child: const Text('Sign up'),
+                        child: Text(LocaleKeys.loginSignUp.tr),
                       ),
                     ],
                   ),

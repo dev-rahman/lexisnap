@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../../core/errors/auth_exception.dart';
+import '../../core/localization/locale_keys.dart';
 import '../../core/services/auth/auth_service.dart';
 import '../../core/services/theme/theme_service.dart';
 import '../../core/utils/app_snackbar.dart';
@@ -27,7 +28,7 @@ class ProfileController extends GetxController {
       await _authService.updateProfile(fullName: fullName);
       refreshTrigger.value++;
       Get.back();
-      AppSnackbar.success('Your name has been updated.');
+      AppSnackbar.success(LocaleKeys.profileNameUpdated.tr);
     } on AppAuthException catch (e) {
       AppSnackbar.error(e.message);
     } finally {

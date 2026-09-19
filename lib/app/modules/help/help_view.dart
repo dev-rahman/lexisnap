@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -16,7 +17,7 @@ class HelpView extends GetView<HelpController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help & support'),
+        title: Text(LocaleKeys.helpTitle.tr),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: Get.back,
@@ -28,7 +29,7 @@ class HelpView extends GetView<HelpController> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Frequently asked questions', style: AppTextStyles.heading2),
+              Text(LocaleKeys.helpFaqTitle.tr, style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
               Obx(
                 () => Column(
@@ -43,24 +44,27 @@ class HelpView extends GetView<HelpController> {
                 ),
               ),
               const SizedBox(height: AppSpacing.lg * 1.5),
-              Text('Still need help?', style: AppTextStyles.heading2),
+              Text(
+                LocaleKeys.helpStillNeedHelp.tr,
+                style: AppTextStyles.heading2,
+              ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                'Send us a message and we\'ll get back to you by email.',
+                LocaleKeys.helpSendMessageBody.tr,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.md),
               AppTextField(
-                label: 'Your message',
+                label: LocaleKeys.helpYourMessage.tr,
                 controller: controller.messageController,
-                hintText: 'What do you need help with?',
+                hintText: LocaleKeys.helpMessageHint.tr,
                 maxLines: 5,
                 textInputAction: TextInputAction.newline,
               ),
               const SizedBox(height: AppSpacing.md),
               Obx(
                 () => AppButton(
-                  label: 'Email support',
+                  label: LocaleKeys.helpEmailSupportButton.tr,
                   icon: const Icon(
                     Icons.mail_outline,
                     color: Colors.white,
@@ -111,7 +115,7 @@ class _FaqTile extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        entry.question,
+                        entry.questionKey.tr,
                         style: AppTextStyles.bodyMedium,
                       ),
                     ),
@@ -131,7 +135,7 @@ class _FaqTile extends StatelessWidget {
                       ? Padding(
                           padding: const EdgeInsets.only(top: AppSpacing.sm),
                           child: Text(
-                            entry.answer,
+                            entry.answerKey.tr,
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         )

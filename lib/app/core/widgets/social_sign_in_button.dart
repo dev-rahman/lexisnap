@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
+import '../localization/locale_keys.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
@@ -65,7 +67,9 @@ class SocialSignInButton extends StatelessWidget {
                         ),
                   const SizedBox(width: AppSpacing.sm),
                   Text(
-                    _isApple ? 'Continue with Apple' : 'Continue with Google',
+                    _isApple
+                        ? LocaleKeys.loginContinueApple.tr
+                        : LocaleKeys.loginContinueGoogle.tr,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: foregroundColor,

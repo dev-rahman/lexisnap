@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../core/localization/locale_keys.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -11,6 +12,7 @@ import '../../core/widgets/app_bottom_nav_bar.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/app_top_safe_area.dart';
+import '../../core/widgets/language_picker_sheet.dart';
 import '../../routes/app_routes.dart';
 import 'profile_controller.dart';
 
@@ -36,10 +38,12 @@ class ProfileView extends GetView<ProfileController> {
                 Obx(() {
                   controller.refreshTrigger.value;
                   final user = controller.user;
-                  final displayName = user?.fullName?.isNotEmpty == true
+                  final actualName = user?.fullName?.isNotEmpty == true
                       ? user!.fullName!
-                      : 'Your account';
-                  final initials = _initialsFor(displayName, user?.email);
+                      : null;
+                  final displayName =
+                      actualName ?? LocaleKeys.profileYourAccount.tr;
+                  final initials = _initialsFor(actualName, user?.email);
 
                   return Column(
                     children: [
@@ -62,11 +66,8 @@ class ProfileView extends GetView<ProfileController> {
                       ),
                       const SizedBox(height: AppSpacing.md),
                       InkWell(
-                        onTap: () => _showEditNameSheet(
-                          context,
-                          controller,
-                          displayName,
-                        ),
+                        onTap: () =>
+                            _showEditNameSheet(context, controller, actualName),
                         borderRadius: BorderRadius.circular(AppRadius.sm),
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
@@ -102,26 +103,32 @@ class ProfileView extends GetView<ProfileController> {
                   children: [
                     _SettingsTile(
                       icon: Icons.notifications_outlined,
-                      label: 'Notifications',
+                      label: LocaleKeys.profileNotifications.tr,
                       onTap: () => AppSnackbar.info(
-                        'Notification settings are on the way.',
+                        LocaleKeys.profileNotificationsComingSoon.tr,
                       ),
                     ),
                     _SettingsTile(
                       icon: Icons.palette_outlined,
-                      label: 'Appearance',
+                      label: LocaleKeys.profileAppearance.tr,
                       onTap: () => _showThemePicker(context, controller),
                     ),
                     _SettingsTile(
+                      icon: Icons.language_outlined,
+                      label: LocaleKeys.profileLanguage.tr,
+                      onTap: () => showLanguagePickerSheet(context),
+                    ),
+                    _SettingsTile(
                       icon: Icons.help_outline_rounded,
-                      label: 'Help & support',
+                      label: LocaleKeys.profileHelpSupport.tr,
                       onTap: () => Get.toNamed(AppRoutes.help),
                     ),
                     _SettingsTile(
                       icon: Icons.info_outline_rounded,
-                      label: 'About LexiSnap',
-                      onTap: () =>
-                          AppSnackbar.info('About page is on the way.'),
+                      label: LocaleKeys.profileAbout.tr,
+                      onTap: () => AppSnackbar.info(
+                        LocaleKeys.profileAboutComingSoon.tr,
+                      ),
                       showDivider: false,
                     ),
                   ],
@@ -129,7 +136,7 @@ class ProfileView extends GetView<ProfileController> {
                 const SizedBox(height: AppSpacing.lg),
                 Obx(
                   () => AppButton(
-                    label: 'Sign out',
+                    label: LocaleKeys.profileSignOut.tr,
                     variant: AppButtonVariant.outlined,
                     color: AppColors.alert,
                     isLoading: controller.isSigningOut.value,
@@ -144,8 +151,8 @@ class ProfileView extends GetView<ProfileController> {
     );
   }
 
-  String _initialsFor(String name, String? email) {
-    if (name != 'Your account') {
+  String _initialsFor(String? name, String? email) {
+    if (name != null && name.isNotEmpty) {
       final parts = name.trim().split(RegExp(r'\s+'));
       final letters = parts.take(2).map((p) => p.isNotEmpty ? p[0] : '').join();
       if (letters.isNotEmpty) return letters.toUpperCase();
@@ -158,12 +165,10 @@ class ProfileView extends GetView<ProfileController> {
 void _showEditNameSheet(
   BuildContext context,
   ProfileController controller,
-  String currentName,
+  String? currentName,
 ) {
   final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController(
-    text: currentName == 'Your account' ? '' : currentName,
-  );
+  final nameController = TextEditingController(text: currentName ?? '');
 
   showModalBottomSheet(
     context: context,
@@ -186,19 +191,24 @@ void _showEditNameSheet(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Edit name', style: AppTextStyles.heading2),
+              Text(
+                LocaleKeys.profileEditName.tr,
+                style: AppTextStyles.heading2,
+              ),
               const SizedBox(height: AppSpacing.md),
               AppTextField(
-                label: 'Full name',
+                label: LocaleKeys.commonFullName.tr,
                 controller: nameController,
                 textInputAction: TextInputAction.done,
-                validator: (v) =>
-                    Validators.required(v, message: 'Enter a name'),
+                validator: (v) => Validators.required(
+                  v,
+                  message: LocaleKeys.validatorNameRequired.tr,
+                ),
               ),
               const SizedBox(height: AppSpacing.lg),
               Obx(
                 () => AppButton(
-                  label: 'Save',
+                  label: LocaleKeys.commonSave.tr,
                   isLoading: controller.isUpdatingName.value,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
@@ -219,7 +229,7 @@ void _showThemePicker(BuildContext context, ProfileController controller) {
   showModalBottomSheet(
     context: context,
     backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
+    shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
     ),
     builder: (sheetContext) {
@@ -230,42 +240,45 @@ void _showThemePicker(BuildContext context, ProfileController controller) {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Appearance', style: AppTextStyles.heading2),
+              Text(
+                LocaleKeys.profileAppearance.tr,
+                style: AppTextStyles.heading2,
+              ),
               const SizedBox(height: AppSpacing.md),
               Obx(
                 () => Column(
                   children: [
-                    _ThemeOption(
-                      label: 'System',
+                    _PickerOption(
+                      label: LocaleKeys.themeSystem.tr,
                       icon: Icons.brightness_auto_outlined,
                       isSelected:
                           controller.themeService.themeMode.value ==
                           ThemeMode.system,
                       onTap: () {
                         controller.themeService.setThemeMode(ThemeMode.system);
-                        Get.back(); // Close the bottom sheet after selection
+                        Get.back();
                       },
                     ),
-                    _ThemeOption(
-                      label: 'Light',
+                    _PickerOption(
+                      label: LocaleKeys.themeLight.tr,
                       icon: Icons.light_mode_outlined,
                       isSelected:
                           controller.themeService.themeMode.value ==
                           ThemeMode.light,
                       onTap: () {
                         controller.themeService.setThemeMode(ThemeMode.light);
-                        Get.back(); // Close the bottom sheet after selection
+                        Get.back();
                       },
                     ),
-                    _ThemeOption(
-                      label: 'Dark',
+                    _PickerOption(
+                      label: LocaleKeys.themeDark.tr,
                       icon: Icons.dark_mode_outlined,
                       isSelected:
                           controller.themeService.themeMode.value ==
                           ThemeMode.dark,
                       onTap: () {
                         controller.themeService.setThemeMode(ThemeMode.dark);
-                        Get.back(); // Close the bottom sheet after selection
+                        Get.back();
                       },
                     ),
                   ],
@@ -279,8 +292,10 @@ void _showThemePicker(BuildContext context, ProfileController controller) {
   );
 }
 
-class _ThemeOption extends StatelessWidget {
-  const _ThemeOption({
+/// Shared row style for the Appearance bottom sheet: an icon, a label, and
+/// a checkmark on the selected option.
+class _PickerOption extends StatelessWidget {
+  const _PickerOption({
     required this.label,
     required this.icon,
     required this.isSelected,
