@@ -72,6 +72,11 @@ class _StockAndroidNavBar extends StatelessWidget {
   final VoidCallback onProfileTap;
   final VoidCallback onScanTap;
 
+  // Material 3's default NavigationBar height (80) reads as oversized next
+  // to the rest of the app; this is a more compact, still-comfortable
+  // touch target.
+  static const double _barContentHeight = 56;
+
   @override
   Widget build(BuildContext context) {
     // Map our 2 persistent tabs (Home/Profile) onto 3 visible
@@ -79,8 +84,19 @@ class _StockAndroidNavBar extends StatelessWidget {
     // tapping it pushes a route rather than switching tabs.
     final materialIndex = currentIndex == 0 ? 0 : 2;
 
+    // NavigationBar already wraps itself in Material + SafeArea internally
+    // (that's what it's designed for - the same as when it's placed via
+    // Scaffold.bottomNavigationBar), so it handles the bottom gesture
+    // inset correctly on its own: its Material background reaches the
+    // true edge, and only its tappable content is padded above the
+    // gesture handle. Our own outer SafeArea must skip both top and
+    // bottom here, or it would consume the bottom inset *before*
+    // NavigationBar sees it, pushing the whole bar (background included)
+    // up and leaving a plain paper-colored gap below it - which is
+    // exactly the bug being fixed.
     return SafeArea(
       top: false,
+      bottom: false,
       child: NavigationBarTheme(
         data: NavigationBarThemeData(
           backgroundColor: context.colorPaper,
@@ -104,6 +120,7 @@ class _StockAndroidNavBar extends StatelessWidget {
           ),
         ),
         child: NavigationBar(
+          height: _barContentHeight,
           selectedIndex: materialIndex,
           onDestinationSelected: (index) {
             switch (index) {
