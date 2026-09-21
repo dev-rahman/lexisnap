@@ -69,6 +69,7 @@ const Map<String, String> ko = {
   LocaleKeys.homeYourDecks: '내 덱',
   LocaleKeys.homeNoDecksTitle: '아직 덱이 없어요',
   LocaleKeys.homeNoDecksBody: '스캔해서 첫 번째 덱을 만들어보세요.',
+  LocaleKeys.homeDeckCardCount: '단어 @count개',
 
   LocaleKeys.navHome: '홈',
   LocaleKeys.navScan: '스캔',
@@ -153,4 +154,14 @@ const Map<String, String> ko = {
   LocaleKeys.permissionGalleryDeniedBody:
       'LexiSnap의 사진 접근 권한이 꺼져 있어요. 설정에서 켜면 사진을 선택할 수 있어요.',
   LocaleKeys.permissionOpenSettings: '설정 열기',
+
+  LocaleKeys.deckLoadError: '이 덱을 불러오지 못했어요. 다시 시도해주세요.',
+  LocaleKeys.deckSummary: '@source → @target · 단어 @count개',
+  LocaleKeys.deckRenameTitle: '덱 이름',
+  LocaleKeys.deckRenameError: '덱 이름을 변경하지 못했어요. 다시 시도해주세요.',
+  LocaleKeys.deckDeleteTitle: '이 덱을 삭제할까요?',
+  LocaleKeys.deckDeleteBody: '이 덱과 모든 플래시카드가 삭제돼요. 이 작업은 되돌릴 수 없어요.',
+  LocaleKeys.deckDeleteConfirm: '덱 삭제',
+  LocaleKeys.deckDeletedSuccess: '덱이 삭제됐어요.',
+  LocaleKeys.deckDeleteError: '덱을 삭제하지 못했어요. 다시 시도해주세요.',
 };

@@ -8,6 +8,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_bottom_nav_bar.dart';
 import '../../core/widgets/app_top_safe_area.dart';
+import '../../data/models/deck.dart';
 import 'home_controller.dart';
 
 class HomeView extends GetView<HomeController> {
@@ -47,7 +48,28 @@ class HomeView extends GetView<HomeController> {
               const SizedBox(height: AppSpacing.lg * 1.5),
               Text(LocaleKeys.homeYourDecks.tr, style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
-              const _EmptyDecksState(),
+              Obx(() {
+                if (controller.isLoadingDecks.value) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: AppSpacing.lg),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                }
+                if (controller.decks.isEmpty) {
+                  return const _EmptyDecksState();
+                }
+                return Column(
+                  children: [
+                    for (final deck in controller.decks) ...[
+                      _DeckCard(
+                        deck: deck,
+                        onTap: () => controller.goToDeck(deck),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                  ],
+                );
+              }),
             ],
           ),
         ),
@@ -158,6 +180,69 @@ class _EmptyDecksState extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium,
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _DeckCard extends StatelessWidget {
+  const _DeckCard({required this.deck, required this.onTap});
+
+  final Deck deck;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.colorSurface,
+      borderRadius: BorderRadius.circular(AppRadius.lg),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.md),
+          child: Row(
+            children: [
+              Container(
+                height: 44,
+                width: 44,
+                decoration: BoxDecoration(
+                  color: context.colorPaper,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.style_outlined,
+                  color: context.colorInkMuted,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      deck.name,
+                      style: AppTextStyles.bodyMedium.copyWith(
+                        color: context.colorInk,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      LocaleKeys.homeDeckCardCount.trParams({
+                        'count': '${deck.cardCount}',
+                      }),
+                      style: AppTextStyles.caption.copyWith(
+                        color: context.colorInkMuted,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right_rounded, color: context.colorInkMuted),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -14,6 +14,10 @@ abstract class AppRoutes {
   /// Full-screen scan flow, pushed on top of [main].
   static const scan = '/scan';
 
+  /// A single saved deck's flashcards, pushed from Home. Expects the
+  /// deck's id as the route arguments.
+  static const deckDetail = '/deck';
+
   /// Help & support, pushed from Profile.
   static const help = '/help';
 }

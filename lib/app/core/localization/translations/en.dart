@@ -70,6 +70,7 @@ const Map<String, String> en = {
   LocaleKeys.homeYourDecks: 'Your decks',
   LocaleKeys.homeNoDecksTitle: 'No decks yet',
   LocaleKeys.homeNoDecksBody: 'Scan something to create your first deck.',
+  LocaleKeys.homeDeckCardCount: '@count words',
 
   LocaleKeys.navHome: 'Home',
   LocaleKeys.navScan: 'Scan',
@@ -153,4 +154,14 @@ const Map<String, String> en = {
   LocaleKeys.permissionCameraDeniedBody: 'Camera access is off for LexiSnap. Enable it in Settings to scan with your camera.',
   LocaleKeys.permissionGalleryDeniedBody: 'Photo access is off for LexiSnap. Enable it in Settings to choose photos.',
   LocaleKeys.permissionOpenSettings: 'Open Settings',
+
+  LocaleKeys.deckLoadError: "Couldn't load this deck. Please try again.",
+  LocaleKeys.deckSummary: '@source → @target · @count words',
+  LocaleKeys.deckRenameTitle: 'Deck name',
+  LocaleKeys.deckRenameError: "Couldn't rename this deck. Please try again.",
+  LocaleKeys.deckDeleteTitle: 'Delete this deck?',
+  LocaleKeys.deckDeleteBody: "This deck and all of its flashcards will be deleted. This can't be undone.",
+  LocaleKeys.deckDeleteConfirm: 'Delete deck',
+  LocaleKeys.deckDeletedSuccess: 'Deck deleted.',
+  LocaleKeys.deckDeleteError: "Couldn't delete this deck. Please try again.",
 };

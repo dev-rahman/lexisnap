@@ -73,6 +73,7 @@ const Map<String, String> fr = {
   LocaleKeys.homeNoDecksTitle: 'Aucun paquet pour le moment',
   LocaleKeys.homeNoDecksBody:
       'Scannez quelque chose pour créer votre premier paquet.',
+  LocaleKeys.homeDeckCardCount: '@count mots',
 
   LocaleKeys.navHome: 'Accueil',
   LocaleKeys.navScan: 'Scanner',
@@ -161,4 +162,17 @@ const Map<String, String> fr = {
   LocaleKeys.permissionCameraDeniedBody: "L'accès à l'appareil photo est désactivé pour LexiSnap. Activez-le dans les réglages pour scanner avec votre appareil photo.",
   LocaleKeys.permissionGalleryDeniedBody: "L'accès aux photos est désactivé pour LexiSnap. Activez-le dans les réglages pour choisir des photos.",
   LocaleKeys.permissionOpenSettings: 'Ouvrir les réglages',
+
+  LocaleKeys.deckLoadError:
+      "Impossible de charger ce paquet. Veuillez réessayer.",
+  LocaleKeys.deckSummary: '@source → @target · @count mots',
+  LocaleKeys.deckRenameTitle: 'Nom du paquet',
+  LocaleKeys.deckRenameError:
+      "Impossible de renommer ce paquet. Veuillez réessayer.",
+  LocaleKeys.deckDeleteTitle: 'Supprimer ce paquet ?',
+  LocaleKeys.deckDeleteBody: "Ce paquet et toutes ses cartes mémo seront supprimés. Cette action est irréversible.",
+  LocaleKeys.deckDeleteConfirm: 'Supprimer le paquet',
+  LocaleKeys.deckDeletedSuccess: 'Paquet supprimé.',
+  LocaleKeys.deckDeleteError:
+      "Impossible de supprimer ce paquet. Veuillez réessayer.",
 };

@@ -70,6 +70,7 @@ const Map<String, String> es = {
   LocaleKeys.homeYourDecks: 'Tus mazos',
   LocaleKeys.homeNoDecksTitle: 'Aún no tienes mazos',
   LocaleKeys.homeNoDecksBody: 'Escanea algo para crear tu primer mazo.',
+  LocaleKeys.homeDeckCardCount: '@count palabras',
 
   LocaleKeys.navHome: 'Inicio',
   LocaleKeys.navScan: 'Escanear',
@@ -157,4 +158,16 @@ const Map<String, String> es = {
   LocaleKeys.permissionCameraDeniedBody: 'El acceso a la cámara está desactivado para LexiSnap. Actívalo en Ajustes para escanear con tu cámara.',
   LocaleKeys.permissionGalleryDeniedBody: 'El acceso a las fotos está desactivado para LexiSnap. Actívalo en Ajustes para elegir fotos.',
   LocaleKeys.permissionOpenSettings: 'Abrir Ajustes',
+
+  LocaleKeys.deckLoadError: 'No se pudo cargar este mazo. Inténtalo de nuevo.',
+  LocaleKeys.deckSummary: '@source → @target · @count palabras',
+  LocaleKeys.deckRenameTitle: 'Nombre del mazo',
+  LocaleKeys.deckRenameError:
+      'No se pudo renombrar este mazo. Inténtalo de nuevo.',
+  LocaleKeys.deckDeleteTitle: '¿Eliminar este mazo?',
+  LocaleKeys.deckDeleteBody: 'Este mazo y todas sus tarjetas se eliminarán. Esta acción no se puede deshacer.',
+  LocaleKeys.deckDeleteConfirm: 'Eliminar mazo',
+  LocaleKeys.deckDeletedSuccess: 'Mazo eliminado.',
+  LocaleKeys.deckDeleteError:
+      'No se pudo eliminar este mazo. Inténtalo de nuevo.',
 };

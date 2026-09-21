@@ -37,18 +37,20 @@ const SYSTEM_PROMPT =
   "worth learning as vocabulary (skip trivial function words like " +
   "articles/pronouns unless the text is clearly about them). For each " +
   "word, classify its CEFR level (A1-C2) by how commonly it's learned, " +
-  "and write exactly one natural example sentence that uses the word and " +
-  "is written at that same CEFR level - a B1 word gets a B1-appropriate " +
-  "sentence, not simplified or overcomplicated. Deduplicate case-" +
-  "insensitively. Also detect the source language of the scanned text " +
-  "(as an ISO 639-1 code and its English display name), and suggest a " +
-  "short, thematic name for a flashcard deck made from this text (e.g. " +
-  '"Restaurant menu vocabulary", not just "French words"). Respond with ' +
-  "ONLY a JSON object of this exact shape, no other text: " +
+  "write a short dictionary-style definition of the word (in the same " +
+  "language as the word itself), and write exactly one natural example " +
+  "sentence that uses the word and is written at that same CEFR level - " +
+  "a B1 word gets a B1-appropriate sentence, not simplified or " +
+  "overcomplicated. Deduplicate case-insensitively. Also detect the " +
+  "source language of the scanned text (as an ISO 639-1 code and its " +
+  "English display name), and suggest a short, thematic name for a " +
+  'flashcard deck made from this text (e.g. "Restaurant menu ' +
+  'vocabulary", not just "French words"). Respond with ONLY a JSON ' +
+  "object of this exact shape, no other text: " +
   '{"language_code": string, "language_name": string, ' +
   '"suggested_deck_name": string, "words": [{"word": string, ' +
-  '"level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "example_sentence": string}, ' +
-  "...]}";
+  '"level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "word_description": string, ' +
+  '"example_sentence": string}, ...]}';
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
@@ -159,6 +161,7 @@ Deno.serve(async (req) => {
 function validateWords(parsed: unknown): Array<{
   word: string;
   level: string;
+  word_description: string;
   example_sentence: string;
 }> {
   const rawWords = (parsed as { words?: unknown })?.words;
@@ -167,12 +170,15 @@ function validateWords(parsed: unknown): Array<{
   const result: Array<{
     word: string;
     level: string;
+    word_description: string;
     example_sentence: string;
   }> = [];
 
   for (const item of rawWords) {
     const word = (item as { word?: unknown })?.word;
     const level = (item as { level?: unknown })?.level;
+    const wordDescription = (item as { word_description?: unknown })
+      ?.word_description;
     const exampleSentence = (item as { example_sentence?: unknown })
       ?.example_sentence;
 
@@ -181,10 +187,17 @@ function validateWords(parsed: unknown): Array<{
       word.trim().length > 0 &&
       typeof level === "string" &&
       CEFR_LEVELS.has(level) &&
+      typeof wordDescription === "string" &&
+      wordDescription.trim().length > 0 &&
       typeof exampleSentence === "string" &&
       exampleSentence.trim().length > 0
     ) {
-      result.push({ word, level, example_sentence: exampleSentence });
+      result.push({
+        word,
+        level,
+        word_description: wordDescription,
+        example_sentence: exampleSentence,
+      });
     }
   }
 

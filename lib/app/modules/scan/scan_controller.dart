@@ -11,6 +11,7 @@ import '../../core/utils/vocabulary_extractor.dart';
 import '../../data/models/deck_word.dart';
 import '../../data/models/vocabulary_extraction_result.dart';
 import '../../data/models/vocabulary_word.dart';
+import '../home/home_controller.dart';
 
 enum ScanStage {
   /// Choosing between camera and gallery.
@@ -159,6 +160,7 @@ class ScanController extends GetxController {
           DeckWord(
             word: word.word,
             level: word.level,
+            wordDescription: word.wordDescription,
             exampleSentence: word.exampleSentence,
             translation: translations[word.word] ?? '',
           ),
@@ -180,6 +182,7 @@ class ScanController extends GetxController {
       );
 
       final count = deckWords.length;
+      await Get.find<HomeController>().refreshDecks();
       Get.back();
       AppSnackbar.success(
         LocaleKeys.scanDeckCreatedSuccess.trParams({

@@ -9,6 +9,8 @@ import 'ocr/mlkit_text_recognition_service.dart';
 import 'ocr/text_recognition_service.dart';
 import 'onboarding/onboarding_service.dart';
 import 'permission/permission_service.dart';
+import 'speech/flutter_tts_service.dart';
+import 'speech/text_to_speech_service.dart';
 import 'theme/theme_service.dart';
 import 'translation/supabase_edge_translation_service.dart';
 import 'translation/translation_ai_service.dart';
@@ -41,6 +43,7 @@ class ServiceLocator {
       permanent: true,
     );
     Get.put<DeckRepository>(SupabaseDeckRepository(), permanent: true);
+    Get.put<TextToSpeechService>(FlutterTtsService(), permanent: true);
 
     final themeService = ThemeService();
     await themeService.init();

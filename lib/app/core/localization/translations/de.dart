@@ -71,6 +71,7 @@ const Map<String, String> de = {
   LocaleKeys.homeNoDecksTitle: 'Noch keine Stapel',
   LocaleKeys.homeNoDecksBody:
       'Scanne etwas, um deinen ersten Stapel zu erstellen.',
+  LocaleKeys.homeDeckCardCount: '@count Wörter',
 
   LocaleKeys.navHome: 'Start',
   LocaleKeys.navScan: 'Scannen',
@@ -159,4 +160,17 @@ const Map<String, String> de = {
   LocaleKeys.permissionCameraDeniedBody: 'Der Kamerazugriff ist für LexiSnap deaktiviert. Aktiviere ihn in den Einstellungen, um mit der Kamera zu scannen.',
   LocaleKeys.permissionGalleryDeniedBody: 'Der Fotozugriff ist für LexiSnap deaktiviert. Aktiviere ihn in den Einstellungen, um Fotos auszuwählen.',
   LocaleKeys.permissionOpenSettings: 'Einstellungen öffnen',
+
+  LocaleKeys.deckLoadError:
+      'Dieser Stapel konnte nicht geladen werden. Bitte versuche es erneut.',
+  LocaleKeys.deckSummary: '@source → @target · @count Wörter',
+  LocaleKeys.deckRenameTitle: 'Stapelname',
+  LocaleKeys.deckRenameError:
+      'Der Stapel konnte nicht umbenannt werden. Bitte versuche es erneut.',
+  LocaleKeys.deckDeleteTitle: 'Diesen Stapel löschen?',
+  LocaleKeys.deckDeleteBody: 'Dieser Stapel und alle seine Karteikarten werden gelöscht. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.deckDeleteConfirm: 'Stapel löschen',
+  LocaleKeys.deckDeletedSuccess: 'Stapel gelöscht.',
+  LocaleKeys.deckDeleteError:
+      'Der Stapel konnte nicht gelöscht werden. Bitte versuche es erneut.',
 };

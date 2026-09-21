@@ -80,6 +80,7 @@ class LocaleKeys {
   static const homeYourDecks = 'home_your_decks';
   static const homeNoDecksTitle = 'home_no_decks_title';
   static const homeNoDecksBody = 'home_no_decks_body';
+  static const homeDeckCardCount = 'home_deck_card_count';
 
   // Bottom nav
   static const navHome = 'nav_home';
@@ -164,4 +165,15 @@ class LocaleKeys {
   static const permissionCameraDeniedBody = 'permission_camera_denied_body';
   static const permissionGalleryDeniedBody = 'permission_gallery_denied_body';
   static const permissionOpenSettings = 'permission_open_settings';
+
+  // Deck detail
+  static const deckLoadError = 'deck_load_error';
+  static const deckSummary = 'deck_summary';
+  static const deckRenameTitle = 'deck_rename_title';
+  static const deckRenameError = 'deck_rename_error';
+  static const deckDeleteTitle = 'deck_delete_title';
+  static const deckDeleteBody = 'deck_delete_body';
+  static const deckDeleteConfirm = 'deck_delete_confirm';
+  static const deckDeletedSuccess = 'deck_deleted_success';
+  static const deckDeleteError = 'deck_delete_error';
 }

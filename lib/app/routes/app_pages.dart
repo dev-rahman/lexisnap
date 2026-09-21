@@ -6,6 +6,8 @@ import '../modules/auth/login/login_binding.dart';
 import '../modules/auth/login/login_view.dart';
 import '../modules/auth/signup/signup_binding.dart';
 import '../modules/auth/signup/signup_view.dart';
+import '../modules/deck_detail/deck_detail_binding.dart';
+import '../modules/deck_detail/deck_detail_view.dart';
 import '../modules/help/help_binding.dart';
 import '../modules/help/help_view.dart';
 import '../modules/main/main_binding.dart';
@@ -63,6 +65,12 @@ class AppPages {
       name: AppRoutes.scan,
       page: () => const ScanView(),
       binding: ScanBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.deckDetail,
+      page: () => const DeckDetailView(),
+      binding: DeckDetailBinding(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
     ),
     GetPage(
