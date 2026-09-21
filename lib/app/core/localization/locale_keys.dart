@@ -10,6 +10,7 @@ class LocaleKeys {
   static const commonFullName = 'common_full_name';
   static const commonOr = 'common_or';
   static const commonSave = 'common_save';
+  static const commonCancel = 'common_cancel';
   static const commonComingSoon = 'common_coming_soon';
   static const commonSomethingWentWrong = 'common_something_went_wrong';
   static const commonSuccess = 'common_success';
@@ -142,7 +143,15 @@ class LocaleKeys {
   static const scanNoTextFoundBody = 'scan_no_text_found_body';
   static const scanTryAgain = 'scan_try_again';
   static const scanProcessingError = 'scan_processing_error';
-  static const scanWordsCapturedSuccess = 'scan_words_captured_success';
+  static const scanDetectedLanguage = 'scan_detected_language';
+  static const scanTargetLanguageTitle = 'scan_target_language_title';
+  static const scanTargetLanguageBody = 'scan_target_language_body';
+  static const scanTargetLanguageHint = 'scan_target_language_hint';
+  static const scanTargetLanguageRequired = 'scan_target_language_required';
+  static const scanTargetLanguageSave = 'scan_target_language_save';
+  static const scanSavingDeck = 'scan_saving_deck';
+  static const scanDeckCreatedSuccess = 'scan_deck_created_success';
+  static const scanDeckSaveError = 'scan_deck_save_error';
 
   // Permissions
   static const permissionCameraTitle = 'permission_camera_title';

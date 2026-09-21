@@ -6,6 +6,7 @@ const Map<String, String> fr = {
   LocaleKeys.commonFullName: 'Nom complet',
   LocaleKeys.commonOr: 'ou',
   LocaleKeys.commonSave: 'Enregistrer',
+  LocaleKeys.commonCancel: 'Annuler',
   LocaleKeys.commonComingSoon: 'Bientôt disponible',
   LocaleKeys.commonSomethingWentWrong: "Une erreur s'est produite",
   LocaleKeys.commonSuccess: 'Succès',
@@ -138,8 +139,17 @@ const Map<String, String> fr = {
   LocaleKeys.scanTryAgain: 'Réessayer',
   LocaleKeys.scanProcessingError:
       "Impossible de lire cette photo. Veuillez réessayer.",
-  LocaleKeys.scanWordsCapturedSuccess:
-      '@count mots capturés ! La création de cartes mémo arrive bientôt.',
+  LocaleKeys.scanDetectedLanguage: 'Détecté : @language',
+  LocaleKeys.scanTargetLanguageTitle: 'Traduire en',
+  LocaleKeys.scanTargetLanguageBody:
+      'Dans quelle langue souhaitez-vous traduire ces mots ?',
+  LocaleKeys.scanTargetLanguageHint: 'ex. anglais, espagnol, allemand…',
+  LocaleKeys.scanTargetLanguageRequired: 'Saisissez une langue pour continuer',
+  LocaleKeys.scanTargetLanguageSave: 'Créer le paquet',
+  LocaleKeys.scanSavingDeck: 'Enregistrement de votre paquet…',
+  LocaleKeys.scanDeckCreatedSuccess: '@name est prêt avec @count mots !',
+  LocaleKeys.scanDeckSaveError:
+      "Impossible d'enregistrer votre paquet. Veuillez réessayer.",
 
   LocaleKeys.permissionCameraTitle: "Autoriser l'accès à l'appareil photo",
   LocaleKeys.permissionCameraBody: "LexiSnap a besoin de votre appareil photo pour scanner du texte depuis des livres, menus, panneaux, et plus encore.",

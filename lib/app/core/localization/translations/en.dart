@@ -6,6 +6,7 @@ const Map<String, String> en = {
   LocaleKeys.commonFullName: 'Full name',
   LocaleKeys.commonOr: 'or',
   LocaleKeys.commonSave: 'Save',
+  LocaleKeys.commonCancel: 'Cancel',
   LocaleKeys.commonComingSoon: 'Coming soon',
   LocaleKeys.commonSomethingWentWrong: 'Something went wrong',
   LocaleKeys.commonSuccess: 'Success',
@@ -131,8 +132,16 @@ const Map<String, String> en = {
   LocaleKeys.scanNoTextFoundBody: "We couldn't find any readable text in that photo. Try a clearer, well-lit shot.",
   LocaleKeys.scanTryAgain: 'Try again',
   LocaleKeys.scanProcessingError: "Couldn't read that photo. Please try again.",
-  LocaleKeys.scanWordsCapturedSuccess:
-      '@count words captured! Flashcard creation is coming soon.',
+  LocaleKeys.scanDetectedLanguage: 'Detected: @language',
+  LocaleKeys.scanTargetLanguageTitle: 'Translate into',
+  LocaleKeys.scanTargetLanguageBody:
+      'What language would you like these words translated into?',
+  LocaleKeys.scanTargetLanguageHint: 'e.g. English, Spanish, German…',
+  LocaleKeys.scanTargetLanguageRequired: 'Enter a language to continue',
+  LocaleKeys.scanTargetLanguageSave: 'Create deck',
+  LocaleKeys.scanSavingDeck: 'Saving your deck…',
+  LocaleKeys.scanDeckCreatedSuccess: '@name is ready with @count words!',
+  LocaleKeys.scanDeckSaveError: "Couldn't save your deck. Please try again.",
 
   LocaleKeys.permissionCameraTitle: 'Allow camera access',
   LocaleKeys.permissionCameraBody: 'LexiSnap needs your camera to scan text from books, menus, signs, and more.',

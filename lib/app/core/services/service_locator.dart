@@ -2,12 +2,18 @@ import 'package:get/get.dart';
 
 import 'auth/auth_service.dart';
 import 'auth/supabase_auth_service.dart';
+import 'deck/deck_repository.dart';
+import 'deck/supabase_deck_repository.dart';
 import 'locale/locale_service.dart';
 import 'ocr/mlkit_text_recognition_service.dart';
 import 'ocr/text_recognition_service.dart';
 import 'onboarding/onboarding_service.dart';
 import 'permission/permission_service.dart';
 import 'theme/theme_service.dart';
+import 'translation/supabase_edge_translation_service.dart';
+import 'translation/translation_ai_service.dart';
+import 'vocabulary/supabase_edge_vocabulary_service.dart';
+import 'vocabulary/vocabulary_ai_service.dart';
 
 /// Registers every app-wide service.
 ///
@@ -26,6 +32,15 @@ class ServiceLocator {
       MlKitTextRecognitionService(),
       permanent: true,
     );
+    Get.put<VocabularyAiService>(
+      SupabaseEdgeVocabularyService(),
+      permanent: true,
+    );
+    Get.put<TranslationAiService>(
+      SupabaseEdgeTranslationService(),
+      permanent: true,
+    );
+    Get.put<DeckRepository>(SupabaseDeckRepository(), permanent: true);
 
     final themeService = ThemeService();
     await themeService.init();

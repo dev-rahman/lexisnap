@@ -6,6 +6,7 @@ const Map<String, String> ko = {
   LocaleKeys.commonFullName: '이름',
   LocaleKeys.commonOr: '또는',
   LocaleKeys.commonSave: '저장',
+  LocaleKeys.commonCancel: '취소',
   LocaleKeys.commonComingSoon: '곧 출시 예정',
   LocaleKeys.commonSomethingWentWrong: '문제가 발생했어요',
   LocaleKeys.commonSuccess: '완료',
@@ -128,8 +129,15 @@ const Map<String, String> ko = {
       '이 사진에서 읽을 수 있는 텍스트를 찾지 못했어요. 더 선명하고 밝은 사진으로 다시 시도해보세요.',
   LocaleKeys.scanTryAgain: '다시 시도',
   LocaleKeys.scanProcessingError: '사진을 읽지 못했어요. 다시 시도해주세요.',
-  LocaleKeys.scanWordsCapturedSuccess:
-      '단어 @count개를 담았어요! 플래시카드 만들기 기능은 곧 제공될 예정이에요.',
+  LocaleKeys.scanDetectedLanguage: '감지된 언어: @language',
+  LocaleKeys.scanTargetLanguageTitle: '번역할 언어',
+  LocaleKeys.scanTargetLanguageBody: '이 단어들을 어떤 언어로 번역하고 싶으세요?',
+  LocaleKeys.scanTargetLanguageHint: '예: 영어, 스페인어, 독일어…',
+  LocaleKeys.scanTargetLanguageRequired: '계속하려면 언어를 입력해주세요',
+  LocaleKeys.scanTargetLanguageSave: '덱 만들기',
+  LocaleKeys.scanSavingDeck: '덱을 저장하는 중…',
+  LocaleKeys.scanDeckCreatedSuccess: '@name 덱이 단어 @count개로 준비됐어요!',
+  LocaleKeys.scanDeckSaveError: '덱을 저장하지 못했어요. 다시 시도해주세요.',
 
   LocaleKeys.permissionCameraTitle: '카메라 접근을 허용해주세요',
   LocaleKeys.permissionCameraBody:

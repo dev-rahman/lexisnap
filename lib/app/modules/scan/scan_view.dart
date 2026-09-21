@@ -12,14 +12,15 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/permission_sheets.dart';
+import '../../data/models/vocabulary_word.dart';
 import 'scan_controller.dart';
 
 /// The scan flow: pick a source (camera/gallery) -> review the photo -> run
-/// on-device OCR -> tap-to-select the words worth learning.
-///
-/// Turning that selection into saved flashcards/decks is a separate,
-/// not-yet-built step - see [ScanController.confirmSelection].
+/// on-device OCR + AI extraction -> tap-to-select the words worth learning
+/// -> pick a target language -> translate and save the selection as a deck
+/// in Supabase. See [ScanController.saveDeck].
 class ScanView extends GetView<ScanController> {
   const ScanView({super.key});
 
@@ -30,7 +31,8 @@ class ScanView extends GetView<ScanController> {
       final isDarkStage =
           stage == ScanStage.source ||
           stage == ScanStage.reviewing ||
-          stage == ScanStage.processing;
+          stage == ScanStage.processing ||
+          stage == ScanStage.savingDeck;
 
       return AnnotatedRegion<SystemUiOverlayStyle>(
         value: isDarkStage
@@ -42,8 +44,13 @@ class ScanView extends GetView<ScanController> {
             child: switch (stage) {
               ScanStage.source => const _SourcePicker(),
               ScanStage.reviewing => const _ImageReview(),
-              ScanStage.processing => const _ProcessingOverlay(),
+              ScanStage.processing => _ProcessingOverlay(
+                label: LocaleKeys.scanReadingText.tr,
+              ),
               ScanStage.wordSelection => const _WordSelection(),
+              ScanStage.savingDeck => _ProcessingOverlay(
+                label: LocaleKeys.scanSavingDeck.tr,
+              ),
               ScanStage.empty => const _NoTextFound(),
             },
           ),
@@ -263,7 +270,9 @@ class _ImageReview extends GetView<ScanController> {
 }
 
 class _ProcessingOverlay extends GetView<ScanController> {
-  const _ProcessingOverlay();
+  const _ProcessingOverlay({required this.label});
+
+  final String label;
 
   @override
   Widget build(BuildContext context) {
@@ -281,7 +290,7 @@ class _ProcessingOverlay extends GetView<ScanController> {
               const CircularProgressIndicator(color: AppColors.accent),
               const SizedBox(height: AppSpacing.md),
               Text(
-                LocaleKeys.scanReadingText.tr,
+                label,
                 style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
               ),
             ],
@@ -320,6 +329,17 @@ class _WordSelection extends GetView<ScanController> {
                 LocaleKeys.scanSelectWordsSubtitle.tr,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
+              if (controller.sourceLanguageName.value != null) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  LocaleKeys.scanDetectedLanguage.trParams({
+                    'language': controller.sourceLanguageName.value!,
+                  }),
+                  style: AppTextStyles.caption.copyWith(
+                    color: context.colorInkMuted,
+                  ),
+                ),
+              ],
               const SizedBox(height: AppSpacing.md),
               Obx(
                 () => Row(
@@ -356,16 +376,16 @@ class _WordSelection extends GetView<ScanController> {
               AppSpacing.lg,
             ),
             child: Obx(
-              () => Wrap(
-                spacing: AppSpacing.sm,
-                runSpacing: AppSpacing.sm,
+              () => Column(
                 children: [
-                  for (final word in controller.candidateWords)
-                    _WordChip(
+                  for (final word in controller.candidateWords) ...[
+                    _WordCard(
                       word: word,
                       isSelected: controller.selectedWords.contains(word),
                       onTap: () => controller.toggleWord(word),
                     ),
+                    const SizedBox(height: AppSpacing.sm),
+                  ],
                 ],
               ),
             ),
@@ -383,7 +403,7 @@ class _WordSelection extends GetView<ScanController> {
               label: LocaleKeys.scanContinueButton.tr,
               onPressed: controller.selectedWords.isEmpty
                   ? null
-                  : controller.confirmSelection,
+                  : () => _showTargetLanguageDialog(context, controller),
             ),
           ),
         ),
@@ -392,19 +412,95 @@ class _WordSelection extends GetView<ScanController> {
   }
 }
 
-class _WordChip extends StatelessWidget {
-  const _WordChip({
+Future<void> _showTargetLanguageDialog(
+  BuildContext context,
+  ScanController controller,
+) async {
+  final textController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+
+  final targetLanguage = await showModalBottomSheet<String>(
+    context: context,
+    isScrollControlled: true,
+    backgroundColor: context.colorPaper,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+    ),
+    builder: (sheetContext) {
+      return Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.lg,
+          right: AppSpacing.lg,
+          top: AppSpacing.lg,
+          bottom: MediaQuery.of(sheetContext).viewInsets.bottom + AppSpacing.lg,
+        ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.scanTargetLanguageBody.tr,
+                style: AppTextStyles.heading2,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AppTextField(
+                label: LocaleKeys.scanTargetLanguageTitle.tr,
+                controller: textController,
+                hintText: LocaleKeys.scanTargetLanguageHint.tr,
+                textInputAction: TextInputAction.done,
+                validator: (value) => (value == null || value.trim().isEmpty)
+                    ? LocaleKeys.scanTargetLanguageRequired.tr
+                    : null,
+                onFieldSubmitted: (_) {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.pop(sheetContext, textController.text.trim());
+                  }
+                },
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppButton(
+                label: LocaleKeys.scanTargetLanguageSave.tr,
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.pop(sheetContext, textController.text.trim());
+                  }
+                },
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              AppButton(
+                variant: AppButtonVariant.text,
+                label: LocaleKeys.commonCancel.tr,
+                onPressed: () => Navigator.pop(sheetContext),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
+  if (targetLanguage != null && targetLanguage.isNotEmpty) {
+    await controller.saveDeck(targetLanguage);
+  }
+}
+
+class _WordCard extends StatelessWidget {
+  const _WordCard({
     required this.word,
     required this.isSelected,
     required this.onTap,
   });
 
-  final String word;
+  final VocabularyWord word;
   final bool isSelected;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final textColor = isSelected ? Colors.white : context.colorInk;
+
     return Material(
       color: isSelected ? AppColors.accent : context.colorSurface,
       borderRadius: BorderRadius.circular(AppRadius.md),
@@ -416,12 +512,77 @@ class _WordChip extends StatelessWidget {
             horizontal: AppSpacing.md,
             vertical: AppSpacing.sm,
           ),
-          child: Text(
-            word,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: isSelected ? Colors.white : context.colorInk,
-            ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                isSelected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                color: isSelected ? Colors.white : context.colorInkMuted,
+                size: 20,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          word.word,
+                          style: AppTextStyles.bodyMedium.copyWith(
+                            color: textColor,
+                          ),
+                        ),
+                        if (word.level != null) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          _LevelBadge(level: word.level!, dark: isSelected),
+                        ],
+                      ],
+                    ),
+                    if (word.exampleSentence != null) ...[
+                      const SizedBox(height: 2),
+                      Text(
+                        word.exampleSentence!,
+                        style: AppTextStyles.caption.copyWith(
+                          color: isSelected
+                              ? Colors.white.withValues(alpha: 0.85)
+                              : context.colorInkMuted,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LevelBadge extends StatelessWidget {
+  const _LevelBadge({required this.level, required this.dark});
+
+  final String level;
+  final bool dark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+      decoration: BoxDecoration(
+        color: dark
+            ? Colors.white.withValues(alpha: 0.22)
+            : AppColors.accent.withValues(alpha: 0.14),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Text(
+        level,
+        style: AppTextStyles.caption.copyWith(
+          color: dark ? Colors.white : AppColors.accent,
+          fontWeight: FontWeight.w700,
+          fontSize: 11,
         ),
       ),
     );

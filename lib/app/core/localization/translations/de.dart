@@ -6,6 +6,7 @@ const Map<String, String> de = {
   LocaleKeys.commonFullName: 'Vollständiger Name',
   LocaleKeys.commonOr: 'oder',
   LocaleKeys.commonSave: 'Speichern',
+  LocaleKeys.commonCancel: 'Abbrechen',
   LocaleKeys.commonComingSoon: 'Demnächst verfügbar',
   LocaleKeys.commonSomethingWentWrong: 'Etwas ist schiefgelaufen',
   LocaleKeys.commonSuccess: 'Erfolgreich',
@@ -135,8 +136,18 @@ const Map<String, String> de = {
   LocaleKeys.scanTryAgain: 'Erneut versuchen',
   LocaleKeys.scanProcessingError:
       'Das Foto konnte nicht gelesen werden. Bitte versuche es erneut.',
-  LocaleKeys.scanWordsCapturedSuccess:
-      '@count Wörter erfasst! Die Erstellung von Karteikarten folgt bald.',
+  LocaleKeys.scanDetectedLanguage: 'Erkannt: @language',
+  LocaleKeys.scanTargetLanguageTitle: 'Übersetzen in',
+  LocaleKeys.scanTargetLanguageBody:
+      'In welche Sprache möchtest du diese Wörter übersetzen lassen?',
+  LocaleKeys.scanTargetLanguageHint: 'z. B. Englisch, Spanisch, Deutsch …',
+  LocaleKeys.scanTargetLanguageRequired:
+      'Gib eine Sprache ein, um fortzufahren',
+  LocaleKeys.scanTargetLanguageSave: 'Stapel erstellen',
+  LocaleKeys.scanSavingDeck: 'Dein Stapel wird gespeichert …',
+  LocaleKeys.scanDeckCreatedSuccess: '@name ist bereit mit @count Wörtern!',
+  LocaleKeys.scanDeckSaveError:
+      'Dein Stapel konnte nicht gespeichert werden. Bitte versuche es erneut.',
 
   LocaleKeys.permissionCameraTitle: 'Kamerazugriff erlauben',
   LocaleKeys.permissionCameraBody: 'LexiSnap braucht Zugriff auf deine Kamera, um Text aus Büchern, Speisekarten, Schildern und mehr zu scannen.',
