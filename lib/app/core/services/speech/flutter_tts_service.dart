@@ -7,14 +7,49 @@ import 'text_to_speech_service.dart';
 class FlutterTtsService implements TextToSpeechService {
   final _tts = FlutterTts();
 
-  /// Maps the ISO 639-1 codes this app deals with (from `extract-vocabulary`
-  /// language detection) to the BCP-47 locale tags `flutter_tts` expects.
+  /// Maps every ISO 639-1 code in `VocabularyLanguages.all` (plus AI-
+  /// detected source languages, which use the same codes) to the BCP-47
+  /// locale tag `flutter_tts` expects. Falls back to the device's default
+  /// voice for anything not listed here or not installed on-device.
   static const _localesByLanguageCode = {
     'en': 'en-US',
-    'de': 'de-DE',
-    'fr': 'fr-FR',
     'es': 'es-ES',
+    'fr': 'fr-FR',
+    'de': 'de-DE',
+    'it': 'it-IT',
+    'pt': 'pt-PT',
+    'nl': 'nl-NL',
+    'ru': 'ru-RU',
+    'zh': 'zh-CN',
+    'ja': 'ja-JP',
     'ko': 'ko-KR',
+    'ar': 'ar-SA',
+    'hi': 'hi-IN',
+    'bn': 'bn-BD',
+    'tr': 'tr-TR',
+    'vi': 'vi-VN',
+    'th': 'th-TH',
+    'id': 'id-ID',
+    'pl': 'pl-PL',
+    'uk': 'uk-UA',
+    'el': 'el-GR',
+    'he': 'he-IL',
+    'sv': 'sv-SE',
+    'no': 'nb-NO',
+    'da': 'da-DK',
+    'fi': 'fi-FI',
+    'cs': 'cs-CZ',
+    'ro': 'ro-RO',
+    'hu': 'hu-HU',
+    'sw': 'sw-KE',
+    'tl': 'fil-PH',
+    'ms': 'ms-MY',
+    'fa': 'fa-IR',
+    'ur': 'ur-PK',
+    'ta': 'ta-IN',
+    'hr': 'hr-HR',
+    'sk': 'sk-SK',
+    'bg': 'bg-BG',
   };
 
   @override

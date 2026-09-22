@@ -10,6 +10,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../data/models/flashcard.dart';
+import '../../data/vocabulary_languages.dart';
 import 'deck_detail_controller.dart';
 
 class DeckDetailView extends GetView<DeckDetailController> {
@@ -78,8 +79,13 @@ class DeckDetailView extends GetView<DeckDetailController> {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   LocaleKeys.deckSummary.trParams({
-                    'source': deck.sourceLanguage ?? '?',
-                    'target': deck.targetLanguage,
+                    'source':
+                        VocabularyLanguages.byCode(deck.sourceLanguage)?.flag ??
+                        deck.sourceLanguage ??
+                        '?',
+                    'target':
+                        VocabularyLanguages.byCode(deck.targetLanguage)?.flag ??
+                        deck.targetLanguage,
                     'count': '${deck.cardCount}',
                   }),
                   style: AppTextStyles.caption.copyWith(
@@ -91,6 +97,7 @@ class DeckDetailView extends GetView<DeckDetailController> {
                   _FlashcardTile(
                     card: card,
                     sourceLanguage: deck.sourceLanguage,
+                    targetLanguage: deck.targetLanguage,
                   ),
                   const SizedBox(height: AppSpacing.sm),
                 ],
@@ -104,10 +111,15 @@ class DeckDetailView extends GetView<DeckDetailController> {
 }
 
 class _FlashcardTile extends StatelessWidget {
-  const _FlashcardTile({required this.card, required this.sourceLanguage});
+  const _FlashcardTile({
+    required this.card,
+    required this.sourceLanguage,
+    required this.targetLanguage,
+  });
 
   final Flashcard card;
   final String? sourceLanguage;
+  final String targetLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -152,9 +164,26 @@ class _FlashcardTile extends StatelessWidget {
               ),
             ],
           ),
-          Text(
-            card.translation,
-            style: AppTextStyles.bodyMedium.copyWith(color: AppColors.accent),
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  card.translation,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: AppColors.accent,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.volume_up_outlined, size: 20),
+                onPressed: () => Get.find<TextToSpeechService>().speak(
+                  card.translation,
+                  languageCode: targetLanguage,
+                ),
+                color: AppColors.accent,
+                visualDensity: VisualDensity.compact,
+              ),
+            ],
           ),
           if (card.wordDescription != null) ...[
             const SizedBox(height: AppSpacing.xs),
@@ -245,7 +274,7 @@ void _showRenameSheet(
                 controller: nameController,
                 textInputAction: TextInputAction.done,
                 validator: (value) => (value == null || value.trim().isEmpty)
-                    ? LocaleKeys.scanTargetLanguageRequired.tr
+                    ? LocaleKeys.validatorFieldRequired.tr
                     : null,
               ),
               const SizedBox(height: AppSpacing.lg),

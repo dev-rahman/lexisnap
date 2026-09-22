@@ -71,10 +71,11 @@ const Map<String, String> en = {
   LocaleKeys.homeNoDecksTitle: 'No decks yet',
   LocaleKeys.homeNoDecksBody: 'Scan something to create your first deck.',
   LocaleKeys.homeDeckCardCount: '@count words',
+  LocaleKeys.homeSeeAll: 'See all',
 
   LocaleKeys.navHome: 'Home',
   LocaleKeys.navScan: 'Scan',
-  LocaleKeys.navProfile: 'Profile',
+  LocaleKeys.navDecks: 'Decks',
 
   LocaleKeys.profileYourAccount: 'Your account',
   LocaleKeys.profileNotifications: 'Notifications',
@@ -137,9 +138,6 @@ const Map<String, String> en = {
   LocaleKeys.scanTargetLanguageTitle: 'Translate into',
   LocaleKeys.scanTargetLanguageBody:
       'What language would you like these words translated into?',
-  LocaleKeys.scanTargetLanguageHint: 'e.g. English, Spanish, German…',
-  LocaleKeys.scanTargetLanguageRequired: 'Enter a language to continue',
-  LocaleKeys.scanTargetLanguageSave: 'Create deck',
   LocaleKeys.scanSavingDeck: 'Saving your deck…',
   LocaleKeys.scanDeckCreatedSuccess: '@name is ready with @count words!',
   LocaleKeys.scanDeckSaveError: "Couldn't save your deck. Please try again.",

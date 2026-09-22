@@ -70,10 +70,11 @@ const Map<String, String> ko = {
   LocaleKeys.homeNoDecksTitle: '아직 덱이 없어요',
   LocaleKeys.homeNoDecksBody: '스캔해서 첫 번째 덱을 만들어보세요.',
   LocaleKeys.homeDeckCardCount: '단어 @count개',
+  LocaleKeys.homeSeeAll: '전체 보기',
 
   LocaleKeys.navHome: '홈',
   LocaleKeys.navScan: '스캔',
-  LocaleKeys.navProfile: '프로필',
+  LocaleKeys.navDecks: '덱',
 
   LocaleKeys.profileYourAccount: '내 계정',
   LocaleKeys.profileNotifications: '알림',
@@ -133,9 +134,6 @@ const Map<String, String> ko = {
   LocaleKeys.scanDetectedLanguage: '감지된 언어: @language',
   LocaleKeys.scanTargetLanguageTitle: '번역할 언어',
   LocaleKeys.scanTargetLanguageBody: '이 단어들을 어떤 언어로 번역하고 싶으세요?',
-  LocaleKeys.scanTargetLanguageHint: '예: 영어, 스페인어, 독일어…',
-  LocaleKeys.scanTargetLanguageRequired: '계속하려면 언어를 입력해주세요',
-  LocaleKeys.scanTargetLanguageSave: '덱 만들기',
   LocaleKeys.scanSavingDeck: '덱을 저장하는 중…',
   LocaleKeys.scanDeckCreatedSuccess: '@name 덱이 단어 @count개로 준비됐어요!',
   LocaleKeys.scanDeckSaveError: '덱을 저장하지 못했어요. 다시 시도해주세요.',

@@ -8,15 +8,19 @@ abstract class AppRoutes {
   static const forgotPassword = '/forgot-password';
 
   /// The authenticated shell: bottom-bar navigation between Home and
-  /// Profile tabs. This is the post-login landing route.
+  /// Decks tabs, with a floating button to [profile]. This is the
+  /// post-login landing route.
   static const main = '/main';
 
   /// Full-screen scan flow, pushed on top of [main].
   static const scan = '/scan';
 
-  /// A single saved deck's flashcards, pushed from Home. Expects the
+  /// A single saved deck's flashcards, pushed from Home/Decks. Expects the
   /// deck's id as the route arguments.
   static const deckDetail = '/deck';
+
+  /// Account & settings, pushed from the floating profile button.
+  static const profile = '/profile';
 
   /// Help & support, pushed from Profile.
   static const help = '/help';

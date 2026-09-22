@@ -5,7 +5,7 @@ import '../../core/services/deck/deck_repository.dart';
 import '../../core/utils/app_snackbar.dart';
 import '../../data/models/deck.dart';
 import '../../data/models/flashcard.dart';
-import '../home/home_controller.dart';
+import '../decks/decks_controller.dart';
 
 class DeckDetailController extends GetxController {
   DeckRepository get _deckRepository => Get.find<DeckRepository>();
@@ -52,7 +52,7 @@ class DeckDetailController extends GetxController {
         createdAt: current.createdAt,
         notes: current.notes,
       );
-      await Get.find<HomeController>().refreshDecks();
+      await Get.find<DecksController>().refreshDecks();
     } catch (_) {
       AppSnackbar.error(LocaleKeys.deckRenameError.tr);
     }
@@ -61,7 +61,7 @@ class DeckDetailController extends GetxController {
   Future<void> deleteDeck() async {
     try {
       await _deckRepository.deleteDeck(_deckId);
-      await Get.find<HomeController>().refreshDecks();
+      await Get.find<DecksController>().refreshDecks();
       Get.back();
       AppSnackbar.success(LocaleKeys.deckDeletedSuccess.tr);
     } catch (_) {

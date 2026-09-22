@@ -74,10 +74,11 @@ const Map<String, String> fr = {
   LocaleKeys.homeNoDecksBody:
       'Scannez quelque chose pour créer votre premier paquet.',
   LocaleKeys.homeDeckCardCount: '@count mots',
+  LocaleKeys.homeSeeAll: 'Tout voir',
 
   LocaleKeys.navHome: 'Accueil',
   LocaleKeys.navScan: 'Scanner',
-  LocaleKeys.navProfile: 'Profil',
+  LocaleKeys.navDecks: 'Paquets',
 
   LocaleKeys.profileYourAccount: 'Votre compte',
   LocaleKeys.profileNotifications: 'Notifications',
@@ -144,9 +145,6 @@ const Map<String, String> fr = {
   LocaleKeys.scanTargetLanguageTitle: 'Traduire en',
   LocaleKeys.scanTargetLanguageBody:
       'Dans quelle langue souhaitez-vous traduire ces mots ?',
-  LocaleKeys.scanTargetLanguageHint: 'ex. anglais, espagnol, allemand…',
-  LocaleKeys.scanTargetLanguageRequired: 'Saisissez une langue pour continuer',
-  LocaleKeys.scanTargetLanguageSave: 'Créer le paquet',
   LocaleKeys.scanSavingDeck: 'Enregistrement de votre paquet…',
   LocaleKeys.scanDeckCreatedSuccess: '@name est prêt avec @count mots !',
   LocaleKeys.scanDeckSaveError:

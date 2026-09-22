@@ -10,7 +10,7 @@ import '../theme/app_spacing.dart';
 
 /// The app's bottom navigation, adapted per platform rather than reskinned
 /// to look the same everywhere:
-///  - iOS: a floating "liquid glass" pill (Home/Profile) with a Scan button
+///  - iOS: a floating "liquid glass" pill (Home/Decks) with a Scan button
 ///    that floats above it, and scroll-aware minimize like iOS 26's tab bar.
 ///  - Android/other: Flutter's own stock Material 3 [NavigationBar], themed
 ///    to the app's palette but otherwise the platform-idiomatic component.
@@ -19,7 +19,7 @@ class AppBottomNavBar extends StatelessWidget {
     super.key,
     required this.currentIndex,
     required this.onHomeTap,
-    required this.onProfileTap,
+    required this.onDecksTap,
     required this.onScanTap,
     this.isMinimized = false,
   });
@@ -35,7 +35,7 @@ class AppBottomNavBar extends StatelessWidget {
   final int currentIndex;
   final bool isMinimized;
   final VoidCallback onHomeTap;
-  final VoidCallback onProfileTap;
+  final VoidCallback onDecksTap;
   final VoidCallback onScanTap;
 
   @override
@@ -45,14 +45,14 @@ class AppBottomNavBar extends StatelessWidget {
         currentIndex: currentIndex,
         isMinimized: isMinimized,
         onHomeTap: onHomeTap,
-        onProfileTap: onProfileTap,
+        onDecksTap: onDecksTap,
         onScanTap: onScanTap,
       );
     }
     return _StockAndroidNavBar(
       currentIndex: currentIndex,
       onHomeTap: onHomeTap,
-      onProfileTap: onProfileTap,
+      onDecksTap: onDecksTap,
       onScanTap: onScanTap,
     );
   }
@@ -65,13 +65,13 @@ class _StockAndroidNavBar extends StatelessWidget {
   const _StockAndroidNavBar({
     required this.currentIndex,
     required this.onHomeTap,
-    required this.onProfileTap,
+    required this.onDecksTap,
     required this.onScanTap,
   });
 
   final int currentIndex;
   final VoidCallback onHomeTap;
-  final VoidCallback onProfileTap;
+  final VoidCallback onDecksTap;
   final VoidCallback onScanTap;
 
   // Material 3's default NavigationBar height (80) reads as oversized next
@@ -81,7 +81,7 @@ class _StockAndroidNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Map our 2 persistent tabs (Home/Profile) onto 3 visible
+    // Map our 2 persistent tabs (Home/Decks) onto 3 visible
     // destinations, with Scan in the middle. Scan never stays "selected" -
     // tapping it pushes a route rather than switching tabs.
     final materialIndex = currentIndex == 0 ? 0 : 2;
@@ -131,7 +131,7 @@ class _StockAndroidNavBar extends StatelessWidget {
               case 1:
                 onScanTap();
               case 2:
-                onProfileTap();
+                onDecksTap();
             }
           },
           destinations: [
@@ -146,9 +146,9 @@ class _StockAndroidNavBar extends StatelessWidget {
               label: LocaleKeys.navScan.tr,
             ),
             NavigationDestination(
-              icon: const Icon(Icons.person_outline_rounded),
-              selectedIcon: const Icon(Icons.person_rounded),
-              label: LocaleKeys.navProfile.tr,
+              icon: const Icon(Icons.style_outlined),
+              selectedIcon: const Icon(Icons.style_rounded),
+              label: LocaleKeys.navDecks.tr,
             ),
           ],
         ),
@@ -166,7 +166,7 @@ class _LiquidTabBar extends StatelessWidget {
     required this.currentIndex,
     required this.isMinimized,
     required this.onHomeTap,
-    required this.onProfileTap,
+    required this.onDecksTap,
     required this.onScanTap,
   });
 
@@ -178,7 +178,7 @@ class _LiquidTabBar extends StatelessWidget {
   final int currentIndex;
   final bool isMinimized;
   final VoidCallback onHomeTap;
-  final VoidCallback onProfileTap;
+  final VoidCallback onDecksTap;
   final VoidCallback onScanTap;
 
   double get _barHeight =>
@@ -223,12 +223,12 @@ class _LiquidTabBar extends StatelessWidget {
                   ),
                   SizedBox(width: _scanButtonSize),
                   _NavItem(
-                    outlinedIcon: Icons.person_outline_rounded,
-                    filledIcon: Icons.person_rounded,
-                    label: LocaleKeys.navProfile.tr,
+                    outlinedIcon: Icons.style_outlined,
+                    filledIcon: Icons.style_rounded,
+                    label: LocaleKeys.navDecks.tr,
                     isActive: currentIndex == 1,
                     showLabel: !isMinimized,
-                    onTap: onProfileTap,
+                    onTap: onDecksTap,
                   ),
                 ],
               ),

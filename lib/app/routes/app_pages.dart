@@ -14,6 +14,8 @@ import '../modules/main/main_binding.dart';
 import '../modules/main/main_view.dart';
 import '../modules/onboarding/onboarding_binding.dart';
 import '../modules/onboarding/onboarding_view.dart';
+import '../modules/profile/profile_binding.dart';
+import '../modules/profile/profile_view.dart';
 import '../modules/scan/scan_binding.dart';
 import '../modules/scan/scan_view.dart';
 import '../modules/splash/splash_binding.dart';
@@ -71,6 +73,12 @@ class AppPages {
       name: AppRoutes.deckDetail,
       page: () => const DeckDetailView(),
       binding: DeckDetailBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfileView(),
+      binding: ProfileBinding(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
     ),
     GetPage(

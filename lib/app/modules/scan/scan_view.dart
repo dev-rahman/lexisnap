@@ -12,7 +12,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
-import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/language_select_sheet.dart';
 import '../../core/widgets/permission_sheets.dart';
 import '../../data/models/vocabulary_word.dart';
 import 'scan_controller.dart';
@@ -403,7 +403,7 @@ class _WordSelection extends GetView<ScanController> {
               label: LocaleKeys.scanContinueButton.tr,
               onPressed: controller.selectedWords.isEmpty
                   ? null
-                  : () => _showTargetLanguageDialog(context, controller),
+                  : () => _pickTargetLanguage(context, controller),
             ),
           ),
         ),
@@ -412,76 +412,17 @@ class _WordSelection extends GetView<ScanController> {
   }
 }
 
-Future<void> _showTargetLanguageDialog(
+Future<void> _pickTargetLanguage(
   BuildContext context,
   ScanController controller,
 ) async {
-  final textController = TextEditingController();
-  final formKey = GlobalKey<FormState>();
-
-  final targetLanguage = await showModalBottomSheet<String>(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
-    builder: (sheetContext) {
-      return Padding(
-        padding: EdgeInsets.only(
-          left: AppSpacing.lg,
-          right: AppSpacing.lg,
-          top: AppSpacing.lg,
-          bottom: MediaQuery.of(sheetContext).viewInsets.bottom + AppSpacing.lg,
-        ),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LocaleKeys.scanTargetLanguageBody.tr,
-                style: AppTextStyles.heading2,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AppTextField(
-                label: LocaleKeys.scanTargetLanguageTitle.tr,
-                controller: textController,
-                hintText: LocaleKeys.scanTargetLanguageHint.tr,
-                textInputAction: TextInputAction.done,
-                validator: (value) => (value == null || value.trim().isEmpty)
-                    ? LocaleKeys.scanTargetLanguageRequired.tr
-                    : null,
-                onFieldSubmitted: (_) {
-                  if (formKey.currentState!.validate()) {
-                    Navigator.pop(sheetContext, textController.text.trim());
-                  }
-                },
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              AppButton(
-                label: LocaleKeys.scanTargetLanguageSave.tr,
-                onPressed: () {
-                  if (formKey.currentState!.validate()) {
-                    Navigator.pop(sheetContext, textController.text.trim());
-                  }
-                },
-              ),
-              const SizedBox(height: AppSpacing.xs),
-              AppButton(
-                variant: AppButtonVariant.text,
-                label: LocaleKeys.commonCancel.tr,
-                onPressed: () => Navigator.pop(sheetContext),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
+  final targetLanguage = await showLanguageSelectSheet(
+    context,
+    title: LocaleKeys.scanTargetLanguageTitle.tr,
+    subtitle: LocaleKeys.scanTargetLanguageBody.tr,
   );
 
-  if (targetLanguage != null && targetLanguage.isNotEmpty) {
+  if (targetLanguage != null) {
     await controller.saveDeck(targetLanguage);
   }
 }

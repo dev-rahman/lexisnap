@@ -81,11 +81,12 @@ class LocaleKeys {
   static const homeNoDecksTitle = 'home_no_decks_title';
   static const homeNoDecksBody = 'home_no_decks_body';
   static const homeDeckCardCount = 'home_deck_card_count';
+  static const homeSeeAll = 'home_see_all';
 
   // Bottom nav
   static const navHome = 'nav_home';
   static const navScan = 'nav_scan';
-  static const navProfile = 'nav_profile';
+  static const navDecks = 'nav_decks';
 
   // Profile
   static const profileYourAccount = 'profile_your_account';
@@ -147,9 +148,6 @@ class LocaleKeys {
   static const scanDetectedLanguage = 'scan_detected_language';
   static const scanTargetLanguageTitle = 'scan_target_language_title';
   static const scanTargetLanguageBody = 'scan_target_language_body';
-  static const scanTargetLanguageHint = 'scan_target_language_hint';
-  static const scanTargetLanguageRequired = 'scan_target_language_required';
-  static const scanTargetLanguageSave = 'scan_target_language_save';
   static const scanSavingDeck = 'scan_saving_deck';
   static const scanDeckCreatedSuccess = 'scan_deck_created_success';
   static const scanDeckSaveError = 'scan_deck_save_error';

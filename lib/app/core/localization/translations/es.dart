@@ -71,10 +71,11 @@ const Map<String, String> es = {
   LocaleKeys.homeNoDecksTitle: 'Aún no tienes mazos',
   LocaleKeys.homeNoDecksBody: 'Escanea algo para crear tu primer mazo.',
   LocaleKeys.homeDeckCardCount: '@count palabras',
+  LocaleKeys.homeSeeAll: 'Ver todo',
 
   LocaleKeys.navHome: 'Inicio',
   LocaleKeys.navScan: 'Escanear',
-  LocaleKeys.navProfile: 'Perfil',
+  LocaleKeys.navDecks: 'Mazos',
 
   LocaleKeys.profileYourAccount: 'Tu cuenta',
   LocaleKeys.profileNotifications: 'Notificaciones',
@@ -139,9 +140,6 @@ const Map<String, String> es = {
   LocaleKeys.scanTargetLanguageTitle: 'Traducir a',
   LocaleKeys.scanTargetLanguageBody:
       '¿A qué idioma te gustaría traducir estas palabras?',
-  LocaleKeys.scanTargetLanguageHint: 'p. ej. inglés, español, alemán…',
-  LocaleKeys.scanTargetLanguageRequired: 'Escribe un idioma para continuar',
-  LocaleKeys.scanTargetLanguageSave: 'Crear mazo',
   LocaleKeys.scanSavingDeck: 'Guardando tu mazo…',
   LocaleKeys.scanDeckCreatedSuccess: '¡@name está listo con @count palabras!',
   LocaleKeys.scanDeckSaveError:

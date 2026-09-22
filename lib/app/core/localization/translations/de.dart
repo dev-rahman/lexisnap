@@ -72,10 +72,11 @@ const Map<String, String> de = {
   LocaleKeys.homeNoDecksBody:
       'Scanne etwas, um deinen ersten Stapel zu erstellen.',
   LocaleKeys.homeDeckCardCount: '@count Wörter',
+  LocaleKeys.homeSeeAll: 'Alle anzeigen',
 
   LocaleKeys.navHome: 'Start',
   LocaleKeys.navScan: 'Scannen',
-  LocaleKeys.navProfile: 'Profil',
+  LocaleKeys.navDecks: 'Stapel',
 
   LocaleKeys.profileYourAccount: 'Dein Konto',
   LocaleKeys.profileNotifications: 'Benachrichtigungen',
@@ -141,10 +142,6 @@ const Map<String, String> de = {
   LocaleKeys.scanTargetLanguageTitle: 'Übersetzen in',
   LocaleKeys.scanTargetLanguageBody:
       'In welche Sprache möchtest du diese Wörter übersetzen lassen?',
-  LocaleKeys.scanTargetLanguageHint: 'z. B. Englisch, Spanisch, Deutsch …',
-  LocaleKeys.scanTargetLanguageRequired:
-      'Gib eine Sprache ein, um fortzufahren',
-  LocaleKeys.scanTargetLanguageSave: 'Stapel erstellen',
   LocaleKeys.scanSavingDeck: 'Dein Stapel wird gespeichert …',
   LocaleKeys.scanDeckCreatedSuccess: '@name ist bereit mit @count Wörtern!',
   LocaleKeys.scanDeckSaveError:

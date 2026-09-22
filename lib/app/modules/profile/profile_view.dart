@@ -7,11 +7,10 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
+import '../../core/utils/initials.dart';
 import '../../core/utils/validators.dart';
-import '../../core/widgets/app_bottom_nav_bar.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
-import '../../core/widgets/app_top_safe_area.dart';
 import '../../core/widgets/language_picker_sheet.dart';
 import '../../routes/app_routes.dart';
 import 'profile_controller.dart';
@@ -22,143 +21,134 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: Get.back,
+        ),
+      ),
       body: SafeArea(
-        bottom: false,
-        top: false,
-        child: AppTopSafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              0,
-              AppSpacing.lg,
-              AppBottomNavBar.clearance,
-            ),
-            child: Column(
-              children: [
-                Obx(() {
-                  controller.refreshTrigger.value;
-                  final user = controller.user;
-                  final actualName = user?.fullName?.isNotEmpty == true
-                      ? user!.fullName!
-                      : null;
-                  final displayName =
-                      actualName ?? LocaleKeys.profileYourAccount.tr;
-                  final initials = _initialsFor(actualName, user?.email);
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
+          child: Column(
+            children: [
+              Obx(() {
+                controller.refreshTrigger.value;
+                final user = controller.user;
+                final actualName = user?.fullName?.isNotEmpty == true
+                    ? user!.fullName!
+                    : null;
+                final displayName =
+                    actualName ?? LocaleKeys.profileYourAccount.tr;
+                final initials = initialsFor(actualName, user?.email);
 
-                  return Column(
-                    children: [
-                      Container(
-                        height: 76,
-                        width: 76,
-                        decoration: const BoxDecoration(
-                          color: AppColors.ink,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          child: Text(
-                            initials,
-                            style: AppTextStyles.heading1.copyWith(
-                              color: Colors.white,
-                              fontSize: 26,
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.md),
-                      InkWell(
-                        onTap: () =>
-                            _showEditNameSheet(context, controller, actualName),
-                        borderRadius: BorderRadius.circular(AppRadius.sm),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: AppSpacing.sm,
-                            vertical: 2,
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(displayName, style: AppTextStyles.heading2),
-                              const SizedBox(width: AppSpacing.xs),
-                              Icon(
-                                Icons.edit_outlined,
-                                size: 16,
-                                color: context.colorInkMuted,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (user?.email != null) ...[
-                        const SizedBox(height: AppSpacing.xs),
-                        Text(
-                          user!.email!,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ],
-                  );
-                }),
-                const SizedBox(height: AppSpacing.lg * 1.5),
-                _SettingsGroup(
+                return Column(
                   children: [
-                    _SettingsTile(
-                      icon: Icons.notifications_outlined,
-                      label: LocaleKeys.profileNotifications.tr,
-                      onTap: () => AppSnackbar.info(
-                        LocaleKeys.profileNotificationsComingSoon.tr,
+                    Container(
+                      height: 76,
+                      width: 76,
+                      decoration: const BoxDecoration(
+                        color: AppColors.ink,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          initials,
+                          style: AppTextStyles.heading1.copyWith(
+                            color: Colors.white,
+                            fontSize: 26,
+                          ),
+                        ),
                       ),
                     ),
-                    _SettingsTile(
-                      icon: Icons.palette_outlined,
-                      label: LocaleKeys.profileAppearance.tr,
-                      onTap: () => _showThemePicker(context, controller),
-                    ),
-                    _SettingsTile(
-                      icon: Icons.language_outlined,
-                      label: LocaleKeys.profileLanguage.tr,
-                      onTap: () => showLanguagePickerSheet(context),
-                    ),
-                    _SettingsTile(
-                      icon: Icons.help_outline_rounded,
-                      label: LocaleKeys.profileHelpSupport.tr,
-                      onTap: () => Get.toNamed(AppRoutes.help),
-                    ),
-                    _SettingsTile(
-                      icon: Icons.info_outline_rounded,
-                      label: LocaleKeys.profileAbout.tr,
-                      onTap: () => AppSnackbar.info(
-                        LocaleKeys.profileAboutComingSoon.tr,
+                    const SizedBox(height: AppSpacing.md),
+                    InkWell(
+                      onTap: () =>
+                          _showEditNameSheet(context, controller, actualName),
+                      borderRadius: BorderRadius.circular(AppRadius.sm),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: AppSpacing.sm,
+                          vertical: 2,
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(displayName, style: AppTextStyles.heading2),
+                            const SizedBox(width: AppSpacing.xs),
+                            Icon(
+                              Icons.edit_outlined,
+                              size: 16,
+                              color: context.colorInkMuted,
+                            ),
+                          ],
+                        ),
                       ),
-                      showDivider: false,
                     ),
+                    if (user?.email != null) ...[
+                      const SizedBox(height: AppSpacing.xs),
+                      Text(
+                        user!.email!,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                    ],
                   ],
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Obx(
-                  () => AppButton(
-                    label: LocaleKeys.profileSignOut.tr,
-                    variant: AppButtonVariant.outlined,
-                    color: AppColors.alert,
-                    isLoading: controller.isSigningOut.value,
-                    onPressed: controller.signOut,
+                );
+              }),
+              const SizedBox(height: AppSpacing.lg * 1.5),
+              _SettingsGroup(
+                children: [
+                  _SettingsTile(
+                    icon: Icons.notifications_outlined,
+                    label: LocaleKeys.profileNotifications.tr,
+                    onTap: () => AppSnackbar.info(
+                      LocaleKeys.profileNotificationsComingSoon.tr,
+                    ),
                   ),
+                  _SettingsTile(
+                    icon: Icons.palette_outlined,
+                    label: LocaleKeys.profileAppearance.tr,
+                    onTap: () => _showThemePicker(context, controller),
+                  ),
+                  _SettingsTile(
+                    icon: Icons.language_outlined,
+                    label: LocaleKeys.profileLanguage.tr,
+                    onTap: () => showLanguagePickerSheet(context),
+                  ),
+                  _SettingsTile(
+                    icon: Icons.help_outline_rounded,
+                    label: LocaleKeys.profileHelpSupport.tr,
+                    onTap: () => Get.toNamed(AppRoutes.help),
+                  ),
+                  _SettingsTile(
+                    icon: Icons.info_outline_rounded,
+                    label: LocaleKeys.profileAbout.tr,
+                    onTap: () =>
+                        AppSnackbar.info(LocaleKeys.profileAboutComingSoon.tr),
+                    showDivider: false,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              Obx(
+                () => AppButton(
+                  label: LocaleKeys.profileSignOut.tr,
+                  variant: AppButtonVariant.outlined,
+                  color: AppColors.alert,
+                  isLoading: controller.isSigningOut.value,
+                  onPressed: controller.signOut,
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  String _initialsFor(String? name, String? email) {
-    if (name != null && name.isNotEmpty) {
-      final parts = name.trim().split(RegExp(r'\s+'));
-      final letters = parts.take(2).map((p) => p.isNotEmpty ? p[0] : '').join();
-      if (letters.isNotEmpty) return letters.toUpperCase();
-    }
-    if (email != null && email.isNotEmpty) return email[0].toUpperCase();
-    return '?';
   }
 }
 

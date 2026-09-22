@@ -10,8 +10,9 @@ import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/vocabulary_extractor.dart';
 import '../../data/models/deck_word.dart';
 import '../../data/models/vocabulary_extraction_result.dart';
+import '../../data/models/vocabulary_language.dart';
 import '../../data/models/vocabulary_word.dart';
-import '../home/home_controller.dart';
+import '../decks/decks_controller.dart';
 
 enum ScanStage {
   /// Choosing between camera and gallery.
@@ -143,7 +144,7 @@ class ScanController extends GetxController {
   /// Translates the current selection into [targetLanguage] and saves it
   /// as a new deck in Supabase. On failure, the selection is preserved and
   /// the user stays on the word-selection screen to retry.
-  Future<void> saveDeck(String targetLanguage) async {
+  Future<void> saveDeck(VocabularyLanguage targetLanguage) async {
     final selected = selectedWords.toList();
     if (selected.isEmpty) return;
 
@@ -152,7 +153,7 @@ class ScanController extends GetxController {
       final translations = await _translationAiService.translateWords(
         words: selected.map((word) => word.word).toList(),
         sourceLanguage: sourceLanguageCode.value,
-        targetLanguage: targetLanguage,
+        targetLanguage: targetLanguage.name,
       );
 
       final deckWords = [
@@ -172,17 +173,17 @@ class ScanController extends GetxController {
 
       final deckName =
           suggestedDeckName.value ??
-          '${sourceLanguageName.value ?? 'Scan'} → $targetLanguage';
+          '${sourceLanguageName.value ?? 'Scan'} → ${targetLanguage.name}';
 
       await _deckRepository.createDeck(
         name: deckName,
         sourceLanguage: sourceLanguageCode.value,
-        targetLanguage: targetLanguage,
+        targetLanguage: targetLanguage.code,
         words: deckWords,
       );
 
       final count = deckWords.length;
-      await Get.find<HomeController>().refreshDecks();
+      await Get.find<DecksController>().refreshDecks();
       Get.back();
       AppSnackbar.success(
         LocaleKeys.scanDeckCreatedSuccess.trParams({
