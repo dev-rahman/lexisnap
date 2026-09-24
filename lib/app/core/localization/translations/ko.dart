@@ -209,6 +209,15 @@ const Map<String, String> ko = {
   LocaleKeys.reminderOff: '끄기',
   LocaleKeys.reminderPermissionDenied: 'LexiSnap의 알림이 꺼져 있어요. 설정에서 켜면 알림을 받을 수 있어요.',
 
+
+  LocaleKeys.studyModeSmart: '스마트',
+  LocaleKeys.studyModeSmartHint: '카드에 맞춰 자동 선택',
+  LocaleKeys.studyModeQuiz: '퀴즈',
+  LocaleKeys.studyModeQuizHint: '네 개 중에서 고르기',
+  LocaleKeys.studyModeFlip: '뒤집기',
+  LocaleKeys.studyModeFlipHint: '카드를 뒤집고 쓸어 넘기기',
+  LocaleKeys.studyModeListenHint: '손대지 않고 듣기, 채점 없음',
+
   LocaleKeys.goalSettingsTitle: '일일 목표',
   LocaleKeys.goalCardsPerDay: '하루 @count장',
 };

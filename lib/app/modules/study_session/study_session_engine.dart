@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../../data/models/flashcard.dart';
 import '../../data/models/review_grade.dart';
+import '../../data/models/study_mode.dart';
 
 /// How a single card is being asked this time round.
 enum StudyStepKind {
@@ -39,6 +40,7 @@ class StudySessionEngine {
   StudySessionEngine({
     required List<Flashcard> deck,
     required int cap,
+    this.mode = StudyMode.smart,
     Random? random,
   }) : _pool = List.of(deck),
        _random = random ?? Random() {
@@ -63,6 +65,10 @@ class StudySessionEngine {
   /// Below this many successful reviews a card is still being learned, so
   /// it's asked as multiple choice rather than free recall.
   static const _recallFromRepetitions = 3;
+
+  /// How the learner asked to be quizzed. [StudyMode.smart] leaves the
+  /// choice to the engine; the others override it for every card.
+  final StudyMode mode;
 
   final List<Flashcard> _pool;
   final Random _random;
@@ -128,8 +134,17 @@ class StudySessionEngine {
     final card = _queue.first;
     final distractors = _distractorsFor(card);
 
-    if (card.repetitions >= _recallFromRepetitions ||
-        distractors.length < _optionCount - 1) {
+    // A deck with too few distinct translations can't offer four options,
+    // so it falls back to recall however the mode was set.
+    final canOfferChoice = distractors.length >= _optionCount - 1;
+    final wantsChoice = switch (mode) {
+      StudyMode.quiz => true,
+      StudyMode.flip => false,
+      StudyMode.smart ||
+      StudyMode.listen => card.repetitions < _recallFromRepetitions,
+    };
+
+    if (!canOfferChoice || !wantsChoice) {
       return StudyStep(card: card, kind: StudyStepKind.recall);
     }
 

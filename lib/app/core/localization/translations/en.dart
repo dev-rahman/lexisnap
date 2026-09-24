@@ -213,6 +213,15 @@ const Map<String, String> en = {
   LocaleKeys.reminderPermissionDenied:
       'Notifications are off for LexiSnap. Enable them in Settings to get reminders.',
 
+
+  LocaleKeys.studyModeSmart: 'Smart',
+  LocaleKeys.studyModeSmartHint: 'Adapts to each card',
+  LocaleKeys.studyModeQuiz: 'Quiz',
+  LocaleKeys.studyModeQuizHint: 'Pick from four options',
+  LocaleKeys.studyModeFlip: 'Flip',
+  LocaleKeys.studyModeFlipHint: 'Flip the card and swipe',
+  LocaleKeys.studyModeListenHint: 'Hands-free audio, nothing graded',
+
   LocaleKeys.goalSettingsTitle: 'Daily goal',
   LocaleKeys.goalCardsPerDay: '@count cards a day',
 };

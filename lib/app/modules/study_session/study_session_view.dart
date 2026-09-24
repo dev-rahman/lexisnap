@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/deck/deck_repository.dart';
 import '../../core/services/streak/streak_service.dart';
+import '../../core/services/study/study_preferences_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
@@ -58,6 +59,7 @@ class _StudySessionViewState extends State<StudySessionView> {
   StudySessionEngine _newEngine() => StudySessionEngine(
     deck: _deck,
     cap: _streakService.streak.value.dailyGoal,
+    mode: Get.find<StudyPreferencesService>().mode.value,
   );
 
   Future<void> _answer(bool recalled, Duration timeToAnswer) async {

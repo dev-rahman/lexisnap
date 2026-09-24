@@ -13,6 +13,7 @@ import 'permission/permission_service.dart';
 import 'speech/flutter_tts_service.dart';
 import 'speech/text_to_speech_service.dart';
 import 'streak/streak_service.dart';
+import 'study/study_preferences_service.dart';
 import 'theme/theme_service.dart';
 import 'translation/supabase_edge_translation_service.dart';
 import 'translation/translation_ai_service.dart';
@@ -56,6 +57,10 @@ class ServiceLocator {
     Get.put<LocaleService>(localeService, permanent: true);
 
     Get.put<StreakService>(await StreakService().init(), permanent: true);
+    Get.put<StudyPreferencesService>(
+      await StudyPreferencesService().init(),
+      permanent: true,
+    );
     Get.put<StudyReminderService>(
       await StudyReminderService().init(),
       permanent: true,

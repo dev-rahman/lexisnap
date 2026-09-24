@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/speech/text_to_speech_service.dart';
 import '../../core/services/streak/streak_service.dart';
+import '../../core/services/study/study_preferences_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -11,6 +12,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../data/models/flashcard.dart';
+import '../../data/models/study_mode.dart';
 import '../../data/vocabulary_languages.dart';
 import '../card_detail/card_detail_view.dart';
 import '../listen_session/listen_session_view.dart';
@@ -213,21 +215,136 @@ class _StudyHeroCard extends StatelessWidget {
           const SizedBox(height: AppSpacing.md),
           const _DailyGoalBar(),
           const SizedBox(height: AppSpacing.md),
-          AppButton(
-            label: hasDue
-                ? LocaleKeys.deckStudyDue.trParams({'count': '$dueCount'})
-                : LocaleKeys.deckStudy.tr,
-            icon: const Icon(Icons.style_rounded, size: 18),
-            onPressed: isEmpty ? null : onStudy,
+          const _StudyModePicker(),
+          const SizedBox(height: AppSpacing.md),
+          Obx(() {
+            final mode = Get.find<StudyPreferencesService>().mode.value;
+            final isListening = mode == StudyMode.listen;
+
+            return AppButton(
+              label: isListening
+                  ? LocaleKeys.deckListen.tr
+                  : hasDue
+                  ? LocaleKeys.deckStudyDue.trParams({'count': '$dueCount'})
+                  : LocaleKeys.deckStudy.tr,
+              icon: Icon(
+                isListening ? Icons.headphones_rounded : Icons.style_rounded,
+                size: 18,
+              ),
+              onPressed: isEmpty ? null : (isListening ? onListen : onStudy),
+            );
+          }),
+        ],
+      ),
+    );
+  }
+}
+
+/// Lets the learner choose how they're asked, instead of the app always
+/// deciding for them. "Smart" keeps the adaptive behaviour as the default
+/// so nobody has to care, and the rest are one tap away and remembered.
+class _StudyModePicker extends StatelessWidget {
+  const _StudyModePicker();
+
+  static const _icons = {
+    StudyMode.smart: Icons.auto_awesome_rounded,
+    StudyMode.quiz: Icons.checklist_rounded,
+    StudyMode.flip: Icons.swipe_rounded,
+    StudyMode.listen: Icons.headphones_rounded,
+  };
+
+  static const _labels = {
+    StudyMode.smart: LocaleKeys.studyModeSmart,
+    StudyMode.quiz: LocaleKeys.studyModeQuiz,
+    StudyMode.flip: LocaleKeys.studyModeFlip,
+    StudyMode.listen: LocaleKeys.deckListen,
+  };
+
+  static const _hints = {
+    StudyMode.smart: LocaleKeys.studyModeSmartHint,
+    StudyMode.quiz: LocaleKeys.studyModeQuizHint,
+    StudyMode.flip: LocaleKeys.studyModeFlipHint,
+    StudyMode.listen: LocaleKeys.studyModeListenHint,
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    final service = Get.find<StudyPreferencesService>();
+
+    return Obx(() {
+      final selected = service.mode.value;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              for (final mode in StudyMode.values) ...[
+                if (mode != StudyMode.values.first)
+                  const SizedBox(width: AppSpacing.xs),
+                Expanded(
+                  child: _ModeChip(
+                    icon: _icons[mode]!,
+                    label: _labels[mode]!.tr,
+                    isSelected: mode == selected,
+                    onTap: () => service.setMode(mode),
+                  ),
+                ),
+              ],
+            ],
           ),
-          const SizedBox(height: AppSpacing.xs),
-          AppButton(
-            variant: AppButtonVariant.text,
-            label: LocaleKeys.deckListen.tr,
-            icon: const Icon(Icons.headphones_rounded, size: 18),
-            onPressed: isEmpty ? null : onListen,
+          const SizedBox(height: AppSpacing.sm),
+          Text(
+            _hints[selected]!.tr,
+            style: AppTextStyles.caption.copyWith(color: context.colorInkMuted),
           ),
         ],
+      );
+    });
+  }
+}
+
+class _ModeChip extends StatelessWidget {
+  const _ModeChip({
+    required this.icon,
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final foreground = isSelected ? Colors.white : context.colorInkMuted;
+
+    return Material(
+      color: isSelected ? AppColors.accent : context.colorPaper,
+      borderRadius: BorderRadius.circular(AppRadius.sm),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+          child: Column(
+            children: [
+              Icon(icon, size: 20, color: foreground),
+              const SizedBox(height: AppSpacing.xs),
+              Text(
+                label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.caption.copyWith(
+                  color: foreground,
+                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w400,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

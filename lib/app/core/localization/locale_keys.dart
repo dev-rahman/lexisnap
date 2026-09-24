@@ -224,6 +224,15 @@ class LocaleKeys {
   static const reminderOff = 'reminder_off';
   static const reminderPermissionDenied = 'reminder_permission_denied';
 
+  // Study mode picker
+  static const studyModeSmart = 'study_mode_smart';
+  static const studyModeSmartHint = 'study_mode_smart_hint';
+  static const studyModeQuiz = 'study_mode_quiz';
+  static const studyModeQuizHint = 'study_mode_quiz_hint';
+  static const studyModeFlip = 'study_mode_flip';
+  static const studyModeFlipHint = 'study_mode_flip_hint';
+  static const studyModeListenHint = 'study_mode_listen_hint';
+
   // Daily goal
   static const goalSettingsTitle = 'goal_settings_title';
   static const goalCardsPerDay = 'goal_cards_per_day';

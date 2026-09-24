@@ -225,6 +225,15 @@ const Map<String, String> fr = {
   LocaleKeys.reminderPermissionDenied:
       'Les notifications sont désactivées pour LexiSnap. Activez-les dans les Réglages pour recevoir des rappels.',
 
+
+  LocaleKeys.studyModeSmart: 'Auto',
+  LocaleKeys.studyModeSmartHint: "S'adapte à chaque carte",
+  LocaleKeys.studyModeQuiz: 'Quiz',
+  LocaleKeys.studyModeQuizHint: 'Choisir parmi quatre options',
+  LocaleKeys.studyModeFlip: 'Retourner',
+  LocaleKeys.studyModeFlipHint: 'Retournez la carte et balayez',
+  LocaleKeys.studyModeListenHint: "Mains libres, rien n'est évalué",
+
   LocaleKeys.goalSettingsTitle: 'Objectif quotidien',
   LocaleKeys.goalCardsPerDay: '@count cartes par jour',
 };
