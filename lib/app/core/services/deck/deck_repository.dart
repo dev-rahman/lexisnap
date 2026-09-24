@@ -30,6 +30,11 @@ abstract class DeckRepository {
   /// Deletes the deck and all of its flashcards.
   Future<void> deleteDeck(String deckId);
 
+  /// Every card due for review right now, across all of the user's decks,
+  /// soonest-due first. Each card carries its deck's language pair, so a
+  /// session spanning several decks can still speak each word correctly.
+  Future<List<Flashcard>> listDueFlashcards({int limit});
+
   /// Records a study-session grade for [card], applying the SM-2 schedule
   /// update and persisting it. Returns the card with its new schedule.
   Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade);

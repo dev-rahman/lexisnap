@@ -69,6 +69,9 @@ const Map<String, String> fr = {
   LocaleKeys.homeScanCtaTitle: 'Scanner quelque chose de nouveau',
   LocaleKeys.homeScanCtaSubtitle:
       'Transformez n\'importe quel texte en cartes mémo',
+  LocaleKeys.homeReviewCta: 'Réviser @count cartes',
+  LocaleKeys.homeReviewCtaOne: 'Réviser 1 carte',
+  LocaleKeys.homeReviewCtaSubtitle: 'À revoir dans tous vos paquets',
   LocaleKeys.homeYourDecks: 'Vos paquets',
   LocaleKeys.homeNoDecksTitle: 'Aucun paquet pour le moment',
   LocaleKeys.homeNoDecksBody:

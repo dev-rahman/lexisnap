@@ -28,16 +28,9 @@ import 'widgets/swipe_flashcard.dart';
 ///
 /// Sessions are capped at the user's daily goal so they always end.
 class StudySessionView extends StatefulWidget {
-  const StudySessionView({
-    super.key,
-    required this.flashcards,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-  });
+  const StudySessionView({super.key, required this.flashcards});
 
   final List<Flashcard> flashcards;
-  final String? sourceLanguage;
-  final String targetLanguage;
 
   @override
   State<StudySessionView> createState() => _StudySessionViewState();
@@ -125,11 +118,7 @@ class _StudySessionViewState extends State<StudySessionView> {
             IconButton(
               icon: const Icon(Icons.info_outline_rounded),
               onPressed: () => Get.to(
-                () => CardDetailView(
-                  card: step.card,
-                  sourceLanguage: widget.sourceLanguage,
-                  targetLanguage: widget.targetLanguage,
-                ),
+                () => CardDetailView(card: step.card),
               ),
             ),
         ],
@@ -192,13 +181,10 @@ class _StudySessionViewState extends State<StudySessionView> {
                     card: step.card,
                     options: step.options,
                     answerIndex: step.answerIndex,
-                    sourceLanguage: widget.sourceLanguage,
                     onAnswer: _answer,
                   ),
                   StudyStepKind.recall => SwipeFlashcard(
                     card: step.card,
-                    sourceLanguage: widget.sourceLanguage,
-                    targetLanguage: widget.targetLanguage,
                     onAnswer: _answer,
                   ),
                 },

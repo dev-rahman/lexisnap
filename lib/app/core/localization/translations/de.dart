@@ -67,6 +67,9 @@ const Map<String, String> de = {
   LocaleKeys.homeSubtitle: 'Bereit, etwas Neues zu lernen?',
   LocaleKeys.homeScanCtaTitle: 'Etwas Neues scannen',
   LocaleKeys.homeScanCtaSubtitle: 'Verwandle jeden Text in Karteikarten',
+  LocaleKeys.homeReviewCta: '@count Karten wiederholen',
+  LocaleKeys.homeReviewCtaOne: '1 Karte wiederholen',
+  LocaleKeys.homeReviewCtaSubtitle: 'Jetzt fällig in all deinen Decks',
   LocaleKeys.homeYourDecks: 'Deine Stapel',
   LocaleKeys.homeNoDecksTitle: 'Noch keine Stapel',
   LocaleKeys.homeNoDecksBody:

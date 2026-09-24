@@ -25,14 +25,10 @@ class SwipeFlashcard extends StatefulWidget {
   const SwipeFlashcard({
     super.key,
     required this.card,
-    required this.sourceLanguage,
-    required this.targetLanguage,
     required this.onAnswer,
   });
 
   final Flashcard card;
-  final String? sourceLanguage;
-  final String targetLanguage;
 
   /// Reports whether the word was recalled, and how long it took to get
   /// there - measured to the moment the card was flipped, which is when
@@ -204,7 +200,7 @@ class _SwipeFlashcardState extends State<SwipeFlashcard>
 
     return _CardShell(
       level: card.level,
-      onSpeak: () => _speak(card.word, widget.sourceLanguage),
+      onSpeak: () => _speak(card.word, card.sourceLanguage),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -244,7 +240,7 @@ class _SwipeFlashcardState extends State<SwipeFlashcard>
 
     return _CardShell(
       level: card.level,
-      onSpeak: () => _speak(card.translation, widget.targetLanguage),
+      onSpeak: () => _speak(card.translation, card.targetLanguage),
       child: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

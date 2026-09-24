@@ -25,14 +25,12 @@ class ChoiceRound extends StatefulWidget {
     required this.card,
     required this.options,
     required this.answerIndex,
-    required this.sourceLanguage,
     required this.onAnswer,
   });
 
   final Flashcard card;
   final List<String> options;
   final int answerIndex;
-  final String? sourceLanguage;
 
   /// Fired once the result has been shown long enough to read. The
   /// reported duration is measured to the tap itself, not to this
@@ -88,8 +86,7 @@ class _ChoiceRoundState extends State<ChoiceRound> {
         // stretching: a word marooned in a screen-tall card reads as an
         // empty screen, and it pushes the options out of thumb reach.
         Expanded(
-          child: Align(
-            alignment: Alignment.bottomCenter,
+          child: Center(
             child: SingleChildScrollView(child: _buildPrompt(context)),
           ),
         ),
@@ -145,7 +142,7 @@ class _ChoiceRoundState extends State<ChoiceRound> {
             color: AppColors.accent,
             onPressed: () => Get.find<TextToSpeechService>().speak(
               widget.card.word,
-              languageCode: widget.sourceLanguage,
+              languageCode: widget.card.sourceLanguage,
             ),
           ),
         ],

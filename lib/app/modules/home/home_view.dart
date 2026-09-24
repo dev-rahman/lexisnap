@@ -44,7 +44,27 @@ class HomeView extends GetView<HomeController> {
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: AppSpacing.lg),
-              _ScanCta(onTap: controller.goToScan),
+              // Reviewing is the daily habit and scanning is occasional,
+              // so whichever one is actually owed takes the accent.
+              Obx(() {
+                final dueCount = controller.decksController.dueCount;
+                if (dueCount == 0) {
+                  return _ScanCta(
+                    onTap: controller.goToScan,
+                    isPrimary: true,
+                  );
+                }
+                return Column(
+                  children: [
+                    _ReviewCta(
+                      dueCount: dueCount,
+                      onTap: controller.startReview,
+                    ),
+                    const SizedBox(height: AppSpacing.sm),
+                    _ScanCta(onTap: controller.goToScan, isPrimary: false),
+                  ],
+                );
+              }),
               Obx(() {
                 final decksController = controller.decksController;
                 if (decksController.decks.isEmpty) {
@@ -89,33 +109,94 @@ class HomeView extends GetView<HomeController> {
   }
 }
 
-class _ScanCta extends StatelessWidget {
-  const _ScanCta({required this.onTap});
+/// The one-tap way into everything that's owed today, regardless of which
+/// deck it lives in.
+class _ReviewCta extends StatelessWidget {
+  const _ReviewCta({required this.dueCount, required this.onTap});
 
+  final int dueCount;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    return _HomeCta(
+      icon: Icons.style_rounded,
+      title: dueCount == 1
+          ? LocaleKeys.homeReviewCtaOne.tr
+          : LocaleKeys.homeReviewCta.trParams({'count': '$dueCount'}),
+      subtitle: LocaleKeys.homeReviewCtaSubtitle.tr,
+      isPrimary: true,
+      onTap: onTap,
+    );
+  }
+}
+
+class _ScanCta extends StatelessWidget {
+  const _ScanCta({required this.onTap, required this.isPrimary});
+
+  final VoidCallback onTap;
+  final bool isPrimary;
+
+  @override
+  Widget build(BuildContext context) {
+    return _HomeCta(
+      icon: Icons.document_scanner_rounded,
+      title: LocaleKeys.homeScanCtaTitle.tr,
+      subtitle: LocaleKeys.homeScanCtaSubtitle.tr,
+      isPrimary: isPrimary,
+      onTap: onTap,
+    );
+  }
+}
+
+/// Shared shape for Home's two calls to action. Only one of them wears
+/// the accent at a time, so the screen always has a single obvious next
+/// step rather than two competing orange blocks.
+class _HomeCta extends StatelessWidget {
+  const _HomeCta({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.isPrimary,
+    required this.onTap,
+  });
+
+  final IconData icon;
+  final String title;
+  final String subtitle;
+  final bool isPrimary;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final foreground = isPrimary ? Colors.white : context.colorInk;
+    final mutedForeground = isPrimary
+        ? Colors.white.withValues(alpha: 0.85)
+        : context.colorInkMuted;
+
     return Material(
-      color: AppColors.accent,
+      color: isPrimary ? AppColors.accent : context.colorSurface,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.lg),
         onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          padding: EdgeInsets.all(isPrimary ? AppSpacing.lg : AppSpacing.md),
           child: Row(
             children: [
               Container(
-                height: 48,
-                width: 48,
+                height: isPrimary ? 48 : 40,
+                width: isPrimary ? 48 : 40,
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.18),
+                  color: isPrimary
+                      ? Colors.white.withValues(alpha: 0.18)
+                      : AppColors.accent.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
-                  Icons.document_scanner_rounded,
-                  color: Colors.white,
+                child: Icon(
+                  icon,
+                  size: isPrimary ? 24 : 20,
+                  color: isPrimary ? Colors.white : AppColors.accent,
                 ),
               ),
               const SizedBox(width: AppSpacing.md),
@@ -124,23 +205,23 @@ class _ScanCta extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      LocaleKeys.homeScanCtaTitle.tr,
+                      title,
                       style: AppTextStyles.bodyMedium.copyWith(
-                        color: Colors.white,
-                        fontSize: 16,
+                        color: foreground,
+                        fontSize: isPrimary ? 16 : 15,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      LocaleKeys.homeScanCtaSubtitle.tr,
+                      subtitle,
                       style: AppTextStyles.caption.copyWith(
-                        color: Colors.white.withValues(alpha: 0.85),
+                        color: mutedForeground,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.arrow_forward_rounded, color: Colors.white),
+              Icon(Icons.arrow_forward_rounded, color: mutedForeground),
             ],
           ),
         ),

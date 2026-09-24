@@ -17,16 +17,9 @@ import '../../data/models/flashcard.dart';
 /// the learner never actually answered would quietly corrupt the spacing
 /// that the review sessions depend on.
 class ListenSessionView extends StatefulWidget {
-  const ListenSessionView({
-    super.key,
-    required this.flashcards,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-  });
+  const ListenSessionView({super.key, required this.flashcards});
 
   final List<Flashcard> flashcards;
-  final String? sourceLanguage;
-  final String targetLanguage;
 
   @override
   State<ListenSessionView> createState() => _ListenSessionViewState();
@@ -100,14 +93,14 @@ class _ListenSessionViewState extends State<ListenSessionView> {
       final card = widget.flashcards[_index];
 
       setState(() => _showTranslation = false);
-      await _speak(card.word, widget.sourceLanguage);
+      await _speak(card.word, card.sourceLanguage);
       if (_isStale(runId)) return;
 
       await Future.delayed(_recallGap);
       if (_isStale(runId)) return;
 
       setState(() => _showTranslation = true);
-      await _speak(card.translation, widget.targetLanguage);
+      await _speak(card.translation, card.targetLanguage);
       if (_isStale(runId)) return;
 
       await Future.delayed(_betweenCardsGap);

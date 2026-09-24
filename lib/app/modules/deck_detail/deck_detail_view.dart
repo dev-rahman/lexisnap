@@ -106,8 +106,6 @@ class DeckDetailView extends GetView<DeckDetailController> {
                     await Get.to(
                       () => StudySessionView(
                         flashcards: List.of(controller.flashcards),
-                        sourceLanguage: deck.sourceLanguage,
-                        targetLanguage: deck.targetLanguage,
                       ),
                     );
                     controller.reload();
@@ -115,18 +113,12 @@ class DeckDetailView extends GetView<DeckDetailController> {
                   onListen: () => Get.to(
                     () => ListenSessionView(
                       flashcards: List.of(controller.flashcards),
-                      sourceLanguage: deck.sourceLanguage,
-                      targetLanguage: deck.targetLanguage,
                     ),
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 for (final card in controller.flashcards) ...[
-                  _FlashcardTile(
-                    card: card,
-                    sourceLanguage: deck.sourceLanguage,
-                    targetLanguage: deck.targetLanguage,
-                  ),
+                  _FlashcardTile(card: card),
                   const SizedBox(height: AppSpacing.sm),
                 ],
               ],
@@ -439,15 +431,9 @@ class _DailyGoalBar extends StatelessWidget {
 }
 
 class _FlashcardTile extends StatelessWidget {
-  const _FlashcardTile({
-    required this.card,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-  });
+  const _FlashcardTile({required this.card});
 
   final Flashcard card;
-  final String? sourceLanguage;
-  final String targetLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -456,13 +442,7 @@ class _FlashcardTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadius.md),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        onTap: () => Get.to(
-          () => CardDetailView(
-            card: card,
-            sourceLanguage: sourceLanguage,
-            targetLanguage: targetLanguage,
-          ),
-        ),
+        onTap: () => Get.to(() => CardDetailView(card: card)),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,
@@ -474,7 +454,7 @@ class _FlashcardTile extends StatelessWidget {
                 icon: const Icon(Icons.volume_up_outlined, size: 20),
                 onPressed: () => Get.find<TextToSpeechService>().speak(
                   card.word,
-                  languageCode: sourceLanguage,
+                  languageCode: card.sourceLanguage,
                 ),
                 color: AppColors.accent,
                 visualDensity: VisualDensity.compact,

@@ -5,6 +5,7 @@ import '../../data/models/app_user.dart';
 import '../../routes/app_routes.dart';
 import '../decks/decks_controller.dart';
 import '../main/main_controller.dart';
+import '../study_session/study_session_view.dart';
 
 class HomeController extends GetxController {
   AuthService get _authService => Get.find<AuthService>();
@@ -27,4 +28,14 @@ class HomeController extends GetxController {
   void goToScan() => Get.toNamed(AppRoutes.scan);
 
   void goToDecksTab() => Get.find<MainController>().changeTab(1);
+
+  /// Reviews everything due across every deck in one session. The whole
+  /// point is that the user doesn't pick a deck first - the scheduler
+  /// already knows which cards are owed.
+  Future<void> startReview() async {
+    await Get.to(
+      () => StudySessionView(flashcards: List.of(decksController.dueCards)),
+    );
+    await decksController.refreshDecks();
+  }
 }

@@ -15,16 +15,9 @@ import '../../data/models/flashcard.dart';
 /// deck detail's compact card row, or from within a study session via the
 /// "show details" button.
 class CardDetailView extends StatelessWidget {
-  const CardDetailView({
-    super.key,
-    required this.card,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-  });
+  const CardDetailView({super.key, required this.card});
 
   final Flashcard card;
-  final String? sourceLanguage;
-  final String targetLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +53,7 @@ class CardDetailView extends StatelessWidget {
                     icon: const Icon(Icons.volume_up_outlined),
                     onPressed: () => Get.find<TextToSpeechService>().speak(
                       card.word,
-                      languageCode: sourceLanguage,
+                      languageCode: card.sourceLanguage,
                     ),
                     color: AppColors.accent,
                   ),
@@ -80,7 +73,7 @@ class CardDetailView extends StatelessWidget {
                     icon: const Icon(Icons.volume_up_outlined),
                     onPressed: () => Get.find<TextToSpeechService>().speak(
                       card.translation,
-                      languageCode: targetLanguage,
+                      languageCode: card.targetLanguage,
                     ),
                     color: AppColors.accent,
                   ),

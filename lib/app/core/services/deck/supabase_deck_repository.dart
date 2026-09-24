@@ -77,10 +77,34 @@ class SupabaseDeckRepository implements DeckRepository {
         .cast<Map<String, dynamic>>();
 
     final flashcards = [
-      for (final card in flashcardRows) _flashcardFromRow(card),
+      for (final card in flashcardRows)
+        _flashcardFromRow(
+          card,
+          sourceLanguage: deck.sourceLanguage,
+          targetLanguage: deck.targetLanguage,
+        ),
     ];
 
     return (deck, flashcards);
+  }
+
+  @override
+  Future<List<Flashcard>> listDueFlashcards({int limit = 200}) async {
+    final rows = await _client
+        .from('flashcards')
+        .select('*, example_sentences(*), decks!inner(*)')
+        .lte('due_at', DateTime.now().toIso8601String())
+        .order('due_at')
+        .limit(limit);
+
+    return [
+      for (final row in rows)
+        _flashcardFromRow(
+          row,
+          sourceLanguage: (row['decks'] as Map)['source_language'] as String?,
+          targetLanguage: (row['decks'] as Map)['target_language'] as String,
+        ),
+    ];
   }
 
   @override
@@ -143,7 +167,11 @@ class SupabaseDeckRepository implements DeckRepository {
     );
   }
 
-  Flashcard _flashcardFromRow(Map<String, dynamic> row) {
+  Flashcard _flashcardFromRow(
+    Map<String, dynamic> row, {
+    required String? sourceLanguage,
+    required String targetLanguage,
+  }) {
     final sentenceRows = (row['example_sentences'] as List? ?? [])
         .cast<Map<String, dynamic>>();
     sentenceRows.sort(
@@ -162,6 +190,8 @@ class SupabaseDeckRepository implements DeckRepository {
       ],
       notes: row['notes'] as String?,
       audioUrl: row['audio_url'] as String?,
+      sourceLanguage: sourceLanguage,
+      targetLanguage: targetLanguage,
       easeFactor: (row['ease_factor'] as num).toDouble(),
       intervalDays: row['interval_days'] as int,
       repetitions: row['repetitions'] as int,

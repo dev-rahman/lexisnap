@@ -157,14 +157,22 @@ class StudySessionEngine {
     );
   }
 
-  /// Wrong answers drawn from the same deck, so they're plausible enough
-  /// to test the word rather than the process of elimination.
+  /// Wrong answers drawn from other cards, so they're plausible enough to
+  /// test the word rather than the process of elimination.
+  ///
+  /// Restricted to the card's own target language: a session can span
+  /// decks, and offering three German options against one Arabic answer
+  /// would let the learner pick the right one without reading it.
   List<String> _distractorsFor(Flashcard card) {
-    final seen = <String>{card.translation};
+    // Seeded with the prompt itself as well as the answer: cognates mean
+    // another card's translation can spell the word being asked about,
+    // and offering that as a wrong answer is just confusing.
+    final seen = <String>{card.translation, card.word};
     final candidates = <String>[];
 
     for (final other in _pool) {
       if (other.id == card.id) continue;
+      if (other.targetLanguage != card.targetLanguage) continue;
       if (seen.add(other.translation)) candidates.add(other.translation);
     }
 

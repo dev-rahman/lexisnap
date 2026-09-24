@@ -77,6 +77,9 @@ class LocaleKeys {
   static const homeSubtitle = 'home_subtitle';
   static const homeScanCtaTitle = 'home_scan_cta_title';
   static const homeScanCtaSubtitle = 'home_scan_cta_subtitle';
+  static const homeReviewCta = 'home_review_cta';
+  static const homeReviewCtaOne = 'home_review_cta_one';
+  static const homeReviewCtaSubtitle = 'home_review_cta_subtitle';
   static const homeYourDecks = 'home_your_decks';
   static const homeNoDecksTitle = 'home_no_decks_title';
   static const homeNoDecksBody = 'home_no_decks_body';
