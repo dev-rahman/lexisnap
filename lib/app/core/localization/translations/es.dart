@@ -168,4 +168,25 @@ const Map<String, String> es = {
   LocaleKeys.deckDeletedSuccess: 'Mazo eliminado.',
   LocaleKeys.deckDeleteError:
       'No se pudo eliminar este mazo. Inténtalo de nuevo.',
+  LocaleKeys.deckStudy: 'Estudiar',
+  LocaleKeys.deckStudyDue: 'Estudiar · @count pendientes',
+
+  LocaleKeys.cardDetailReviewedOnce: 'Repasada una vez',
+  LocaleKeys.cardDetailReviewedTimes: 'Repasada @count veces',
+  LocaleKeys.cardDetailNotReviewedYet: 'Aún no repasada',
+  LocaleKeys.cardDetailNextReviewToday: 'Próximo repaso: hoy',
+  LocaleKeys.cardDetailNextReviewInDays: 'Próximo repaso: en @count días',
+
+  LocaleKeys.studyProgress: '@current de @total',
+  LocaleKeys.studyTapToReveal: 'Toca para revelar',
+  LocaleKeys.studyGradeAgain: 'De nuevo',
+  LocaleKeys.studyGradeHard: 'Difícil',
+  LocaleKeys.studyGradeGood: 'Bien',
+  LocaleKeys.studyGradeEasy: 'Fácil',
+  LocaleKeys.studyNothingDueTitle: 'Nada pendiente por ahora',
+  LocaleKeys.studyNothingDueBody:
+      'Estás al día - aquí tienes todo el mazo para practicar más.',
+  LocaleKeys.studyCompleteTitle: '¡Sesión completa!',
+  LocaleKeys.studyCompleteBody: 'Repasaste @count tarjetas.',
+  LocaleKeys.studyDone: 'Listo',
 };

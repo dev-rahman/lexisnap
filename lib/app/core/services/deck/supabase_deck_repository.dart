@@ -3,6 +3,8 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data/models/deck.dart';
 import '../../../data/models/deck_word.dart';
 import '../../../data/models/flashcard.dart';
+import '../../../data/models/review_grade.dart';
+import '../../utils/spaced_repetition.dart';
 import 'deck_repository.dart';
 
 class SupabaseDeckRepository implements DeckRepository {
@@ -91,6 +93,36 @@ class SupabaseDeckRepository implements DeckRepository {
     await _client.from('decks').delete().eq('id', deckId);
   }
 
+  @override
+  Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade) async {
+    final update = calculateNextReview(
+      easeFactor: card.easeFactor,
+      intervalDays: card.intervalDays,
+      repetitions: card.repetitions,
+      grade: grade,
+    );
+    final reviewedAt = DateTime.now();
+
+    await _client
+        .from('flashcards')
+        .update({
+          'ease_factor': update.easeFactor,
+          'interval_days': update.intervalDays,
+          'repetitions': update.repetitions,
+          'due_at': update.dueAt.toIso8601String(),
+          'last_reviewed_at': reviewedAt.toIso8601String(),
+        })
+        .eq('id', card.id);
+
+    return card.copyWith(
+      easeFactor: update.easeFactor,
+      intervalDays: update.intervalDays,
+      repetitions: update.repetitions,
+      dueAt: update.dueAt,
+      lastReviewedAt: reviewedAt,
+    );
+  }
+
   Deck _deckFromRow(Map<String, dynamic> row) {
     final flashcardsField = row['flashcards'];
     final cardCount = flashcardsField is List && flashcardsField.isNotEmpty
@@ -130,6 +162,13 @@ class SupabaseDeckRepository implements DeckRepository {
       ],
       notes: row['notes'] as String?,
       audioUrl: row['audio_url'] as String?,
+      easeFactor: (row['ease_factor'] as num).toDouble(),
+      intervalDays: row['interval_days'] as int,
+      repetitions: row['repetitions'] as int,
+      dueAt: DateTime.parse(row['due_at'] as String),
+      lastReviewedAt: row['last_reviewed_at'] == null
+          ? null
+          : DateTime.parse(row['last_reviewed_at'] as String),
     );
   }
 }

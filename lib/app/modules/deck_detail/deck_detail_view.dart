@@ -11,6 +11,8 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/vocabulary_languages.dart';
+import '../card_detail/card_detail_view.dart';
+import '../study_session/study_session_view.dart';
 import 'deck_detail_controller.dart';
 
 class DeckDetailView extends GetView<DeckDetailController> {
@@ -92,6 +94,27 @@ class DeckDetailView extends GetView<DeckDetailController> {
                     color: context.colorInkMuted,
                   ),
                 ),
+                const SizedBox(height: AppSpacing.md),
+                AppButton(
+                  label: controller.dueCount > 0
+                      ? LocaleKeys.deckStudyDue.trParams({
+                          'count': '${controller.dueCount}',
+                        })
+                      : LocaleKeys.deckStudy.tr,
+                  icon: const Icon(Icons.style_rounded, size: 18),
+                  onPressed: controller.flashcards.isEmpty
+                      ? null
+                      : () async {
+                          await Get.to(
+                            () => StudySessionView(
+                              flashcards: List.of(controller.flashcards),
+                              sourceLanguage: deck.sourceLanguage,
+                              targetLanguage: deck.targetLanguage,
+                            ),
+                          );
+                          controller.reload();
+                        },
+                ),
                 const SizedBox(height: AppSpacing.lg),
                 for (final card in controller.flashcards) ...[
                   _FlashcardTile(
@@ -123,36 +146,25 @@ class _FlashcardTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: context.colorSurface,
+    return Material(
+      color: context.colorSurface,
+      borderRadius: BorderRadius.circular(AppRadius.md),
+      child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.md),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+        onTap: () => Get.to(
+          () => CardDetailView(
+            card: card,
+            sourceLanguage: sourceLanguage,
+            targetLanguage: targetLanguage,
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.md,
+            vertical: AppSpacing.sm,
+          ),
+          child: Row(
             children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    Flexible(
-                      child: Text(
-                        card.word,
-                        style: AppTextStyles.bodyMedium.copyWith(
-                          color: context.colorInk,
-                        ),
-                      ),
-                    ),
-                    if (card.level != null) ...[
-                      const SizedBox(width: AppSpacing.xs),
-                      _LevelBadge(level: card.level!),
-                    ],
-                  ],
-                ),
-              ),
               IconButton(
                 icon: const Icon(Icons.volume_up_outlined, size: 20),
                 onPressed: () => Get.find<TextToSpeechService>().speak(
@@ -162,49 +174,39 @@ class _FlashcardTile extends StatelessWidget {
                 color: AppColors.accent,
                 visualDensity: VisualDensity.compact,
               ),
-            ],
-          ),
-          Row(
-            children: [
               Expanded(
-                child: Text(
-                  card.translation,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: AppColors.accent,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Flexible(
+                          child: Text(
+                            card.word,
+                            style: AppTextStyles.bodyMedium.copyWith(
+                              color: context.colorInk,
+                            ),
+                          ),
+                        ),
+                        if (card.level != null) ...[
+                          const SizedBox(width: AppSpacing.xs),
+                          _LevelBadge(level: card.level!),
+                        ],
+                      ],
+                    ),
+                    Text(
+                      card.translation,
+                      style: AppTextStyles.caption.copyWith(
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.volume_up_outlined, size: 20),
-                onPressed: () => Get.find<TextToSpeechService>().speak(
-                  card.translation,
-                  languageCode: targetLanguage,
-                ),
-                color: AppColors.accent,
-                visualDensity: VisualDensity.compact,
-              ),
+              Icon(Icons.chevron_right_rounded, color: context.colorInkMuted),
             ],
           ),
-          if (card.wordDescription != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              card.wordDescription!,
-              style: AppTextStyles.caption.copyWith(
-                color: context.colorInkMuted,
-              ),
-            ),
-          ],
-          for (final sentence in card.exampleSentences) ...[
-            const SizedBox(height: 2),
-            Text(
-              sentence,
-              style: AppTextStyles.caption.copyWith(
-                color: context.colorInkMuted,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-        ],
+        ),
       ),
     );
   }

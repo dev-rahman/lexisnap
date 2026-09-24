@@ -174,4 +174,26 @@ class LocaleKeys {
   static const deckDeleteConfirm = 'deck_delete_confirm';
   static const deckDeletedSuccess = 'deck_deleted_success';
   static const deckDeleteError = 'deck_delete_error';
+  static const deckStudy = 'deck_study';
+  static const deckStudyDue = 'deck_study_due';
+
+  // Card detail
+  static const cardDetailReviewedOnce = 'card_detail_reviewed_once';
+  static const cardDetailReviewedTimes = 'card_detail_reviewed_times';
+  static const cardDetailNotReviewedYet = 'card_detail_not_reviewed_yet';
+  static const cardDetailNextReviewToday = 'card_detail_next_review_today';
+  static const cardDetailNextReviewInDays = 'card_detail_next_review_in_days';
+
+  // Study session
+  static const studyProgress = 'study_progress';
+  static const studyTapToReveal = 'study_tap_to_reveal';
+  static const studyGradeAgain = 'study_grade_again';
+  static const studyGradeHard = 'study_grade_hard';
+  static const studyGradeGood = 'study_grade_good';
+  static const studyGradeEasy = 'study_grade_easy';
+  static const studyNothingDueTitle = 'study_nothing_due_title';
+  static const studyNothingDueBody = 'study_nothing_due_body';
+  static const studyCompleteTitle = 'study_complete_title';
+  static const studyCompleteBody = 'study_complete_body';
+  static const studyDone = 'study_done';
 }

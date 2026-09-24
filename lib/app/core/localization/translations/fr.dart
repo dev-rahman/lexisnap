@@ -173,4 +173,26 @@ const Map<String, String> fr = {
   LocaleKeys.deckDeletedSuccess: 'Paquet supprimé.',
   LocaleKeys.deckDeleteError:
       "Impossible de supprimer ce paquet. Veuillez réessayer.",
+  LocaleKeys.deckStudy: 'Réviser',
+  LocaleKeys.deckStudyDue: 'Réviser · @count à revoir',
+
+  LocaleKeys.cardDetailReviewedOnce: 'Révisée une fois',
+  LocaleKeys.cardDetailReviewedTimes: 'Révisée @count fois',
+  LocaleKeys.cardDetailNotReviewedYet: 'Pas encore révisée',
+  LocaleKeys.cardDetailNextReviewToday: "Prochaine révision : aujourd'hui",
+  LocaleKeys.cardDetailNextReviewInDays:
+      'Prochaine révision : dans @count jours',
+
+  LocaleKeys.studyProgress: '@current sur @total',
+  LocaleKeys.studyTapToReveal: 'Touchez pour révéler',
+  LocaleKeys.studyGradeAgain: 'À revoir',
+  LocaleKeys.studyGradeHard: 'Difficile',
+  LocaleKeys.studyGradeGood: 'Bien',
+  LocaleKeys.studyGradeEasy: 'Facile',
+  LocaleKeys.studyNothingDueTitle: 'Rien à revoir pour le moment',
+  LocaleKeys.studyNothingDueBody:
+      "Vous êtes à jour - voici tout le paquet pour vous entraîner davantage.",
+  LocaleKeys.studyCompleteTitle: 'Session terminée !',
+  LocaleKeys.studyCompleteBody: 'Vous avez révisé @count cartes.',
+  LocaleKeys.studyDone: 'Terminé',
 };

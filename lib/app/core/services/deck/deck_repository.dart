@@ -1,6 +1,7 @@
 import '../../../data/models/deck.dart';
 import '../../../data/models/deck_word.dart';
 import '../../../data/models/flashcard.dart';
+import '../../../data/models/review_grade.dart';
 
 /// Contract for persisting and managing scanned decks. Controllers talk
 /// only to this interface, never to a specific backend/SDK.
@@ -28,4 +29,8 @@ abstract class DeckRepository {
 
   /// Deletes the deck and all of its flashcards.
   Future<void> deleteDeck(String deckId);
+
+  /// Records a study-session grade for [card], applying the SM-2 schedule
+  /// update and persisting it. Returns the card with its new schedule.
+  Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade);
 }

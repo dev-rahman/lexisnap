@@ -170,4 +170,25 @@ const Map<String, String> de = {
   LocaleKeys.deckDeletedSuccess: 'Stapel gelöscht.',
   LocaleKeys.deckDeleteError:
       'Der Stapel konnte nicht gelöscht werden. Bitte versuche es erneut.',
+  LocaleKeys.deckStudy: 'Lernen',
+  LocaleKeys.deckStudyDue: 'Lernen · @count fällig',
+
+  LocaleKeys.cardDetailReviewedOnce: 'Einmal wiederholt',
+  LocaleKeys.cardDetailReviewedTimes: '@count Mal wiederholt',
+  LocaleKeys.cardDetailNotReviewedYet: 'Noch nicht wiederholt',
+  LocaleKeys.cardDetailNextReviewToday: 'Nächste Wiederholung: heute',
+  LocaleKeys.cardDetailNextReviewInDays:
+      'Nächste Wiederholung: in @count Tagen',
+
+  LocaleKeys.studyProgress: '@current von @total',
+  LocaleKeys.studyTapToReveal: 'Zum Aufdecken tippen',
+  LocaleKeys.studyGradeAgain: 'Nochmal',
+  LocaleKeys.studyGradeHard: 'Schwer',
+  LocaleKeys.studyGradeGood: 'Gut',
+  LocaleKeys.studyGradeEasy: 'Leicht',
+  LocaleKeys.studyNothingDueTitle: 'Gerade nichts fällig',
+  LocaleKeys.studyNothingDueBody: 'Du bist auf dem neuesten Stand - hier ist der ganze Stapel zum Extra-Üben.',
+  LocaleKeys.studyCompleteTitle: 'Sitzung abgeschlossen!',
+  LocaleKeys.studyCompleteBody: 'Du hast @count Karten wiederholt.',
+  LocaleKeys.studyDone: 'Fertig',
 };

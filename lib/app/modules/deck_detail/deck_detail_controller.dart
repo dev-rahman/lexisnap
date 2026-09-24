@@ -16,11 +16,17 @@ class DeckDetailController extends GetxController {
   final deck = Rxn<Deck>();
   final flashcards = <Flashcard>[].obs;
 
+  int get dueCount => flashcards.where((card) => card.isDue).length;
+
   @override
   void onInit() {
     super.onInit();
     _load();
   }
+
+  /// Re-fetches the deck and its flashcards - used after a study session so
+  /// due counts and cards reflect the just-recorded reviews.
+  Future<void> reload() => _load();
 
   Future<void> _load() async {
     isLoading.value = true;

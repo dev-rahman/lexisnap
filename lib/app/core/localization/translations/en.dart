@@ -162,4 +162,25 @@ const Map<String, String> en = {
   LocaleKeys.deckDeleteConfirm: 'Delete deck',
   LocaleKeys.deckDeletedSuccess: 'Deck deleted.',
   LocaleKeys.deckDeleteError: "Couldn't delete this deck. Please try again.",
+  LocaleKeys.deckStudy: 'Study',
+  LocaleKeys.deckStudyDue: 'Study · @count due',
+
+  LocaleKeys.cardDetailReviewedOnce: 'Reviewed once',
+  LocaleKeys.cardDetailReviewedTimes: 'Reviewed @count times',
+  LocaleKeys.cardDetailNotReviewedYet: 'Not reviewed yet',
+  LocaleKeys.cardDetailNextReviewToday: 'Next review: today',
+  LocaleKeys.cardDetailNextReviewInDays: 'Next review: in @count days',
+
+  LocaleKeys.studyProgress: '@current of @total',
+  LocaleKeys.studyTapToReveal: 'Tap to reveal',
+  LocaleKeys.studyGradeAgain: 'Again',
+  LocaleKeys.studyGradeHard: 'Hard',
+  LocaleKeys.studyGradeGood: 'Good',
+  LocaleKeys.studyGradeEasy: 'Easy',
+  LocaleKeys.studyNothingDueTitle: 'Nothing due right now',
+  LocaleKeys.studyNothingDueBody:
+      "You're all caught up - here's the whole deck for extra practice.",
+  LocaleKeys.studyCompleteTitle: 'Session complete!',
+  LocaleKeys.studyCompleteBody: 'You reviewed @count cards.',
+  LocaleKeys.studyDone: 'Done',
 };
