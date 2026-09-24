@@ -90,7 +90,6 @@ class LocaleKeys {
 
   // Profile
   static const profileYourAccount = 'profile_your_account';
-  static const profileNotifications = 'profile_notifications';
   static const profileAppearance = 'profile_appearance';
   static const profileLanguage = 'profile_language';
   static const profileHelpSupport = 'profile_help_support';
@@ -98,8 +97,6 @@ class LocaleKeys {
   static const profileSignOut = 'profile_sign_out';
   static const profileEditName = 'profile_edit_name';
   static const profileNameUpdated = 'profile_name_updated';
-  static const profileNotificationsComingSoon =
-      'profile_notifications_coming_soon';
   static const profileAboutComingSoon = 'profile_about_coming_soon';
   static const themeSystem = 'theme_system';
   static const themeLight = 'theme_light';
@@ -176,6 +173,11 @@ class LocaleKeys {
   static const deckDeleteError = 'deck_delete_error';
   static const deckStudy = 'deck_study';
   static const deckStudyDue = 'deck_study_due';
+  static const deckListen = 'deck_listen';
+  static const deckAllCaughtUp = 'deck_all_caught_up';
+  static const deckDueNow = 'deck_due_now';
+  static const deckStreakLabel = 'deck_streak_label';
+  static const deckGoalProgress = 'deck_goal_progress';
 
   // Card detail
   static const cardDetailReviewedOnce = 'card_detail_reviewed_once';
@@ -196,4 +198,33 @@ class LocaleKeys {
   static const studyCompleteTitle = 'study_complete_title';
   static const studyCompleteBody = 'study_complete_body';
   static const studyDone = 'study_done';
+  static const studyGotIt = 'study_got_it';
+  static const studyForgot = 'study_forgot';
+  static const studyChoicePrompt = 'study_choice_prompt';
+  static const studySwipeHint = 'study_swipe_hint';
+  static const studyAccuracy = 'study_accuracy';
+  static const studyStreakDays = 'study_streak_days';
+  static const studyStreakStarted = 'study_streak_started';
+  static const studyGoalProgress = 'study_goal_progress';
+  static const studyGoalMet = 'study_goal_met';
+  static const studyContinue = 'study_continue';
+
+  // Listening (hands-free) mode
+  static const listenTitle = 'listen_title';
+  static const listenHint = 'listen_hint';
+  static const listenFinished = 'listen_finished';
+
+  // Study reminders
+  static const reminderNotificationTitle = 'reminder_notification_title';
+  static const reminderNotificationBody = 'reminder_notification_body';
+  static const reminderChannelName = 'reminder_channel_name';
+  static const reminderChannelDescription = 'reminder_channel_description';
+  static const reminderSettingsTitle = 'reminder_settings_title';
+  static const reminderEveryDayAt = 'reminder_every_day_at';
+  static const reminderOff = 'reminder_off';
+  static const reminderPermissionDenied = 'reminder_permission_denied';
+
+  // Daily goal
+  static const goalSettingsTitle = 'goal_settings_title';
+  static const goalCardsPerDay = 'goal_cards_per_day';
 }

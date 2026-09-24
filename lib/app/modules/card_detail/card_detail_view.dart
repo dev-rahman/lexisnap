@@ -7,6 +7,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/study_day.dart';
 import '../../data/models/flashcard.dart';
 
 /// Full detail for a single flashcard - word, translation, description,
@@ -132,7 +133,10 @@ class CardDetailView extends StatelessWidget {
             'count': '${card.repetitions}',
           });
 
-    final daysUntilDue = card.dueAt.difference(DateTime.now()).inDays;
+    // Counted in whole study days rather than raw 24-hour spans: due dates
+    // sit on the 4am boundary, so a truncating subtraction reports a card
+    // due in six days as five.
+    final daysUntilDue = studyDaysBetween(DateTime.now(), card.dueAt);
     final dueLabel = daysUntilDue <= 0
         ? LocaleKeys.cardDetailNextReviewToday.tr
         : LocaleKeys.cardDetailNextReviewInDays.trParams({

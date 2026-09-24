@@ -5,6 +5,13 @@ import 'text_to_speech_service.dart';
 /// Speaks words aloud using the OS's built-in text-to-speech engine via
 /// the `flutter_tts` plugin - free, offline, no account or API key.
 class FlutterTtsService implements TextToSpeechService {
+  FlutterTtsService() {
+    // Makes `speak` resolve when the utterance actually finishes rather
+    // than when it's queued, which is what lets listening mode chain
+    // word, pause, translation, pause without guessing at durations.
+    _tts.awaitSpeakCompletion(true);
+  }
+
   final _tts = FlutterTts();
 
   /// Maps every ISO 639-1 code in `VocabularyLanguages.all` (plus AI-
@@ -70,4 +77,7 @@ class FlutterTtsService implements TextToSpeechService {
     await _tts.stop();
     await _tts.speak(text);
   }
+
+  @override
+  Future<void> stop() => _tts.stop();
 }

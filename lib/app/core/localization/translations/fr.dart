@@ -81,7 +81,6 @@ const Map<String, String> fr = {
   LocaleKeys.navDecks: 'Paquets',
 
   LocaleKeys.profileYourAccount: 'Votre compte',
-  LocaleKeys.profileNotifications: 'Notifications',
   LocaleKeys.profileAppearance: 'Apparence',
   LocaleKeys.profileLanguage: 'Langue',
   LocaleKeys.profileHelpSupport: 'Aide et assistance',
@@ -89,8 +88,6 @@ const Map<String, String> fr = {
   LocaleKeys.profileSignOut: 'Se déconnecter',
   LocaleKeys.profileEditName: 'Modifier le nom',
   LocaleKeys.profileNameUpdated: 'Votre nom a été mis à jour.',
-  LocaleKeys.profileNotificationsComingSoon:
-      'Les paramètres de notifications arrivent bientôt.',
   LocaleKeys.profileAboutComingSoon: "La page À propos arrive bientôt.",
   LocaleKeys.themeSystem: 'Système',
   LocaleKeys.themeLight: 'Clair',
@@ -175,6 +172,11 @@ const Map<String, String> fr = {
       "Impossible de supprimer ce paquet. Veuillez réessayer.",
   LocaleKeys.deckStudy: 'Réviser',
   LocaleKeys.deckStudyDue: 'Réviser · @count à revoir',
+  LocaleKeys.deckListen: 'Écouter',
+  LocaleKeys.deckAllCaughtUp: 'Tout est à jour',
+  LocaleKeys.deckDueNow: '@count prêtes à réviser',
+  LocaleKeys.deckStreakLabel: 'jours d\'affilée',
+  LocaleKeys.deckGoalProgress: '@done / @goal aujourd\'hui',
 
   LocaleKeys.cardDetailReviewedOnce: 'Révisée une fois',
   LocaleKeys.cardDetailReviewedTimes: 'Révisée @count fois',
@@ -195,4 +197,34 @@ const Map<String, String> fr = {
   LocaleKeys.studyCompleteTitle: 'Session terminée !',
   LocaleKeys.studyCompleteBody: 'Vous avez révisé @count cartes.',
   LocaleKeys.studyDone: 'Terminé',
+  LocaleKeys.studyGotIt: 'Je savais',
+  LocaleKeys.studyForgot: 'Oublié',
+  LocaleKeys.studyChoicePrompt: 'Que signifie ce mot ?',
+  LocaleKeys.studySwipeHint: 'Balayez la carte ou touchez ci-dessous',
+  LocaleKeys.studyAccuracy: 'mémorisés',
+  LocaleKeys.studyStreakDays: 'Série de @count jours',
+  LocaleKeys.studyStreakStarted: 'Série lancée',
+  LocaleKeys.studyGoalProgress: '@done sur @goal aujourd\'hui',
+  LocaleKeys.studyGoalMet: 'Objectif du jour atteint',
+  LocaleKeys.studyContinue: 'Réviser @count de plus',
+
+  LocaleKeys.listenTitle: 'Écoute',
+  LocaleKeys.listenHint:
+      'Lit le paquet en mains libres. Rien n\'est évalué ici.',
+  LocaleKeys.listenFinished: 'Fin du paquet',
+
+  LocaleKeys.reminderNotificationTitle: 'C\'est l\'heure de réviser',
+  LocaleKeys.reminderNotificationBody:
+      'Quelques cartes vous attendent. Deux minutes suffisent.',
+  LocaleKeys.reminderChannelName: 'Rappels de révision',
+  LocaleKeys.reminderChannelDescription:
+      'Votre rappel quotidien pour réviser vos cartes.',
+  LocaleKeys.reminderSettingsTitle: 'Rappel quotidien',
+  LocaleKeys.reminderEveryDayAt: 'Tous les jours à @time',
+  LocaleKeys.reminderOff: 'Désactivé',
+  LocaleKeys.reminderPermissionDenied:
+      'Les notifications sont désactivées pour LexiSnap. Activez-les dans les Réglages pour recevoir des rappels.',
+
+  LocaleKeys.goalSettingsTitle: 'Objectif quotidien',
+  LocaleKeys.goalCardsPerDay: '@count cartes par jour',
 };

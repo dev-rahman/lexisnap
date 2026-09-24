@@ -79,7 +79,6 @@ const Map<String, String> de = {
   LocaleKeys.navDecks: 'Stapel',
 
   LocaleKeys.profileYourAccount: 'Dein Konto',
-  LocaleKeys.profileNotifications: 'Benachrichtigungen',
   LocaleKeys.profileAppearance: 'Erscheinungsbild',
   LocaleKeys.profileLanguage: 'Sprache',
   LocaleKeys.profileHelpSupport: 'Hilfe & Support',
@@ -87,8 +86,6 @@ const Map<String, String> de = {
   LocaleKeys.profileSignOut: 'Abmelden',
   LocaleKeys.profileEditName: 'Namen bearbeiten',
   LocaleKeys.profileNameUpdated: 'Dein Name wurde aktualisiert.',
-  LocaleKeys.profileNotificationsComingSoon:
-      'Benachrichtigungseinstellungen sind bald verfügbar.',
   LocaleKeys.profileAboutComingSoon: 'Die Info-Seite ist bald verfügbar.',
   LocaleKeys.themeSystem: 'System',
   LocaleKeys.themeLight: 'Hell',
@@ -172,6 +169,11 @@ const Map<String, String> de = {
       'Der Stapel konnte nicht gelöscht werden. Bitte versuche es erneut.',
   LocaleKeys.deckStudy: 'Lernen',
   LocaleKeys.deckStudyDue: 'Lernen · @count fällig',
+  LocaleKeys.deckListen: 'Anhören',
+  LocaleKeys.deckAllCaughtUp: 'Alles erledigt',
+  LocaleKeys.deckDueNow: '@count zum Wiederholen bereit',
+  LocaleKeys.deckStreakLabel: 'Tage in Folge',
+  LocaleKeys.deckGoalProgress: '@done / @goal heute',
 
   LocaleKeys.cardDetailReviewedOnce: 'Einmal wiederholt',
   LocaleKeys.cardDetailReviewedTimes: '@count Mal wiederholt',
@@ -191,4 +193,34 @@ const Map<String, String> de = {
   LocaleKeys.studyCompleteTitle: 'Sitzung abgeschlossen!',
   LocaleKeys.studyCompleteBody: 'Du hast @count Karten wiederholt.',
   LocaleKeys.studyDone: 'Fertig',
+  LocaleKeys.studyGotIt: 'Gewusst',
+  LocaleKeys.studyForgot: 'Vergessen',
+  LocaleKeys.studyChoicePrompt: 'Was bedeutet das?',
+  LocaleKeys.studySwipeHint: 'Karte wischen oder unten tippen',
+  LocaleKeys.studyAccuracy: 'gewusst',
+  LocaleKeys.studyStreakDays: '@count Tage in Folge',
+  LocaleKeys.studyStreakStarted: 'Serie gestartet',
+  LocaleKeys.studyGoalProgress: '@done von @goal heute',
+  LocaleKeys.studyGoalMet: 'Tagesziel erreicht',
+  LocaleKeys.studyContinue: '@count weitere wiederholen',
+
+  LocaleKeys.listenTitle: 'Anhören',
+  LocaleKeys.listenHint:
+      'Spielt das Deck freihändig ab. Hier wird nichts bewertet.',
+  LocaleKeys.listenFinished: 'Ende des Decks',
+
+  LocaleKeys.reminderNotificationTitle: 'Zeit zum Lernen',
+  LocaleKeys.reminderNotificationBody:
+      'Ein paar Karten warten. Zwei Minuten reichen.',
+  LocaleKeys.reminderChannelName: 'Lernerinnerungen',
+  LocaleKeys.reminderChannelDescription:
+      'Deine tägliche Erinnerung, Karteikarten zu wiederholen.',
+  LocaleKeys.reminderSettingsTitle: 'Tägliche Erinnerung',
+  LocaleKeys.reminderEveryDayAt: 'Täglich um @time',
+  LocaleKeys.reminderOff: 'Aus',
+  LocaleKeys.reminderPermissionDenied:
+      'Mitteilungen sind für LexiSnap deaktiviert. Aktiviere sie in den Einstellungen, um Erinnerungen zu erhalten.',
+
+  LocaleKeys.goalSettingsTitle: 'Tagesziel',
+  LocaleKeys.goalCardsPerDay: '@count Karten pro Tag',
 };

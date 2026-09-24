@@ -5,6 +5,11 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
+    <!-- Daily study reminder. RECEIVE_BOOT_COMPLETED lets the scheduled
+         reminder survive a reboot; without it the alarm is dropped and the
+         user silently stops being reminded. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <application
         android:label="lexisnap"
         android:name="${applicationName}"

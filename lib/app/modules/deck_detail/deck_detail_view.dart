@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/speech/text_to_speech_service.dart';
+import '../../core/services/streak/streak_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -12,6 +13,7 @@ import '../../core/widgets/app_text_field.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/vocabulary_languages.dart';
 import '../card_detail/card_detail_view.dart';
+import '../listen_session/listen_session_view.dart';
 import '../study_session/study_session_view.dart';
 import 'deck_detail_controller.dart';
 
@@ -95,25 +97,26 @@ class DeckDetailView extends GetView<DeckDetailController> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.md),
-                AppButton(
-                  label: controller.dueCount > 0
-                      ? LocaleKeys.deckStudyDue.trParams({
-                          'count': '${controller.dueCount}',
-                        })
-                      : LocaleKeys.deckStudy.tr,
-                  icon: const Icon(Icons.style_rounded, size: 18),
-                  onPressed: controller.flashcards.isEmpty
-                      ? null
-                      : () async {
-                          await Get.to(
-                            () => StudySessionView(
-                              flashcards: List.of(controller.flashcards),
-                              sourceLanguage: deck.sourceLanguage,
-                              targetLanguage: deck.targetLanguage,
-                            ),
-                          );
-                          controller.reload();
-                        },
+                _StudyHeroCard(
+                  dueCount: controller.dueCount,
+                  isEmpty: controller.flashcards.isEmpty,
+                  onStudy: () async {
+                    await Get.to(
+                      () => StudySessionView(
+                        flashcards: List.of(controller.flashcards),
+                        sourceLanguage: deck.sourceLanguage,
+                        targetLanguage: deck.targetLanguage,
+                      ),
+                    );
+                    controller.reload();
+                  },
+                  onListen: () => Get.to(
+                    () => ListenSessionView(
+                      flashcards: List.of(controller.flashcards),
+                      sourceLanguage: deck.sourceLanguage,
+                      targetLanguage: deck.targetLanguage,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
                 for (final card in controller.flashcards) ...[
@@ -130,6 +133,191 @@ class DeckDetailView extends GetView<DeckDetailController> {
         }),
       ),
     );
+  }
+}
+
+/// The deck's entry point into studying: what's waiting, how the streak
+/// is doing, and the two ways in.
+///
+/// It leads with the due count and the streak rather than the deck's card
+/// list because those are the two numbers that decide whether the user
+/// starts a session at all.
+class _StudyHeroCard extends StatelessWidget {
+  const _StudyHeroCard({
+    required this.dueCount,
+    required this.isEmpty,
+    required this.onStudy,
+    required this.onListen,
+  });
+
+  final int dueCount;
+  final bool isEmpty;
+  final VoidCallback onStudy;
+  final VoidCallback onListen;
+
+  @override
+  Widget build(BuildContext context) {
+    final hasDue = dueCount > 0;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: context.colorSurface,
+        borderRadius: BorderRadius.circular(AppRadius.lg),
+        border: Border.all(color: context.colorBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    if (hasDue)
+                      Text(
+                        '$dueCount',
+                        style: AppTextStyles.heading1.copyWith(
+                          color: AppColors.accent,
+                          fontSize: 34,
+                        ),
+                      )
+                    else
+                      const Icon(
+                        Icons.check_circle_rounded,
+                        color: AppColors.success,
+                        size: 30,
+                      ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
+                      child: Text(
+                        hasDue
+                            ? LocaleKeys.deckDueNow.trParams({
+                                'count': '$dueCount',
+                              })
+                            : LocaleKeys.deckAllCaughtUp.tr,
+                        style: AppTextStyles.bodyMedium.copyWith(
+                          color: context.colorInk,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const _StreakBadge(),
+            ],
+          ),
+          const SizedBox(height: AppSpacing.md),
+          const _DailyGoalBar(),
+          const SizedBox(height: AppSpacing.md),
+          AppButton(
+            label: hasDue
+                ? LocaleKeys.deckStudyDue.trParams({'count': '$dueCount'})
+                : LocaleKeys.deckStudy.tr,
+            icon: const Icon(Icons.style_rounded, size: 18),
+            onPressed: isEmpty ? null : onStudy,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          AppButton(
+            variant: AppButtonVariant.text,
+            label: LocaleKeys.deckListen.tr,
+            icon: const Icon(Icons.headphones_rounded, size: 18),
+            onPressed: isEmpty ? null : onListen,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StreakBadge extends StatelessWidget {
+  const _StreakBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final streak = Get.find<StreakService>().streak.value;
+      if (streak.current == 0) return const SizedBox.shrink();
+
+      return Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppSpacing.sm,
+          vertical: AppSpacing.xs,
+        ),
+        decoration: BoxDecoration(
+          color: AppColors.accent.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(AppRadius.sm),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(
+              Icons.local_fire_department_rounded,
+              color: AppColors.accent,
+              size: 18,
+            ),
+            const SizedBox(width: AppSpacing.xs),
+            Text(
+              '${streak.current}',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.accent,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 2),
+            Text(
+              LocaleKeys.deckStreakLabel.tr,
+              style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+            ),
+          ],
+        ),
+      );
+    });
+  }
+}
+
+class _DailyGoalBar extends StatelessWidget {
+  const _DailyGoalBar();
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final streak = Get.find<StreakService>().streak.value;
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: streak.goalProgress,
+              minHeight: 6,
+              backgroundColor: context.colorBorder,
+              valueColor: AlwaysStoppedAnimation(
+                streak.goalMet ? AppColors.success : AppColors.accent,
+              ),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            streak.goalMet
+                ? LocaleKeys.studyGoalMet.tr
+                : LocaleKeys.deckGoalProgress.trParams({
+                    'done': '${streak.reviewsToday}',
+                    'goal': '${streak.dailyGoal}',
+                  }),
+            style: AppTextStyles.caption.copyWith(
+              color: streak.goalMet
+                  ? AppColors.success
+                  : context.colorInkMuted,
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 
@@ -203,6 +391,16 @@ class _FlashcardTile extends StatelessWidget {
                   ],
                 ),
               ),
+              if (card.isDue)
+                Container(
+                  width: 8,
+                  height: 8,
+                  margin: const EdgeInsets.only(right: AppSpacing.sm),
+                  decoration: const BoxDecoration(
+                    color: AppColors.accent,
+                    shape: BoxShape.circle,
+                  ),
+                ),
               Icon(Icons.chevron_right_rounded, color: context.colorInkMuted),
             ],
           ),

@@ -7,5 +7,11 @@
 abstract class TextToSpeechService {
   /// Speaks [text], in the voice/locale for [languageCode] (an ISO 639-1
   /// code like 'fr') when available, otherwise the device default.
+  ///
+  /// Completes when the utterance has finished playing, so callers that
+  /// chain speech (hands-free listening) can simply await it.
   Future<void> speak(String text, {String? languageCode});
+
+  /// Cuts off whatever is currently playing.
+  Future<void> stop();
 }

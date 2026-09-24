@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
+import '../../core/services/notification/study_reminder_service.dart';
+import '../../core/services/streak/streak_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -103,11 +105,28 @@ class ProfileView extends GetView<ProfileController> {
               const SizedBox(height: AppSpacing.lg * 1.5),
               _SettingsGroup(
                 children: [
-                  _SettingsTile(
-                    icon: Icons.notifications_outlined,
-                    label: LocaleKeys.profileNotifications.tr,
-                    onTap: () => AppSnackbar.info(
-                      LocaleKeys.profileNotificationsComingSoon.tr,
+                  Obx(() {
+                    final reminder = Get.find<StudyReminderService>();
+                    return _SettingsTile(
+                      icon: Icons.notifications_outlined,
+                      label: LocaleKeys.reminderSettingsTitle.tr,
+                      value: reminder.isEnabled.value
+                          ? LocaleKeys.reminderEveryDayAt.trParams({
+                              'time': reminder.time.value.format(context),
+                            })
+                          : LocaleKeys.reminderOff.tr,
+                      onTap: () => _showReminderSheet(context),
+                    );
+                  }),
+                  Obx(
+                    () => _SettingsTile(
+                      icon: Icons.flag_outlined,
+                      label: LocaleKeys.goalSettingsTitle.tr,
+                      value: LocaleKeys.goalCardsPerDay.trParams({
+                        'count':
+                            '${Get.find<StreakService>().streak.value.dailyGoal}',
+                      }),
+                      onTap: () => _showGoalSheet(context),
                     ),
                   ),
                   _SettingsTile(
@@ -282,6 +301,134 @@ void _showThemePicker(BuildContext context, ProfileController controller) {
   );
 }
 
+/// Turns the daily study reminder on or off and picks its time.
+///
+/// Opening a system permission prompt here rather than at first launch
+/// means the OS dialog arrives right after the user has asked for
+/// reminders, which is the only moment it makes sense to them.
+void _showReminderSheet(BuildContext context) {
+  final reminder = Get.find<StudyReminderService>();
+
+  Future<void> setEnabled(bool enabled) async {
+    if (!enabled) {
+      await reminder.disable();
+      return;
+    }
+    final granted = await reminder.enable();
+    if (!granted) AppSnackbar.error(LocaleKeys.reminderPermissionDenied.tr);
+  }
+
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: context.colorPaper,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+    ),
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Obx(
+            () => Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  LocaleKeys.reminderSettingsTitle.tr,
+                  style: AppTextStyles.heading2,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                SwitchListTile.adaptive(
+                  contentPadding: EdgeInsets.zero,
+                  activeThumbColor: AppColors.accent,
+                  value: reminder.isEnabled.value,
+                  onChanged: setEnabled,
+                  title: Text(
+                    reminder.isEnabled.value
+                        ? LocaleKeys.reminderEveryDayAt.trParams({
+                            'time': reminder.time.value.format(sheetContext),
+                          })
+                        : LocaleKeys.reminderOff.tr,
+                    style: AppTextStyles.bodyMedium,
+                  ),
+                ),
+                if (reminder.isEnabled.value) ...[
+                  const SizedBox(height: AppSpacing.sm),
+                  AppButton(
+                    variant: AppButtonVariant.outlined,
+                    label: reminder.time.value.format(sheetContext),
+                    icon: const Icon(Icons.schedule_rounded, size: 18),
+                    onPressed: () async {
+                      final picked = await showTimePicker(
+                        context: sheetContext,
+                        initialTime: reminder.time.value,
+                      );
+                      if (picked != null) await reminder.enable(at: picked);
+                    },
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+/// Sets how many cards a day counts as done - which also caps how many a
+/// single session will serve up, so the goal and the session are the same
+/// promise.
+void _showGoalSheet(BuildContext context) {
+  const options = [10, 20, 30, 50];
+  final streakService = Get.find<StreakService>();
+
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: context.colorPaper,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
+    ),
+    builder: (sheetContext) {
+      return SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(AppSpacing.lg),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.goalSettingsTitle.tr,
+                style: AppTextStyles.heading2,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              Obx(
+                () => Column(
+                  children: [
+                    for (final option in options)
+                      _PickerOption(
+                        label: LocaleKeys.goalCardsPerDay.trParams({
+                          'count': '$option',
+                        }),
+                        icon: Icons.flag_outlined,
+                        isSelected:
+                            streakService.streak.value.dailyGoal == option,
+                        onTap: () {
+                          streakService.setDailyGoal(option);
+                          Get.back();
+                        },
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
+
 /// Shared row style for the Appearance bottom sheet: an icon, a label, and
 /// a checkmark on the selected option.
 class _PickerOption extends StatelessWidget {
@@ -358,12 +505,18 @@ class _SettingsTile extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.onTap,
+    this.value,
     this.showDivider = true,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
+
+  /// Current setting, shown muted at the end of the row so the state is
+  /// readable without opening the tile.
+  final String? value;
+
   final bool showDivider;
 
   @override
@@ -384,6 +537,19 @@ class _SettingsTile extends StatelessWidget {
                   Icon(icon, size: 22, color: context.colorInk),
                   const SizedBox(width: AppSpacing.md),
                   Expanded(child: Text(label, style: AppTextStyles.bodyMedium)),
+                  if (value != null) ...[
+                    Flexible(
+                      child: Text(
+                        value!,
+                        textAlign: TextAlign.end,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.caption.copyWith(
+                          color: context.colorInkMuted,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                  ],
                   Icon(
                     Icons.chevron_right_rounded,
                     color: context.colorInkMuted,

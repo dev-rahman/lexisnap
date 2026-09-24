@@ -78,7 +78,6 @@ const Map<String, String> en = {
   LocaleKeys.navDecks: 'Decks',
 
   LocaleKeys.profileYourAccount: 'Your account',
-  LocaleKeys.profileNotifications: 'Notifications',
   LocaleKeys.profileAppearance: 'Appearance',
   LocaleKeys.profileLanguage: 'Language',
   LocaleKeys.profileHelpSupport: 'Help & support',
@@ -86,8 +85,6 @@ const Map<String, String> en = {
   LocaleKeys.profileSignOut: 'Sign out',
   LocaleKeys.profileEditName: 'Edit name',
   LocaleKeys.profileNameUpdated: 'Your name has been updated.',
-  LocaleKeys.profileNotificationsComingSoon:
-      'Notification settings are on the way.',
   LocaleKeys.profileAboutComingSoon: 'About page is on the way.',
   LocaleKeys.themeSystem: 'System',
   LocaleKeys.themeLight: 'Light',
@@ -164,6 +161,11 @@ const Map<String, String> en = {
   LocaleKeys.deckDeleteError: "Couldn't delete this deck. Please try again.",
   LocaleKeys.deckStudy: 'Study',
   LocaleKeys.deckStudyDue: 'Study · @count due',
+  LocaleKeys.deckListen: 'Listen',
+  LocaleKeys.deckAllCaughtUp: 'All caught up',
+  LocaleKeys.deckDueNow: '@count ready to review',
+  LocaleKeys.deckStreakLabel: 'day streak',
+  LocaleKeys.deckGoalProgress: '@done / @goal today',
 
   LocaleKeys.cardDetailReviewedOnce: 'Reviewed once',
   LocaleKeys.cardDetailReviewedTimes: 'Reviewed @count times',
@@ -183,4 +185,34 @@ const Map<String, String> en = {
   LocaleKeys.studyCompleteTitle: 'Session complete!',
   LocaleKeys.studyCompleteBody: 'You reviewed @count cards.',
   LocaleKeys.studyDone: 'Done',
+  LocaleKeys.studyGotIt: 'Got it',
+  LocaleKeys.studyForgot: 'Forgot',
+  LocaleKeys.studyChoicePrompt: 'What does this mean?',
+  LocaleKeys.studySwipeHint: 'Swipe the card, or tap below',
+  LocaleKeys.studyAccuracy: 'recalled',
+  LocaleKeys.studyStreakDays: '@count-day streak',
+  LocaleKeys.studyStreakStarted: 'Streak started',
+  LocaleKeys.studyGoalProgress: '@done of @goal today',
+  LocaleKeys.studyGoalMet: 'Daily goal reached',
+  LocaleKeys.studyContinue: 'Review @count more',
+
+  LocaleKeys.listenTitle: 'Listening',
+  LocaleKeys.listenHint:
+      'Plays through the deck hands-free. Nothing is graded here.',
+  LocaleKeys.listenFinished: 'End of deck',
+
+  LocaleKeys.reminderNotificationTitle: 'Time to study',
+  LocaleKeys.reminderNotificationBody:
+      'A few cards are waiting. Two minutes is enough.',
+  LocaleKeys.reminderChannelName: 'Study reminders',
+  LocaleKeys.reminderChannelDescription:
+      'Your daily nudge to review flashcards.',
+  LocaleKeys.reminderSettingsTitle: 'Daily reminder',
+  LocaleKeys.reminderEveryDayAt: 'Every day at @time',
+  LocaleKeys.reminderOff: 'Off',
+  LocaleKeys.reminderPermissionDenied:
+      'Notifications are off for LexiSnap. Enable them in Settings to get reminders.',
+
+  LocaleKeys.goalSettingsTitle: 'Daily goal',
+  LocaleKeys.goalCardsPerDay: '@count cards a day',
 };

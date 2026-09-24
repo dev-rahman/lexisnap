@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../../data/models/review_grade.dart';
+import 'study_day.dart';
 
 /// The next scheduling state for a flashcard, produced by [calculateNextReview].
 class SrsUpdate {
@@ -19,6 +20,9 @@ class SrsUpdate {
 
 /// SM-2, the spaced-repetition algorithm behind Anki. [grade] maps to the
 /// classic 0-5 "quality of recall" scale as: again=0, hard=3, good=4, easy=5.
+///
+/// Due dates land on study-day boundaries rather than the exact review
+/// time - see `study_day.dart` for why.
 SrsUpdate calculateNextReview({
   required double easeFactor,
   required int intervalDays,
@@ -41,8 +45,10 @@ SrsUpdate calculateNextReview({
   int newRepetitions;
   int newIntervalDays;
   if (quality < 3) {
+    // A lapse stays due today rather than waiting for tomorrow, so a card
+    // the learner just blanked on can be re-earned in the same sitting.
     newRepetitions = 0;
-    newIntervalDays = 1;
+    newIntervalDays = 0;
   } else {
     newRepetitions = repetitions + 1;
     if (newRepetitions == 1) {
@@ -58,6 +64,6 @@ SrsUpdate calculateNextReview({
     easeFactor: newEaseFactor,
     intervalDays: newIntervalDays,
     repetitions: newRepetitions,
-    dueAt: reviewedAt.add(Duration(days: newIntervalDays)),
+    dueAt: dueDateAfter(reviewedAt, newIntervalDays),
   );
 }

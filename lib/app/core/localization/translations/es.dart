@@ -78,7 +78,6 @@ const Map<String, String> es = {
   LocaleKeys.navDecks: 'Mazos',
 
   LocaleKeys.profileYourAccount: 'Tu cuenta',
-  LocaleKeys.profileNotifications: 'Notificaciones',
   LocaleKeys.profileAppearance: 'Apariencia',
   LocaleKeys.profileLanguage: 'Idioma',
   LocaleKeys.profileHelpSupport: 'Ayuda y soporte',
@@ -86,8 +85,6 @@ const Map<String, String> es = {
   LocaleKeys.profileSignOut: 'Cerrar sesión',
   LocaleKeys.profileEditName: 'Editar nombre',
   LocaleKeys.profileNameUpdated: 'Tu nombre se ha actualizado.',
-  LocaleKeys.profileNotificationsComingSoon:
-      'La configuración de notificaciones llegará pronto.',
   LocaleKeys.profileAboutComingSoon: 'La página Acerca de llegará pronto.',
   LocaleKeys.themeSystem: 'Sistema',
   LocaleKeys.themeLight: 'Claro',
@@ -170,6 +167,11 @@ const Map<String, String> es = {
       'No se pudo eliminar este mazo. Inténtalo de nuevo.',
   LocaleKeys.deckStudy: 'Estudiar',
   LocaleKeys.deckStudyDue: 'Estudiar · @count pendientes',
+  LocaleKeys.deckListen: 'Escuchar',
+  LocaleKeys.deckAllCaughtUp: 'Todo al día',
+  LocaleKeys.deckDueNow: '@count listas para repasar',
+  LocaleKeys.deckStreakLabel: 'días seguidos',
+  LocaleKeys.deckGoalProgress: '@done / @goal hoy',
 
   LocaleKeys.cardDetailReviewedOnce: 'Repasada una vez',
   LocaleKeys.cardDetailReviewedTimes: 'Repasada @count veces',
@@ -189,4 +191,34 @@ const Map<String, String> es = {
   LocaleKeys.studyCompleteTitle: '¡Sesión completa!',
   LocaleKeys.studyCompleteBody: 'Repasaste @count tarjetas.',
   LocaleKeys.studyDone: 'Listo',
+  LocaleKeys.studyGotIt: 'Lo sabía',
+  LocaleKeys.studyForgot: 'No lo sabía',
+  LocaleKeys.studyChoicePrompt: '¿Qué significa esto?',
+  LocaleKeys.studySwipeHint: 'Desliza la tarjeta o toca abajo',
+  LocaleKeys.studyAccuracy: 'recordadas',
+  LocaleKeys.studyStreakDays: 'Racha de @count días',
+  LocaleKeys.studyStreakStarted: 'Racha iniciada',
+  LocaleKeys.studyGoalProgress: '@done de @goal hoy',
+  LocaleKeys.studyGoalMet: 'Meta diaria alcanzada',
+  LocaleKeys.studyContinue: 'Repasar @count más',
+
+  LocaleKeys.listenTitle: 'Escuchando',
+  LocaleKeys.listenHint:
+      'Reproduce el mazo sin manos. Aquí no se califica nada.',
+  LocaleKeys.listenFinished: 'Fin del mazo',
+
+  LocaleKeys.reminderNotificationTitle: 'Hora de estudiar',
+  LocaleKeys.reminderNotificationBody:
+      'Te esperan unas tarjetas. Con dos minutos basta.',
+  LocaleKeys.reminderChannelName: 'Recordatorios de estudio',
+  LocaleKeys.reminderChannelDescription:
+      'Tu aviso diario para repasar las tarjetas.',
+  LocaleKeys.reminderSettingsTitle: 'Recordatorio diario',
+  LocaleKeys.reminderEveryDayAt: 'Todos los días a las @time',
+  LocaleKeys.reminderOff: 'Desactivado',
+  LocaleKeys.reminderPermissionDenied:
+      'Las notificaciones están desactivadas para LexiSnap. Actívalas en Ajustes para recibir recordatorios.',
+
+  LocaleKeys.goalSettingsTitle: 'Meta diaria',
+  LocaleKeys.goalCardsPerDay: '@count tarjetas al día',
 };

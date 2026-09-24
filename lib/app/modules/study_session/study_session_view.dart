@@ -1,25 +1,31 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/deck/deck_repository.dart';
-import '../../core/services/speech/text_to_speech_service.dart';
+import '../../core/services/streak/streak_service.dart';
 import '../../core/theme/app_colors.dart';
-import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/widgets/app_button.dart';
+import '../../core/utils/app_snackbar.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/models/review_grade.dart';
 import '../card_detail/card_detail_view.dart';
+import 'study_session_engine.dart';
+import 'widgets/choice_round.dart';
+import 'widgets/session_progress_bar.dart';
+import 'widgets/session_summary.dart';
+import 'widgets/swipe_flashcard.dart';
 
-/// A spaced-repetition study session for one deck: cards due for review are
-/// shown one at a time, flipped to reveal the answer, then graded on
-/// Anki's four-level scale. Grading persists the SM-2 schedule immediately
-/// (`DeckRepository.submitReview`); an "Again" grade also requeues the card
-/// a few cards later in this same session.
+/// A spaced-repetition study session for one deck.
+///
+/// The session asks each card the way that card deserves - multiple
+/// choice while it's still being learned, free recall once it's known -
+/// and never asks the learner to grade themselves. Answers are either a
+/// tap on an option or a swipe, and the SM-2 grade is inferred from the
+/// answer plus how long it took (see [ReviewGrade.infer]).
+///
+/// Sessions are capped at the user's daily goal so they always end.
 class StudySessionView extends StatefulWidget {
   const StudySessionView({
     super.key,
@@ -36,95 +42,89 @@ class StudySessionView extends StatefulWidget {
   State<StudySessionView> createState() => _StudySessionViewState();
 }
 
-class _StudySessionViewState extends State<StudySessionView>
-    with SingleTickerProviderStateMixin {
+class _StudySessionViewState extends State<StudySessionView> {
   DeckRepository get _deckRepository => Get.find<DeckRepository>();
+  StreakService get _streakService => Get.find<StreakService>();
 
-  late final List<Flashcard> _queue;
-  late final int _initialTotal;
-  late final bool _nothingWasDue;
-  int _cardInstanceKey = 0;
+  /// The deck as this session knows it, kept current as cards are graded
+  /// so a follow-on round can be started without refetching.
+  late List<Flashcard> _deck = List.of(widget.flashcards);
+
+  late StudySessionEngine _engine = _newEngine();
+
+  int _stepKey = 0;
   bool _isSubmitting = false;
 
-  late final AnimationController _flipController = AnimationController(
-    vsync: this,
-    duration: const Duration(milliseconds: 350),
+  StudySessionEngine _newEngine() => StudySessionEngine(
+    deck: _deck,
+    cap: _streakService.streak.value.dailyGoal,
   );
 
-  final _gradeTally = {for (final grade in ReviewGrade.values) grade: 0};
+  Future<void> _answer(bool recalled, Duration timeToAnswer) async {
+    final step = _engine.currentStep;
+    if (step == null || _isSubmitting) return;
 
-  @override
-  void initState() {
-    super.initState();
-    final due = widget.flashcards.where((card) => card.isDue).toList();
-    _nothingWasDue = due.isEmpty;
-    _queue = due.isEmpty ? List.of(widget.flashcards) : due;
-    _initialTotal = _queue.length;
-  }
+    _isSubmitting = true;
+    final grade = ReviewGrade.infer(
+      recalled: recalled,
+      timeToAnswer: timeToAnswer,
+    );
 
-  @override
-  void dispose() {
-    _flipController.dispose();
-    super.dispose();
-  }
-
-  Flashcard? get _current => _queue.isEmpty ? null : _queue.first;
-
-  void _reveal() {
-    if (_flipController.isAnimating || _flipController.value > 0) return;
-    _flipController.forward();
-  }
-
-  Future<void> _grade(ReviewGrade grade) async {
-    final card = _current;
-    if (card == null || _isSubmitting) return;
-
-    setState(() => _isSubmitting = true);
     try {
-      final updated = await _deckRepository.submitReview(card, grade);
-      _gradeTally[grade] = (_gradeTally[grade] ?? 0) + 1;
+      final updated = await _deckRepository.submitReview(step.card, grade);
+      if (!mounted) return;
 
       setState(() {
-        _queue.removeAt(0);
-        if (grade == ReviewGrade.again) {
-          final reinsertAt = min(3, _queue.length);
-          _queue.insert(reinsertAt, updated);
-        }
-        _cardInstanceKey++;
-        _isSubmitting = false;
+        _deck = [
+          for (final card in _deck) card.id == updated.id ? updated : card,
+        ];
+        _engine.complete(updated, grade);
+        _stepKey++;
       });
-      _flipController.value = 0;
+
+      if (_engine.isComplete) {
+        await _streakService.recordReviews(_engine.retiredCount);
+      }
     } catch (_) {
-      setState(() => _isSubmitting = false);
+      AppSnackbar.error(LocaleKeys.commonSomethingWentWrong.tr);
+    } finally {
+      _isSubmitting = false;
     }
   }
 
+  void _startNextRound() => setState(() {
+    _engine = _newEngine();
+    _stepKey++;
+  });
+
   @override
   Widget build(BuildContext context) {
-    final current = _current;
+    final step = _engine.currentStep;
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.close_rounded),
           onPressed: Get.back,
         ),
-        title: current == null
+        title: step == null
             ? null
             : Text(
                 LocaleKeys.studyProgress.trParams({
-                  'current':
-                      '${(_initialTotal - _queue.length).clamp(0, _initialTotal)}',
-                  'total': '$_initialTotal',
+                  'current': '${_engine.retiredCount}',
+                  'total': '${_engine.plannedTotal}',
                 }),
-                style: AppTextStyles.bodyMedium,
+                style: AppTextStyles.caption.copyWith(
+                  color: context.colorInkMuted,
+                ),
               ),
         actions: [
-          if (current != null)
+          if (step != null)
             IconButton(
               icon: const Icon(Icons.info_outline_rounded),
               onPressed: () => Get.to(
                 () => CardDetailView(
-                  card: current,
+                  card: step.card,
                   sourceLanguage: widget.sourceLanguage,
                   targetLanguage: widget.targetLanguage,
                 ),
@@ -133,337 +133,78 @@ class _StudySessionViewState extends State<StudySessionView>
         ],
       ),
       body: SafeArea(
-        child: current == null
-            ? _SummaryView(
-                totalReviewed: _initialTotal,
-                gradeTally: _gradeTally,
-                onDone: () => Get.back(),
-              )
-            : Column(
-                children: [
-                  LinearProgressIndicator(
-                    value: _initialTotal == 0
-                        ? 0
-                        : (_initialTotal - _queue.length) / _initialTotal,
-                    minHeight: 3,
-                    backgroundColor: context.colorSurface,
-                    valueColor: const AlwaysStoppedAnimation(AppColors.accent),
-                  ),
-                  if (_nothingWasDue)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                        AppSpacing.lg,
-                        AppSpacing.sm,
-                        AppSpacing.lg,
-                        0,
-                      ),
-                      child: Text(
-                        LocaleKeys.studyNothingDueBody.tr,
-                        style: AppTextStyles.caption.copyWith(
-                          color: context.colorInkMuted,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(AppSpacing.lg),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 250),
-                        child: _FlipCard(
-                          key: ValueKey(_cardInstanceKey),
-                          card: current,
-                          sourceLanguage: widget.sourceLanguage,
-                          targetLanguage: widget.targetLanguage,
-                          flipController: _flipController,
-                          onTapFront: _reveal,
-                        ),
-                      ),
-                    ),
-                  ),
-                  AnimatedBuilder(
-                    animation: _flipController,
-                    builder: (context, child) => AnimatedOpacity(
-                      duration: const Duration(milliseconds: 150),
-                      opacity: _flipController.value > 0.5 ? 1 : 0,
-                      child: IgnorePointer(
-                        ignoring: _flipController.value <= 0.5,
-                        child: child,
-                      ),
-                    ),
-                    child: _GradeButtonRow(
-                      isSubmitting: _isSubmitting,
-                      onGrade: _grade,
-                    ),
-                  ),
-                ],
-              ),
+        child: step == null ? _buildSummary() : _buildStep(context, step),
       ),
     );
   }
-}
 
-class _FlipCard extends StatelessWidget {
-  const _FlipCard({
-    super.key,
-    required this.card,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-    required this.flipController,
-    required this.onTapFront,
-  });
+  Widget _buildSummary() {
+    return Obx(
+      () => SessionSummary(
+        reviewedCount: _engine.retiredCount,
+        accuracy: _engine.accuracy,
+        tally: _engine.tally,
+        streak: _streakService.streak.value,
+        remainingDueCount: _engine.skippedDueCount,
+        onDone: Get.back,
+        onContinue: _startNextRound,
+      ),
+    );
+  }
 
-  final Flashcard card;
-  final String? sourceLanguage;
-  final String targetLanguage;
-  final AnimationController flipController;
-  final VoidCallback onTapFront;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: flipController,
-      builder: (context, _) {
-        final angle = flipController.value * pi;
-        final showBack = angle > pi / 2;
-        return GestureDetector(
-          onTap: showBack ? null : onTapFront,
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.identity()
-              ..setEntry(3, 2, 0.001)
-              ..rotateY(angle),
-            child: showBack
-                ? Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.identity()..rotateY(pi),
-                    child: _CardFace(
-                      isBack: true,
-                      card: card,
-                      sourceLanguage: sourceLanguage,
-                      targetLanguage: targetLanguage,
-                    ),
-                  )
-                : _CardFace(
-                    isBack: false,
-                    card: card,
-                    sourceLanguage: sourceLanguage,
-                    targetLanguage: targetLanguage,
-                  ),
+  Widget _buildStep(BuildContext context, StudyStep step) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: SessionProgressBar(
+            total: _engine.plannedTotal,
+            completed: _engine.retiredCount,
           ),
-        );
-      },
-    );
-  }
-}
-
-class _CardFace extends StatelessWidget {
-  const _CardFace({
-    required this.isBack,
-    required this.card,
-    required this.sourceLanguage,
-    required this.targetLanguage,
-  });
-
-  final bool isBack;
-  final Flashcard card;
-  final String? sourceLanguage;
-  final String targetLanguage;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        color: context.colorSurface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      alignment: Alignment.center,
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              isBack ? card.translation : card.word,
-              style: AppTextStyles.heading1.copyWith(
-                color: isBack ? AppColors.accent : context.colorInk,
+        ),
+        if (_engine.nothingWasDue)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.sm,
+              AppSpacing.lg,
+              0,
+            ),
+            child: Text(
+              LocaleKeys.studyNothingDueBody.tr,
+              style: AppTextStyles.caption.copyWith(
+                color: context.colorInkMuted,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: AppSpacing.sm),
-            IconButton(
-              icon: const Icon(Icons.volume_up_outlined),
-              color: AppColors.accent,
-              onPressed: () => Get.find<TextToSpeechService>().speak(
-                isBack ? card.translation : card.word,
-                languageCode: isBack ? targetLanguage : sourceLanguage,
+          ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.lg),
+            child: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 220),
+              child: KeyedSubtree(
+                key: ValueKey(_stepKey),
+                child: switch (step.kind) {
+                  StudyStepKind.choice => ChoiceRound(
+                    card: step.card,
+                    options: step.options,
+                    answerIndex: step.answerIndex,
+                    sourceLanguage: widget.sourceLanguage,
+                    onAnswer: _answer,
+                  ),
+                  StudyStepKind.recall => SwipeFlashcard(
+                    card: step.card,
+                    sourceLanguage: widget.sourceLanguage,
+                    targetLanguage: widget.targetLanguage,
+                    onAnswer: _answer,
+                  ),
+                },
               ),
             ),
-            if (!isBack) ...[
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                LocaleKeys.studyTapToReveal.tr,
-                style: AppTextStyles.caption.copyWith(
-                  color: context.colorInkMuted,
-                ),
-              ),
-            ],
-            if (isBack && card.wordDescription != null) ...[
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                card.wordDescription!,
-                style: AppTextStyles.body.copyWith(
-                  color: context.colorInkMuted,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ],
+          ),
         ),
-      ),
-    );
-  }
-}
-
-class _GradeButtonRow extends StatelessWidget {
-  const _GradeButtonRow({required this.isSubmitting, required this.onGrade});
-
-  final bool isSubmitting;
-  final ValueChanged<ReviewGrade> onGrade;
-
-  static const _colors = {
-    ReviewGrade.again: AppColors.error,
-    ReviewGrade.hard: Color(0xFFD98A3D),
-    ReviewGrade.good: AppColors.success,
-    ReviewGrade.easy: Color(0xFF3B82C4),
-  };
-
-  static const _labels = {
-    ReviewGrade.again: LocaleKeys.studyGradeAgain,
-    ReviewGrade.hard: LocaleKeys.studyGradeHard,
-    ReviewGrade.good: LocaleKeys.studyGradeGood,
-    ReviewGrade.easy: LocaleKeys.studyGradeEasy,
-  };
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        AppSpacing.lg,
-        0,
-        AppSpacing.lg,
-        AppSpacing.lg,
-      ),
-      child: Row(
-        children: [
-          for (final grade in ReviewGrade.values) ...[
-            if (grade != ReviewGrade.again)
-              const SizedBox(width: AppSpacing.sm),
-            Expanded(
-              child: OutlinedButton(
-                onPressed: isSubmitting ? null : () => onGrade(grade),
-                style: OutlinedButton.styleFrom(
-                  foregroundColor: _colors[grade],
-                  side: BorderSide(color: _colors[grade]!),
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
-                ),
-                child: Text(_labels[grade]!.tr),
-              ),
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _SummaryView extends StatelessWidget {
-  const _SummaryView({
-    required this.totalReviewed,
-    required this.gradeTally,
-    required this.onDone,
-  });
-
-  final int totalReviewed;
-  final Map<ReviewGrade, int> gradeTally;
-  final VoidCallback onDone;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.celebration_outlined,
-            size: 56,
-            color: AppColors.accent,
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text(
-            LocaleKeys.studyCompleteTitle.tr,
-            style: AppTextStyles.heading2,
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Text(
-            LocaleKeys.studyCompleteBody.trParams({'count': '$totalReviewed'}),
-            style: AppTextStyles.body.copyWith(color: context.colorInkMuted),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Wrap(
-            spacing: AppSpacing.md,
-            runSpacing: AppSpacing.sm,
-            alignment: WrapAlignment.center,
-            children: [
-              for (final grade in ReviewGrade.values)
-                _TallyChip(
-                  color: _GradeButtonRow._colors[grade]!,
-                  label: _GradeButtonRow._labels[grade]!.tr,
-                  count: gradeTally[grade] ?? 0,
-                ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.lg * 1.5),
-          AppButton(label: LocaleKeys.studyDone.tr, onPressed: onDone),
-        ],
-      ),
-    );
-  }
-}
-
-class _TallyChip extends StatelessWidget {
-  const _TallyChip({
-    required this.color,
-    required this.label,
-    required this.count,
-  });
-
-  final Color color;
-  final String label;
-  final int count;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppSpacing.sm,
-        vertical: AppSpacing.xs,
-      ),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-      ),
-      child: Text(
-        '$count $label',
-        style: AppTextStyles.caption.copyWith(
-          color: color,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+      ],
     );
   }
 }
