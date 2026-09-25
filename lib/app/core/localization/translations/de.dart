@@ -69,7 +69,12 @@ const Map<String, String> de = {
   LocaleKeys.homeScanCtaSubtitle: 'Verwandle jeden Text in Karteikarten',
   LocaleKeys.homeReviewCta: '@count Karten wiederholen',
   LocaleKeys.homeReviewCtaOne: '1 Karte wiederholen',
-  LocaleKeys.homeReviewCtaSubtitle: 'Jetzt fällig in all deinen Decks',
+  LocaleKeys.homeReviewEstimate: 'etwa @count Min.',
+  LocaleKeys.homeGoalToday: '@done von @goal Karten heute',
+  LocaleKeys.homeCardsToday: '@count Karten heute',
+  LocaleKeys.homeStreakBest: 'Rekord @count',
+  LocaleKeys.homeAllCaughtUp: 'Alles erledigt - komm morgen wieder',
+  LocaleKeys.homeStreakStartHint: 'Lerne heute, um deine Serie zu starten',
   LocaleKeys.homeYourDecks: 'Deine Stapel',
   LocaleKeys.homeNoDecksTitle: 'Noch keine Stapel',
   LocaleKeys.homeNoDecksBody:
@@ -175,8 +180,6 @@ const Map<String, String> de = {
   LocaleKeys.deckListen: 'Anhören',
   LocaleKeys.deckAllCaughtUp: 'Alles erledigt',
   LocaleKeys.deckDueNow: '@count zum Wiederholen bereit',
-  LocaleKeys.deckStreakLabel: 'Tage in Folge',
-  LocaleKeys.deckGoalProgress: '@done / @goal heute',
 
   LocaleKeys.cardDetailReviewedOnce: 'Einmal wiederholt',
   LocaleKeys.cardDetailReviewedTimes: '@count Mal wiederholt',
@@ -232,6 +235,7 @@ const Map<String, String> de = {
   LocaleKeys.studyModeFlip: 'Umdrehen',
   LocaleKeys.studyModeFlipHint: 'Karte umdrehen und wischen',
   LocaleKeys.studyModeListenHint: 'Freihändig, ohne Bewertung',
+  LocaleKeys.studyModeTitle: 'Lernmodus',
 
   LocaleKeys.goalSettingsTitle: 'Tagesziel',
   LocaleKeys.goalCardsPerDay: '@count Karten pro Tag',

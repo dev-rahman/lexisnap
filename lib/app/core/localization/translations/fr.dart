@@ -71,7 +71,12 @@ const Map<String, String> fr = {
       'Transformez n\'importe quel texte en cartes mémo',
   LocaleKeys.homeReviewCta: 'Réviser @count cartes',
   LocaleKeys.homeReviewCtaOne: 'Réviser 1 carte',
-  LocaleKeys.homeReviewCtaSubtitle: 'À revoir dans tous vos paquets',
+  LocaleKeys.homeReviewEstimate: 'environ @count min',
+  LocaleKeys.homeGoalToday: '@done sur @goal cartes aujourd\'hui',
+  LocaleKeys.homeCardsToday: '@count cartes aujourd\'hui',
+  LocaleKeys.homeStreakBest: 'record @count',
+  LocaleKeys.homeAllCaughtUp: 'Tout est à jour - revenez demain',
+  LocaleKeys.homeStreakStartHint: 'Révisez aujourd\'hui pour lancer votre série',
   LocaleKeys.homeYourDecks: 'Vos paquets',
   LocaleKeys.homeNoDecksTitle: 'Aucun paquet pour le moment',
   LocaleKeys.homeNoDecksBody:
@@ -178,8 +183,6 @@ const Map<String, String> fr = {
   LocaleKeys.deckListen: 'Écouter',
   LocaleKeys.deckAllCaughtUp: 'Tout est à jour',
   LocaleKeys.deckDueNow: '@count prêtes à réviser',
-  LocaleKeys.deckStreakLabel: 'jours d\'affilée',
-  LocaleKeys.deckGoalProgress: '@done / @goal aujourd\'hui',
 
   LocaleKeys.cardDetailReviewedOnce: 'Révisée une fois',
   LocaleKeys.cardDetailReviewedTimes: 'Révisée @count fois',
@@ -236,6 +239,7 @@ const Map<String, String> fr = {
   LocaleKeys.studyModeFlip: 'Retourner',
   LocaleKeys.studyModeFlipHint: 'Retournez la carte et balayez',
   LocaleKeys.studyModeListenHint: "Mains libres, rien n'est évalué",
+  LocaleKeys.studyModeTitle: 'Mode de révision',
 
   LocaleKeys.goalSettingsTitle: 'Objectif quotidien',
   LocaleKeys.goalCardsPerDay: '@count cartes par jour',

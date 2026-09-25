@@ -34,9 +34,22 @@ class MainView extends GetView<MainController> {
                 }
                 return false;
               },
+              // IndexedStack keeps both tabs mounted, and it does not mute
+              // tickers - so Home's scan-line would keep animating (and
+              // drawing frames) while the user is on Decks. TickerMode
+              // silences every ticker below the hidden tab.
               child: IndexedStack(
                 index: controller.tabIndex.value,
-                children: const [HomeView(), DecksView()],
+                children: [
+                  TickerMode(
+                    enabled: controller.tabIndex.value == 0,
+                    child: const HomeView(),
+                  ),
+                  TickerMode(
+                    enabled: controller.tabIndex.value == 1,
+                    child: const DecksView(),
+                  ),
+                ],
               ),
             ),
             Positioned(

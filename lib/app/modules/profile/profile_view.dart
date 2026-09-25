@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/notification/study_reminder_service.dart';
 import '../../core/services/streak/streak_service.dart';
+import '../../core/services/study/study_preferences_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -13,6 +14,7 @@ import '../../core/utils/initials.dart';
 import '../../core/utils/validators.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/study_mode_sheet.dart';
 import '../../core/widgets/language_picker_sheet.dart';
 import '../../routes/app_routes.dart';
 import 'profile_controller.dart';
@@ -116,6 +118,15 @@ class ProfileView extends GetView<ProfileController> {
                             })
                           : LocaleKeys.reminderOff.tr,
                       onTap: () => _showReminderSheet(context),
+                    );
+                  }),
+                  Obx(() {
+                    final mode = Get.find<StudyPreferencesService>().mode.value;
+                    return _SettingsTile(
+                      icon: studyModeIcons[mode]!,
+                      label: LocaleKeys.studyModeTitle.tr,
+                      value: studyModeLabels[mode]!.tr,
+                      onTap: () => showStudyModeSheet(context),
                     );
                   }),
                   Obx(

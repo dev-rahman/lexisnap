@@ -79,7 +79,12 @@ class LocaleKeys {
   static const homeScanCtaSubtitle = 'home_scan_cta_subtitle';
   static const homeReviewCta = 'home_review_cta';
   static const homeReviewCtaOne = 'home_review_cta_one';
-  static const homeReviewCtaSubtitle = 'home_review_cta_subtitle';
+  static const homeReviewEstimate = 'home_review_estimate';
+  static const homeGoalToday = 'home_goal_today';
+  static const homeCardsToday = 'home_cards_today';
+  static const homeStreakBest = 'home_streak_best';
+  static const homeAllCaughtUp = 'home_all_caught_up';
+  static const homeStreakStartHint = 'home_streak_start_hint';
   static const homeYourDecks = 'home_your_decks';
   static const homeNoDecksTitle = 'home_no_decks_title';
   static const homeNoDecksBody = 'home_no_decks_body';
@@ -179,8 +184,6 @@ class LocaleKeys {
   static const deckListen = 'deck_listen';
   static const deckAllCaughtUp = 'deck_all_caught_up';
   static const deckDueNow = 'deck_due_now';
-  static const deckStreakLabel = 'deck_streak_label';
-  static const deckGoalProgress = 'deck_goal_progress';
 
   // Card detail
   static const cardDetailReviewedOnce = 'card_detail_reviewed_once';
@@ -235,6 +238,7 @@ class LocaleKeys {
   static const studyModeFlip = 'study_mode_flip';
   static const studyModeFlipHint = 'study_mode_flip_hint';
   static const studyModeListenHint = 'study_mode_listen_hint';
+  static const studyModeTitle = 'study_mode_title';
 
   // Daily goal
   static const goalSettingsTitle = 'goal_settings_title';

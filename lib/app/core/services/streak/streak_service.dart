@@ -13,6 +13,7 @@ class StudyStreak {
     this.reviewsToday = 0,
     this.dailyGoal = StreakService.defaultDailyGoal,
     this.lastStudiedAt,
+    this.recentStudyDays = const [],
   });
 
   /// Consecutive study days up to and including today.
@@ -22,10 +23,32 @@ class StudyStreak {
   final int dailyGoal;
   final DateTime? lastStudiedAt;
 
+  /// Study-day boundaries the user actually studied on, newest first.
+  /// Only the recent past is kept - enough to draw the week strip.
+  final List<DateTime> recentStudyDays;
+
   bool get goalMet => reviewsToday >= dailyGoal;
 
   double get goalProgress =>
       dailyGoal <= 0 ? 1 : (reviewsToday / dailyGoal).clamp(0.0, 1.0);
+
+  StudyStreak copyWith({
+    int? current,
+    int? longest,
+    int? reviewsToday,
+    int? dailyGoal,
+    DateTime? lastStudiedAt,
+    List<DateTime>? recentStudyDays,
+  }) {
+    return StudyStreak(
+      current: current ?? this.current,
+      longest: longest ?? this.longest,
+      reviewsToday: reviewsToday ?? this.reviewsToday,
+      dailyGoal: dailyGoal ?? this.dailyGoal,
+      lastStudiedAt: lastStudiedAt ?? this.lastStudiedAt,
+      recentStudyDays: recentStudyDays ?? this.recentStudyDays,
+    );
+  }
 }
 
 /// Tracks study-day streaks and today's review count, on-device only.
@@ -38,13 +61,30 @@ class StudyStreak {
 class StreakService extends GetxService {
   static const defaultDailyGoal = 20;
 
+  /// Days of history retained. The week strip shows seven; the rest is
+  /// slack so a day isn't dropped the moment it scrolls out of view.
+  static const _historyLength = 14;
+
   static const _currentKey = 'streak_current';
   static const _longestKey = 'streak_longest';
   static const _reviewsTodayKey = 'streak_reviews_today';
   static const _dailyGoalKey = 'streak_daily_goal';
   static const _lastStudiedKey = 'streak_last_studied_at';
+  static const _historyKey = 'streak_study_days';
 
   final streak = const StudyStreak().obs;
+
+  /// Seven flags, oldest first, with index 6 being today - the week strip
+  /// reads straight from this.
+  List<bool> get weekProgress {
+    final today = studyDayStart(DateTime.now());
+    final days = streak.value.recentStudyDays;
+
+    return List.generate(
+      7,
+      (index) => days.any((day) => studyDaysBetween(day, today) == 6 - index),
+    );
+  }
 
   Future<StreakService> init() async {
     final prefs = await SharedPreferences.getInstance();
@@ -61,13 +101,27 @@ class StreakService extends GetxService {
     // has already been broken, and today's count starts fresh.
     final isToday = daysSince == 0;
     final isUnbroken = daysSince != null && daysSince <= 1;
+    final current = isUnbroken ? prefs.getInt(_currentKey) ?? 0 : 0;
+
+    var history = _readHistory(prefs);
+    if (history.isEmpty && lastStudiedAt != null) {
+      // Upgrading from a build that only stored the streak length: infer
+      // the days it must have covered so the strip isn't blank on first
+      // launch, then persist so this runs once.
+      history = _inferHistory(
+        lastStudiedAt: lastStudiedAt,
+        streakLength: prefs.getInt(_currentKey) ?? 0,
+      );
+      await _writeHistory(prefs, history);
+    }
 
     streak.value = StudyStreak(
-      current: isUnbroken ? prefs.getInt(_currentKey) ?? 0 : 0,
+      current: current,
       longest: prefs.getInt(_longestKey) ?? 0,
       reviewsToday: isToday ? prefs.getInt(_reviewsTodayKey) ?? 0 : 0,
       dailyGoal: prefs.getInt(_dailyGoalKey) ?? defaultDailyGoal,
       lastStudiedAt: lastStudiedAt,
+      recentStudyDays: history,
     );
     return this;
   }
@@ -78,6 +132,7 @@ class StreakService extends GetxService {
     if (count <= 0) return;
 
     final now = DateTime.now();
+    final today = studyDayStart(now);
     final previous = streak.value;
     final daysSince = previous.lastStudiedAt == null
         ? null
@@ -88,12 +143,18 @@ class StreakService extends GetxService {
         ? max(previous.current, 1)
         : (daysSince == 1 ? previous.current + 1 : 1);
 
-    final updated = StudyStreak(
+    final history = [...previous.recentStudyDays];
+    if (!history.any((day) => day.isAtSameMomentAs(today))) {
+      history.insert(0, today);
+    }
+    history.removeWhere((day) => studyDaysBetween(day, today) >= _historyLength);
+
+    final updated = previous.copyWith(
       current: current,
       longest: max(current, previous.longest),
       reviewsToday: isSameDay ? previous.reviewsToday + count : count,
-      dailyGoal: previous.dailyGoal,
       lastStudiedAt: now,
+      recentStudyDays: history,
     );
     streak.value = updated;
 
@@ -102,20 +163,52 @@ class StreakService extends GetxService {
     await prefs.setInt(_longestKey, updated.longest);
     await prefs.setInt(_reviewsTodayKey, updated.reviewsToday);
     await prefs.setString(_lastStudiedKey, now.toIso8601String());
+    await _writeHistory(prefs, history);
   }
 
   Future<void> setDailyGoal(int goal) async {
     final clamped = goal.clamp(5, 100);
-    final previous = streak.value;
-    streak.value = StudyStreak(
-      current: previous.current,
-      longest: previous.longest,
-      reviewsToday: previous.reviewsToday,
-      dailyGoal: clamped,
-      lastStudiedAt: previous.lastStudiedAt,
-    );
+    streak.value = streak.value.copyWith(dailyGoal: clamped);
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_dailyGoalKey, clamped);
+  }
+
+  List<DateTime> _readHistory(SharedPreferences prefs) {
+    final today = studyDayStart(DateTime.now());
+    final stored = prefs.getStringList(_historyKey) ?? const [];
+
+    final days = [
+      for (final raw in stored)
+        if (DateTime.tryParse(raw) case final day?)
+          if (studyDaysBetween(day, today) < _historyLength) day,
+    ];
+    days.sort((a, b) => b.compareTo(a));
+    return days;
+  }
+
+  Future<void> _writeHistory(
+    SharedPreferences prefs,
+    List<DateTime> history,
+  ) async {
+    await prefs.setStringList(_historyKey, [
+      for (final day in history) day.toIso8601String(),
+    ]);
+  }
+
+  List<DateTime> _inferHistory({
+    required DateTime lastStudiedAt,
+    required int streakLength,
+  }) {
+    final anchor = studyDayStart(lastStudiedAt);
+    return [
+      for (var i = 0; i < min(streakLength, _historyLength); i++)
+        DateTime(
+          anchor.year,
+          anchor.month,
+          anchor.day - i,
+          studyDayRolloverHour,
+        ),
+    ];
   }
 }
