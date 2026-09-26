@@ -35,6 +35,17 @@ abstract class DeckRepository {
   /// session spanning several decks can still speak each word correctly.
   Future<List<Flashcard>> listDueFlashcards({int limit});
 
+  /// Cards that are *not* due yet, soonest-due first, starting at [offset].
+  ///
+  /// Powers extra practice once the day's scheduled reviews are done: the
+  /// user has nothing owed but wants to keep going. [offset] lets the
+  /// caller walk further into the upcoming queue on each extra round
+  /// rather than serving the same nearest cards over and over.
+  Future<List<Flashcard>> listUpcomingFlashcards({
+    required int limit,
+    int offset,
+  });
+
   /// Records a study-session grade for [card], applying the SM-2 schedule
   /// update and persisting it. Returns the card with its new schedule.
   Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade);

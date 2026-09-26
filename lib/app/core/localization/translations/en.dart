@@ -74,12 +74,20 @@ const Map<String, String> en = {
   LocaleKeys.homeCardsToday: '@count cards today',
   LocaleKeys.homeStreakBest: 'best @count',
   LocaleKeys.homeAllCaughtUp: 'All caught up - come back tomorrow',
+  LocaleKeys.homeCaughtUpToday: 'All caught up for today',
+  LocaleKeys.homePracticeCta: 'Practice @count more',
+  LocaleKeys.homePracticeNote:
+      'Extra practice - your schedule stays as it is',
   LocaleKeys.homeStreakStartHint: 'Study today to start your streak',
   LocaleKeys.homeYourDecks: 'Your decks',
   LocaleKeys.homeNoDecksTitle: 'No decks yet',
   LocaleKeys.homeNoDecksBody: 'Scan something to create your first deck.',
   LocaleKeys.homeDeckCardCount: '@count words',
   LocaleKeys.homeSeeAll: 'See all',
+
+  LocaleKeys.decksMixedTitle: 'Mixed review',
+  LocaleKeys.decksMixedDue: '@count due across all your decks',
+  LocaleKeys.decksMixedPractice: 'Nothing due - practice a few anyway',
 
   LocaleKeys.navHome: 'Home',
   LocaleKeys.navScan: 'Scan',
@@ -187,7 +195,7 @@ const Map<String, String> en = {
   LocaleKeys.studyGradeEasy: 'Easy',
   LocaleKeys.studyNothingDueTitle: 'Nothing due right now',
   LocaleKeys.studyNothingDueBody:
-      "You're all caught up - here's the whole deck for extra practice.",
+      "Nothing is due, so these are extra practice - your schedule won't change.",
   LocaleKeys.studyCompleteTitle: 'Session complete!',
   LocaleKeys.studyCompleteBody: 'You reviewed @count cards.',
   LocaleKeys.studyDone: 'Done',

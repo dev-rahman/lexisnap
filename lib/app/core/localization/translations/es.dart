@@ -74,12 +74,20 @@ const Map<String, String> es = {
   LocaleKeys.homeCardsToday: '@count tarjetas hoy',
   LocaleKeys.homeStreakBest: 'mejor @count',
   LocaleKeys.homeAllCaughtUp: 'Todo al día - vuelve mañana',
+  LocaleKeys.homeCaughtUpToday: 'Todo al día por hoy',
+  LocaleKeys.homePracticeCta: 'Practicar @count más',
+  LocaleKeys.homePracticeNote:
+      'Práctica extra: tu calendario no cambia',
   LocaleKeys.homeStreakStartHint: 'Estudia hoy para empezar tu racha',
   LocaleKeys.homeYourDecks: 'Tus mazos',
   LocaleKeys.homeNoDecksTitle: 'Aún no tienes mazos',
   LocaleKeys.homeNoDecksBody: 'Escanea algo para crear tu primer mazo.',
   LocaleKeys.homeDeckCardCount: '@count palabras',
   LocaleKeys.homeSeeAll: 'Ver todo',
+
+  LocaleKeys.decksMixedTitle: 'Repaso mixto',
+  LocaleKeys.decksMixedDue: '@count pendientes en todos tus mazos',
+  LocaleKeys.decksMixedPractice: 'Nada pendiente: practica unas cuantas',
 
   LocaleKeys.navHome: 'Inicio',
   LocaleKeys.navScan: 'Escanear',
@@ -193,7 +201,7 @@ const Map<String, String> es = {
   LocaleKeys.studyGradeEasy: 'Fácil',
   LocaleKeys.studyNothingDueTitle: 'Nada pendiente por ahora',
   LocaleKeys.studyNothingDueBody:
-      'Estás al día - aquí tienes todo el mazo para practicar más.',
+      'No hay nada pendiente, así que esto es práctica extra: tu calendario no cambiará.',
   LocaleKeys.studyCompleteTitle: '¡Sesión completa!',
   LocaleKeys.studyCompleteBody: 'Repasaste @count tarjetas.',
   LocaleKeys.studyDone: 'Listo',

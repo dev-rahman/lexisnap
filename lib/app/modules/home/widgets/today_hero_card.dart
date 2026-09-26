@@ -7,6 +7,7 @@ import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
+import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/daily_goal_ring.dart';
 import '../../../core/widgets/press_scale.dart';
 import '../../../core/widgets/streak_flame.dart';
@@ -26,7 +27,7 @@ class TodayHeroCard extends StatelessWidget {
     super.key,
     required this.streak,
     required this.weekProgress,
-    required this.dueCount,
+    required this.sessionSize,
     required this.reviewMinutes,
     required this.mode,
     required this.previousGoalProgress,
@@ -34,11 +35,18 @@ class TodayHeroCard extends StatelessWidget {
     required this.hasDecks,
     required this.isLoading,
     required this.onStart,
+    required this.canPractice,
+    required this.practiceCount,
+    required this.isLoadingPractice,
+    required this.onPractice,
   });
 
   final StudyStreak streak;
   final List<bool> weekProgress;
-  final int dueCount;
+
+  /// Cards this session will actually serve - not the whole due backlog,
+  /// which the session caps. The button has to promise what it delivers.
+  final int sessionSize;
   final int reviewMinutes;
   final StudyMode mode;
 
@@ -50,6 +58,13 @@ class TodayHeroCard extends StatelessWidget {
   final bool hasDecks;
   final bool isLoading;
   final VoidCallback onStart;
+
+  /// Whether an extra, ahead-of-schedule round is available once the day's
+  /// reviews are cleared.
+  final bool canPractice;
+  final int practiceCount;
+  final bool isLoadingPractice;
+  final VoidCallback onPractice;
 
   @override
   Widget build(BuildContext context) {
@@ -158,22 +173,55 @@ class TodayHeroCard extends StatelessWidget {
     // Nothing to study yet: the scan tile below carries the screen.
     if (!hasDecks) return const SizedBox.shrink(key: ValueKey('empty'));
 
-    if (dueCount == 0) {
-      return Row(
+    if (sessionSize == 0) {
+      return Column(
         key: const ValueKey('caught-up'),
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Icon(
-            Icons.check_circle_rounded,
-            color: AppColors.confirm,
-            size: 20,
+          Row(
+            children: [
+              const Icon(
+                Icons.check_circle_rounded,
+                color: AppColors.confirm,
+                size: 20,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Expanded(
+                child: Text(
+                  // "Come back tomorrow" is a lie once there's an extra
+                  // round on offer right below it.
+                  canPractice
+                      ? LocaleKeys.homeCaughtUpToday.tr
+                      : LocaleKeys.homeAllCaughtUp.tr,
+                  style: AppTextStyles.caption.copyWith(
+                    color: AppColors.confirm,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const SizedBox(width: AppSpacing.sm),
-          Expanded(
-            child: Text(
-              LocaleKeys.homeAllCaughtUp.tr,
-              style: AppTextStyles.caption.copyWith(color: AppColors.confirm),
+          // Clearing the day is an achievement, not a locked door. Someone
+          // who wants to keep going gets another short round - outlined,
+          // not filled, because it's a bonus rather than the day's work.
+          if (canPractice) ...[
+            const SizedBox(height: AppSpacing.md),
+            AppButton(
+              variant: AppButtonVariant.outlined,
+              label: LocaleKeys.homePracticeCta.trParams({
+                'count': '$practiceCount',
+              }),
+              icon: const Icon(Icons.refresh_rounded, size: 20),
+              isLoading: isLoadingPractice,
+              onPressed: onPractice,
             ),
-          ),
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              LocaleKeys.homePracticeNote.tr,
+              style: AppTextStyles.caption.copyWith(
+                color: context.colorInkMuted,
+              ),
+            ),
+          ],
         ],
       );
     }
@@ -206,10 +254,10 @@ class TodayHeroCard extends StatelessWidget {
                 Text(
                   isListening
                       ? LocaleKeys.deckListen.tr
-                      : dueCount == 1
+                      : sessionSize == 1
                       ? LocaleKeys.homeReviewCtaOne.tr
                       : LocaleKeys.homeReviewCta.trParams({
-                          'count': '$dueCount',
+                          'count': '$sessionSize',
                         }),
                   style: AppTextStyles.button.copyWith(color: Colors.white),
                 ),

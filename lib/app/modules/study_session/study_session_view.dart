@@ -28,9 +28,29 @@ import 'widgets/swipe_flashcard.dart';
 ///
 /// Sessions are capped at the user's daily goal so they always end.
 class StudySessionView extends StatefulWidget {
-  const StudySessionView({super.key, required this.flashcards});
+  const StudySessionView({
+    super.key,
+    required this.flashcards,
+    this.practiceOnly = false,
+    this.cap,
+  });
 
   final List<Flashcard> flashcards;
+
+  /// Practice ahead of schedule: grades are shown and counted, but no
+  /// SM-2 update is written.
+  ///
+  /// SM-2 assumes a card was reviewed *when it came due*. Grading a card
+  /// five days early and stretching its interval from that would inflate
+  /// the schedule for retention the learner hasn't demonstrated yet, so
+  /// extra rounds deliberately leave `due_at`, the interval and the ease
+  /// factor exactly where the scheduler put them.
+  final bool practiceOnly;
+
+  /// Cards to serve in this sitting. Defaults to the user's daily goal,
+  /// which is the right cap for the day's real reviews; extra practice
+  /// passes its own smaller number.
+  final int? cap;
 
   @override
   State<StudySessionView> createState() => _StudySessionViewState();
@@ -51,7 +71,7 @@ class _StudySessionViewState extends State<StudySessionView> {
 
   StudySessionEngine _newEngine() => StudySessionEngine(
     deck: _deck,
-    cap: _streakService.streak.value.dailyGoal,
+    cap: widget.cap ?? _streakService.streak.value.dailyGoal,
     mode: Get.find<StudyPreferencesService>().mode.value,
   );
 
@@ -66,7 +86,10 @@ class _StudySessionViewState extends State<StudySessionView> {
     );
 
     try {
-      final updated = await _deckRepository.submitReview(step.card, grade);
+      // Practice rounds leave the schedule alone - see [practiceOnly].
+      final updated = widget.practiceOnly
+          ? step.card
+          : await _deckRepository.submitReview(step.card, grade);
       if (!mounted) return;
 
       setState(() {
@@ -117,9 +140,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           if (step != null)
             IconButton(
               icon: const Icon(Icons.info_outline_rounded),
-              onPressed: () => Get.to(
-                () => CardDetailView(card: step.card),
-              ),
+              onPressed: () => Get.to(() => CardDetailView(card: step.card)),
             ),
         ],
       ),

@@ -76,6 +76,10 @@ const Map<String, String> fr = {
   LocaleKeys.homeCardsToday: '@count cartes aujourd\'hui',
   LocaleKeys.homeStreakBest: 'record @count',
   LocaleKeys.homeAllCaughtUp: 'Tout est à jour - revenez demain',
+  LocaleKeys.homeCaughtUpToday: "Tout est à jour pour aujourd'hui",
+  LocaleKeys.homePracticeCta: 'Réviser @count de plus',
+  LocaleKeys.homePracticeNote:
+      'Entraînement libre : votre planning ne change pas',
   LocaleKeys.homeStreakStartHint: 'Révisez aujourd\'hui pour lancer votre série',
   LocaleKeys.homeYourDecks: 'Vos paquets',
   LocaleKeys.homeNoDecksTitle: 'Aucun paquet pour le moment',
@@ -83,6 +87,10 @@ const Map<String, String> fr = {
       'Scannez quelque chose pour créer votre premier paquet.',
   LocaleKeys.homeDeckCardCount: '@count mots',
   LocaleKeys.homeSeeAll: 'Tout voir',
+
+  LocaleKeys.decksMixedTitle: 'Révision mixte',
+  LocaleKeys.decksMixedDue: '@count à revoir dans tous vos paquets',
+  LocaleKeys.decksMixedPractice: 'Rien à revoir - entraînez-vous quand même',
 
   LocaleKeys.navHome: 'Accueil',
   LocaleKeys.navScan: 'Scanner',
@@ -199,7 +207,7 @@ const Map<String, String> fr = {
   LocaleKeys.studyGradeEasy: 'Facile',
   LocaleKeys.studyNothingDueTitle: 'Rien à revoir pour le moment',
   LocaleKeys.studyNothingDueBody:
-      "Vous êtes à jour - voici tout le paquet pour vous entraîner davantage.",
+      "Rien n'est à revoir : ceci est un entraînement libre, votre planning ne changera pas.",
   LocaleKeys.studyCompleteTitle: 'Session terminée !',
   LocaleKeys.studyCompleteBody: 'Vous avez révisé @count cartes.',
   LocaleKeys.studyDone: 'Terminé',

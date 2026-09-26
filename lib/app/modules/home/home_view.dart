@@ -50,7 +50,7 @@ class HomeView extends GetView<HomeController> {
                 return TodayHeroCard(
                   streak: controller.streakService.streak.value,
                   weekProgress: controller.streakService.weekProgress,
-                  dueCount: decks.dueCount,
+                  sessionSize: controller.reviewSessionSize,
                   reviewMinutes: controller.reviewMinutes,
                   mode: controller.studyPreferences.mode.value,
                   previousGoalProgress: controller.previousGoalProgress.value,
@@ -58,6 +58,10 @@ class HomeView extends GetView<HomeController> {
                   hasDecks: decks.decks.isNotEmpty,
                   isLoading: decks.isLoadingDecks.value,
                   onStart: controller.startSession,
+                  canPractice: decks.canPractice,
+                  practiceCount: controller.practiceRoundSize,
+                  isLoadingPractice: decks.isLoadingPractice.value,
+                  onPractice: controller.startPractice,
                 );
               }),
               const SizedBox(height: AppSpacing.md),

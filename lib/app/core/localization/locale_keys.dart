@@ -84,12 +84,20 @@ class LocaleKeys {
   static const homeCardsToday = 'home_cards_today';
   static const homeStreakBest = 'home_streak_best';
   static const homeAllCaughtUp = 'home_all_caught_up';
+  static const homeCaughtUpToday = 'home_caught_up_today';
+  static const homePracticeCta = 'home_practice_cta';
+  static const homePracticeNote = 'home_practice_note';
   static const homeStreakStartHint = 'home_streak_start_hint';
   static const homeYourDecks = 'home_your_decks';
   static const homeNoDecksTitle = 'home_no_decks_title';
   static const homeNoDecksBody = 'home_no_decks_body';
   static const homeDeckCardCount = 'home_deck_card_count';
   static const homeSeeAll = 'home_see_all';
+
+  // Decks tab
+  static const decksMixedTitle = 'decks_mixed_title';
+  static const decksMixedDue = 'decks_mixed_due';
+  static const decksMixedPractice = 'decks_mixed_practice';
 
   // Bottom nav
   static const navHome = 'nav_home';

@@ -6,12 +6,9 @@ import '../../core/services/auth/auth_service.dart';
 import '../../core/services/streak/streak_service.dart';
 import '../../core/services/study/study_preferences_service.dart';
 import '../../data/models/app_user.dart';
-import '../../data/models/study_mode.dart';
 import '../../routes/app_routes.dart';
 import '../decks/decks_controller.dart';
-import '../listen_session/listen_session_view.dart';
 import '../main/main_controller.dart';
-import '../study_session/study_session_view.dart';
 
 class HomeController extends GetxController {
   /// Rough seconds per card, used only to promise the user a bounded
@@ -60,22 +57,24 @@ class HomeController extends GetxController {
 
   void goToDecksTab() => Get.find<MainController>().changeTab(1);
 
-  /// Starts the day's session in whichever mode the user prefers, over
-  /// everything due across every deck. The whole point is that the user
-  /// doesn't pick a deck first - the scheduler already knows what's owed.
-  Future<void> startSession() async {
-    final cards = List.of(decksController.dueCards);
-    if (cards.isEmpty) return;
+  /// Cards an extra round will serve, for the button's label.
+  int get practiceRoundSize => DecksController.practiceRoundSize;
 
+  /// Starts the day's session over everything due across every deck.
+  /// [DecksController] owns the rules; Home only adds the bookkeeping the
+  /// hero panel needs to replay its numbers afterwards.
+  Future<void> startSession() =>
+      _withHeroReplay(decksController.startDueSession);
+
+  /// Another short round once the day's reviews are cleared, so
+  /// "all caught up" isn't a locked door for someone who wants to keep
+  /// going. Repeatable: each tap walks further into the upcoming queue.
+  Future<void> startPractice() =>
+      _withHeroReplay(decksController.startPracticeRound);
+
+  Future<void> _withHeroReplay(Future<void> Function() start) async {
     previousGoalProgress.value = streakService.streak.value.goalProgress;
-
-    if (studyPreferences.mode.value == StudyMode.listen) {
-      await Get.to(() => ListenSessionView(flashcards: cards));
-    } else {
-      await Get.to(() => StudySessionView(flashcards: cards));
-    }
-
-    await decksController.refreshDecks();
+    await start();
     // Home is the screen the user lands back on, so it - not just the
     // session summary - should show what the session earned.
     heroReplayToken.value++;

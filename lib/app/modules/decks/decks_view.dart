@@ -9,6 +9,7 @@ import '../../core/widgets/app_top_safe_area.dart';
 import '../../core/widgets/deck_card.dart';
 import '../../core/widgets/empty_decks_state.dart';
 import 'decks_controller.dart';
+import 'widgets/mixed_review_tile.dart';
 
 class DecksView extends GetView<DecksController> {
   const DecksView({super.key});
@@ -44,6 +45,20 @@ class DecksView extends GetView<DecksController> {
                 }
                 return Column(
                   children: [
+                    // Above the list on purpose: the best next session is
+                    // usually "whatever is owed", not any one deck. Hidden
+                    // only when there is genuinely nothing to serve, so it
+                    // never offers a tap that does nothing.
+                    if (controller.dueCount > 0 || controller.canPractice) ...[
+                      MixedReviewTile(
+                        dueCount: controller.dueCount,
+                        isLoading: controller.isLoadingPractice.value,
+                        onTap: controller.dueCount > 0
+                            ? controller.startDueSession
+                            : controller.startPracticeRound,
+                      ),
+                      const SizedBox(height: AppSpacing.lg),
+                    ],
                     for (final deck in controller.decks) ...[
                       DeckCard(
                         deck: deck,

@@ -108,6 +108,28 @@ class SupabaseDeckRepository implements DeckRepository {
   }
 
   @override
+  Future<List<Flashcard>> listUpcomingFlashcards({
+    required int limit,
+    int offset = 0,
+  }) async {
+    final rows = await _client
+        .from('flashcards')
+        .select('*, example_sentences(*), decks!inner(*)')
+        .gt('due_at', DateTime.now().toIso8601String())
+        .order('due_at')
+        .range(offset, offset + limit - 1);
+
+    return [
+      for (final row in rows)
+        _flashcardFromRow(
+          row,
+          sourceLanguage: (row['decks'] as Map)['source_language'] as String?,
+          targetLanguage: (row['decks'] as Map)['target_language'] as String,
+        ),
+    ];
+  }
+
+  @override
   Future<void> renameDeck(String deckId, String newName) async {
     await _client.from('decks').update({'name': newName}).eq('id', deckId);
   }

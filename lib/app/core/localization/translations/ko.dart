@@ -73,12 +73,20 @@ const Map<String, String> ko = {
   LocaleKeys.homeCardsToday: '오늘 @count개',
   LocaleKeys.homeStreakBest: '최고 @count일',
   LocaleKeys.homeAllCaughtUp: '모두 완료 - 내일 다시 만나요',
+  LocaleKeys.homeCaughtUpToday: '오늘 할 복습은 모두 끝냈어요',
+  LocaleKeys.homePracticeCta: '@count개 더 연습하기',
+  LocaleKeys.homePracticeNote:
+      '추가 연습이라 복습 일정은 그대로예요',
   LocaleKeys.homeStreakStartHint: '오늘 학습하고 연속 기록을 시작하세요',
   LocaleKeys.homeYourDecks: '내 덱',
   LocaleKeys.homeNoDecksTitle: '아직 덱이 없어요',
   LocaleKeys.homeNoDecksBody: '스캔해서 첫 번째 덱을 만들어보세요.',
   LocaleKeys.homeDeckCardCount: '단어 @count개',
   LocaleKeys.homeSeeAll: '전체 보기',
+
+  LocaleKeys.decksMixedTitle: '섞어서 복습',
+  LocaleKeys.decksMixedDue: '모든 덱에서 @count개 대기 중',
+  LocaleKeys.decksMixedPractice: '복습할 카드는 없지만 연습해 볼까요',
 
   LocaleKeys.navHome: '홈',
   LocaleKeys.navScan: '스캔',
@@ -187,7 +195,8 @@ const Map<String, String> ko = {
   LocaleKeys.studyGradeGood: '좋음',
   LocaleKeys.studyGradeEasy: '쉬움',
   LocaleKeys.studyNothingDueTitle: '지금은 복습할 카드가 없어요',
-  LocaleKeys.studyNothingDueBody: '모두 완료했어요 - 추가 연습을 위해 전체 덱을 보여드릴게요.',
+  LocaleKeys.studyNothingDueBody:
+      '복습할 카드가 없어서 추가 연습이에요. 복습 일정은 바뀌지 않아요.',
   LocaleKeys.studyCompleteTitle: '학습 완료!',
   LocaleKeys.studyCompleteBody: '카드 @count개를 복습했어요.',
   LocaleKeys.studyDone: '완료',

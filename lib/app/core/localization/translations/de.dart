@@ -74,6 +74,10 @@ const Map<String, String> de = {
   LocaleKeys.homeCardsToday: '@count Karten heute',
   LocaleKeys.homeStreakBest: 'Rekord @count',
   LocaleKeys.homeAllCaughtUp: 'Alles erledigt - komm morgen wieder',
+  LocaleKeys.homeCaughtUpToday: 'Für heute alles erledigt',
+  LocaleKeys.homePracticeCta: '@count weitere üben',
+  LocaleKeys.homePracticeNote:
+      'Zusätzliches Üben - dein Plan bleibt unverändert',
   LocaleKeys.homeStreakStartHint: 'Lerne heute, um deine Serie zu starten',
   LocaleKeys.homeYourDecks: 'Deine Stapel',
   LocaleKeys.homeNoDecksTitle: 'Noch keine Stapel',
@@ -81,6 +85,10 @@ const Map<String, String> de = {
       'Scanne etwas, um deinen ersten Stapel zu erstellen.',
   LocaleKeys.homeDeckCardCount: '@count Wörter',
   LocaleKeys.homeSeeAll: 'Alle anzeigen',
+
+  LocaleKeys.decksMixedTitle: 'Gemischte Wiederholung',
+  LocaleKeys.decksMixedDue: '@count fällig in allen Stapeln',
+  LocaleKeys.decksMixedPractice: 'Nichts fällig - übe trotzdem ein paar',
 
   LocaleKeys.navHome: 'Start',
   LocaleKeys.navScan: 'Scannen',
@@ -195,7 +203,8 @@ const Map<String, String> de = {
   LocaleKeys.studyGradeGood: 'Gut',
   LocaleKeys.studyGradeEasy: 'Leicht',
   LocaleKeys.studyNothingDueTitle: 'Gerade nichts fällig',
-  LocaleKeys.studyNothingDueBody: 'Du bist auf dem neuesten Stand - hier ist der ganze Stapel zum Extra-Üben.',
+  LocaleKeys.studyNothingDueBody:
+      'Es ist nichts fällig, das hier ist also zusätzliches Üben - dein Plan ändert sich nicht.',
   LocaleKeys.studyCompleteTitle: 'Sitzung abgeschlossen!',
   LocaleKeys.studyCompleteBody: 'Du hast @count Karten wiederholt.',
   LocaleKeys.studyDone: 'Fertig',
