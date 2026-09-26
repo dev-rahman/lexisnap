@@ -1,7 +1,5 @@
 import 'package:get/get.dart';
 
-import '../../routes/app_routes.dart';
-
 class MainController extends GetxController {
   final tabIndex = 0.obs;
 
@@ -18,5 +16,4 @@ class MainController extends GetxController {
     }
   }
 
-  void openScan() => Get.toNamed(AppRoutes.scan);
 }

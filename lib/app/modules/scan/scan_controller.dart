@@ -1,3 +1,4 @@
+import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -9,14 +10,17 @@ import '../../core/services/vocabulary/vocabulary_ai_service.dart';
 import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/vocabulary_extractor.dart';
 import '../../data/models/deck_word.dart';
+import '../../data/models/scan_source.dart';
 import '../../data/models/vocabulary_extraction_result.dart';
 import '../../data/models/vocabulary_language.dart';
 import '../../data/models/vocabulary_word.dart';
 import '../decks/decks_controller.dart';
 
 enum ScanStage {
-  /// Choosing between camera and gallery.
-  source,
+  /// Waiting on the system camera or photo picker. The route shows almost
+  /// nothing here because the picker covers it immediately - this stage
+  /// exists so the flow has somewhere to stand while that happens.
+  pickingImage,
 
   /// Reviewing the captured/picked photo before running OCR on it.
   reviewing,
@@ -48,7 +52,7 @@ class ScanController extends GetxController {
 
   final _picker = ImagePicker();
 
-  final stage = ScanStage.source.obs;
+  final stage = ScanStage.pickingImage.obs;
   final imagePath = RxnString();
   final candidateWords = <VocabularyWord>[].obs;
   final selectedWords = <VocabularyWord>{}.obs;
@@ -60,31 +64,50 @@ class ScanController extends GetxController {
       candidateWords.isNotEmpty &&
       selectedWords.length == candidateWords.length;
 
-  Future<void> captureFromCamera() async {
+  /// Where the photo comes from, chosen before this route was pushed (see
+  /// `startScanFlow`) and kept so Retake can reopen the same picker.
+  ScanSource? _source;
+
+  @override
+  void onInit() {
+    super.onInit();
+    final source = Get.arguments;
+    if (source is! ScanSource) return;
+    _source = source;
+    // Deferred by a frame: the picker can complete (or be cancelled, which
+    // pops this route) before the route has finished being built.
+    SchedulerBinding.instance.addPostFrameCallback((_) => _pickImage());
+  }
+
+  Future<void> _pickImage() async {
+    final source = _source;
+    if (source == null) return;
+
+    stage.value = ScanStage.pickingImage;
     final file = await _picker.pickImage(
-      source: ImageSource.camera,
+      source: source == ScanSource.camera
+          ? ImageSource.camera
+          : ImageSource.gallery,
       imageQuality: 85,
       maxWidth: 2000,
     );
-    if (file == null) return;
+
+    if (file == null) {
+      // Nothing was picked and there is no source screen to fall back to
+      // any more, so leave the flow rather than sitting on a blank stage.
+      Get.back();
+      return;
+    }
+
     imagePath.value = file.path;
     stage.value = ScanStage.reviewing;
   }
 
-  Future<void> pickFromGallery() async {
-    final file = await _picker.pickImage(
-      source: ImageSource.gallery,
-      imageQuality: 85,
-      maxWidth: 2000,
-    );
-    if (file == null) return;
-    imagePath.value = file.path;
-    stage.value = ScanStage.reviewing;
-  }
-
+  /// Reopens whichever picker the user started from. "Retake" on a camera
+  /// scan should mean the camera, not a source menu they never saw.
   void retake() {
     imagePath.value = null;
-    stage.value = ScanStage.source;
+    _pickImage();
   }
 
   Future<void> confirmImage() async {

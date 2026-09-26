@@ -98,6 +98,10 @@ class LocaleKeys {
   static const decksMixedTitle = 'decks_mixed_title';
   static const decksMixedDue = 'decks_mixed_due';
   static const decksMixedPractice = 'decks_mixed_practice';
+  static const decksStatDecks = 'decks_stat_decks';
+  static const decksStatWords = 'decks_stat_words';
+  static const decksStatDue = 'decks_stat_due';
+  static const decksAll = 'decks_all';
 
   // Bottom nav
   static const navHome = 'nav_home';

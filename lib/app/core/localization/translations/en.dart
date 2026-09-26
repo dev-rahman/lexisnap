@@ -88,6 +88,10 @@ const Map<String, String> en = {
   LocaleKeys.decksMixedTitle: 'Mixed review',
   LocaleKeys.decksMixedDue: '@count due across all your decks',
   LocaleKeys.decksMixedPractice: 'Nothing due - practice a few anyway',
+  LocaleKeys.decksStatDecks: 'Decks',
+  LocaleKeys.decksStatWords: 'Words',
+  LocaleKeys.decksStatDue: 'Due now',
+  LocaleKeys.decksAll: 'All decks',
 
   LocaleKeys.navHome: 'Home',
   LocaleKeys.navScan: 'Scan',

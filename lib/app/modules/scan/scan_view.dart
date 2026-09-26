@@ -5,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
-import '../../core/services/permission/permission_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
@@ -13,7 +12,6 @@ import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/language_select_sheet.dart';
-import '../../core/widgets/permission_sheets.dart';
 import '../../data/models/vocabulary_word.dart';
 import 'scan_controller.dart';
 
@@ -29,7 +27,7 @@ class ScanView extends GetView<ScanController> {
     return Obx(() {
       final stage = controller.stage.value;
       final isDarkStage =
-          stage == ScanStage.source ||
+          stage == ScanStage.pickingImage ||
           stage == ScanStage.reviewing ||
           stage == ScanStage.processing ||
           stage == ScanStage.savingDeck;
@@ -42,7 +40,9 @@ class ScanView extends GetView<ScanController> {
           backgroundColor: isDarkStage ? AppColors.ink : context.colorPaper,
           body: SafeArea(
             child: switch (stage) {
-              ScanStage.source => const _SourcePicker(),
+              // No label: the system picker covers this within a frame,
+              // so anything written here would only flash.
+              ScanStage.pickingImage => const _ProcessingOverlay(),
               ScanStage.reviewing => const _ImageReview(),
               ScanStage.processing => _ProcessingOverlay(
                 label: LocaleKeys.scanReadingText.tr,
@@ -79,122 +79,6 @@ class _CloseButton extends StatelessWidget {
           onPressed: Get.back,
         ),
       ),
-    );
-  }
-}
-
-class _SourcePicker extends GetView<ScanController> {
-  const _SourcePicker();
-
-  Future<void> _takePhoto(BuildContext context) async {
-    final permissionService = Get.find<PermissionService>();
-    final granted = await ensurePermissionGranted(
-      context,
-      status: permissionService.cameraStatus,
-      request: permissionService.requestCamera,
-      icon: Icons.camera_alt_rounded,
-      primerTitle: LocaleKeys.permissionCameraTitle.tr,
-      primerBody: LocaleKeys.permissionCameraBody.tr,
-      deniedBody: LocaleKeys.permissionCameraDeniedBody.tr,
-    );
-    if (!granted) return;
-    await controller.captureFromCamera();
-  }
-
-  Future<void> _chooseFromGallery(BuildContext context) async {
-    final permissionService = Get.find<PermissionService>();
-    final granted = await ensurePermissionGranted(
-      context,
-      status: permissionService.photosStatus,
-      request: permissionService.requestPhotos,
-      icon: Icons.photo_library_rounded,
-      primerTitle: LocaleKeys.permissionGalleryTitle.tr,
-      primerBody: LocaleKeys.permissionGalleryBody.tr,
-      deniedBody: LocaleKeys.permissionGalleryDeniedBody.tr,
-    );
-    if (!granted) return;
-    await controller.pickFromGallery();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const _CloseButton(),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  height: 96,
-                  width: 96,
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.document_scanner_outlined,
-                    color: Colors.white,
-                    size: 40,
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                Text(
-                  LocaleKeys.scanSourceTitle.tr,
-                  style: AppTextStyles.heading2.copyWith(color: Colors.white),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  LocaleKeys.scanSourceSubtitle.tr,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyles.body.copyWith(color: Colors.white70),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            AppSpacing.lg,
-          ),
-          child: Column(
-            children: [
-              AppButton(
-                label: LocaleKeys.scanTakePhoto.tr,
-                icon: const Icon(Icons.camera_alt_rounded, size: 20),
-                onPressed: () => _takePhoto(context),
-              ),
-              const SizedBox(height: AppSpacing.sm),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _chooseFromGallery(context),
-                  icon: const Icon(
-                    Icons.photo_library_outlined,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  label: Text(
-                    LocaleKeys.scanChooseFromGallery.tr,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Colors.white38),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: AppSpacing.md,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
@@ -270,9 +154,11 @@ class _ImageReview extends GetView<ScanController> {
 }
 
 class _ProcessingOverlay extends GetView<ScanController> {
-  const _ProcessingOverlay({required this.label});
+  const _ProcessingOverlay({this.label});
 
-  final String label;
+  /// Omitted while the system picker is opening, when there is nothing
+  /// worth saying for the frame or two before it covers the screen.
+  final String? label;
 
   @override
   Widget build(BuildContext context) {
@@ -288,11 +174,13 @@ class _ProcessingOverlay extends GetView<ScanController> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const CircularProgressIndicator(color: AppColors.accent),
-              const SizedBox(height: AppSpacing.md),
-              Text(
-                label,
-                style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
-              ),
+              if (label != null) ...[
+                const SizedBox(height: AppSpacing.md),
+                Text(
+                  label!,
+                  style: AppTextStyles.bodyMedium.copyWith(color: Colors.white),
+                ),
+              ],
             ],
           ),
         ),

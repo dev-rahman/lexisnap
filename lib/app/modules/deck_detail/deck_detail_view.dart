@@ -10,6 +10,7 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/deck_badge.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/models/study_mode.dart';
 import '../../data/vocabulary_languages.dart';
@@ -57,45 +58,67 @@ class DeckDetailView extends GetView<DeckDetailController> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InkWell(
-                  onTap: () => _showRenameSheet(context, controller, deck.name),
-                  borderRadius: BorderRadius.circular(AppRadius.sm),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.sm,
-                      vertical: 2,
+                // The deck's hue, same badge as the row you tapped to get
+                // here - otherwise the colour in the list would be
+                // decoration rather than the deck's identity.
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    DeckBadge(deckId: deck.id),
+                    const SizedBox(width: AppSpacing.md),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          InkWell(
+                            onTap: () => _showRenameSheet(
+                              context,
+                              controller,
+                              deck.name,
+                            ),
+                            borderRadius: BorderRadius.circular(AppRadius.sm),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    deck.name,
+                                    style: AppTextStyles.heading1,
+                                  ),
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 18,
+                                  color: context.colorInkMuted,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            LocaleKeys.deckSummary.trParams({
+                              'source':
+                                  VocabularyLanguages.byCode(
+                                    deck.sourceLanguage,
+                                  )?.flag ??
+                                  deck.sourceLanguage ??
+                                  '?',
+                              'target':
+                                  VocabularyLanguages.byCode(
+                                    deck.targetLanguage,
+                                  )?.flag ??
+                                  deck.targetLanguage,
+                              'count': '${deck.cardCount}',
+                            }),
+                            style: AppTextStyles.caption.copyWith(
+                              color: context.colorInkMuted,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Flexible(
-                          child: Text(deck.name, style: AppTextStyles.heading1),
-                        ),
-                        const SizedBox(width: AppSpacing.xs),
-                        Icon(
-                          Icons.edit_outlined,
-                          size: 18,
-                          color: context.colorInkMuted,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  LocaleKeys.deckSummary.trParams({
-                    'source':
-                        VocabularyLanguages.byCode(deck.sourceLanguage)?.flag ??
-                        deck.sourceLanguage ??
-                        '?',
-                    'target':
-                        VocabularyLanguages.byCode(deck.targetLanguage)?.flag ??
-                        deck.targetLanguage,
-                    'count': '${deck.cardCount}',
-                  }),
-                  style: AppTextStyles.caption.copyWith(
-                    color: context.colorInkMuted,
-                  ),
+                  ],
                 ),
                 const SizedBox(height: AppSpacing.md),
                 _StudyHeroCard(

@@ -4,29 +4,34 @@ import 'package:get/get.dart';
 import '../../../core/localization/locale_keys.dart';
 import '../../../core/services/streak/streak_service.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/app_gradients.dart';
 import '../../../core/theme/app_radius.dart';
 import '../../../core/theme/app_spacing.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/daily_goal_ring.dart';
 import '../../../core/widgets/press_scale.dart';
-import '../../../core/widgets/streak_flame.dart';
 import '../../../core/widgets/study_mode_sheet.dart';
-import '../../../core/widgets/week_strip.dart';
 import '../../../data/models/study_mode.dart';
 
-/// Home's single focal panel: how you're doing, and the one thing to do
-/// about it today.
+/// Home's focal panel: where today stands, and the one thing to do about it.
 ///
-/// Streak, week and goal are per-user facts, so they belong here at the
-/// root rather than on any individual deck. The review action lives
-/// inside the same card because those numbers are precisely what it
-/// moves - tapping it and coming back should visibly change this panel.
+/// This used to carry the streak pill and the week strip as well, which
+/// made five separate things compete inside one card - and the thing that
+/// mattered, the button, was the last of them. Both now live in the week
+/// card below, leaving this panel with one job: progress, then the action
+/// that moves it.
+///
+/// Navy is what marks it as *the* panel on the screen. The first attempt
+/// used a low-alpha coral gradient over paper, which came out muddy peach;
+/// solid navy is both louder and more readable, and coral on navy has far
+/// more pull than coral on a coral tint. Everything in here is therefore
+/// white or near-white rather than theme-aware - the panel is dark in both
+/// themes, so its contents don't flip.
 class TodayHeroCard extends StatelessWidget {
   const TodayHeroCard({
     super.key,
     required this.streak,
-    required this.weekProgress,
     required this.sessionSize,
     required this.reviewMinutes,
     required this.mode,
@@ -42,7 +47,6 @@ class TodayHeroCard extends StatelessWidget {
   });
 
   final StudyStreak streak;
-  final List<bool> weekProgress;
 
   /// Cards this session will actually serve - not the whole due backlog,
   /// which the session caps. The button has to promise what it delivers.
@@ -72,30 +76,31 @@ class TodayHeroCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: context.colorSurface,
+        color: context.colorPanel,
         borderRadius: BorderRadius.circular(AppRadius.lg),
-        border: Border.all(color: context.colorBorder),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.ink.withValues(alpha: 0.18),
+            blurRadius: 20,
+            offset: const Offset(0, 8),
+          ),
+        ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              StreakFlame(
-                count: streak.current,
-                replayToken: replayToken,
-                celebrate: streak.goalMet,
-              ),
-              const Spacer(),
-              _ModeChip(mode: mode),
-            ],
+          // On its own row rather than beside the ring: sharing that row
+          // squeezed the count and the streak line into what was left of
+          // a small phone's width after a 64px ring and a 90px chip.
+          Align(
+            alignment: Alignment.centerRight,
+            child: _ModeChip(mode: mode),
           ),
-          const SizedBox(height: AppSpacing.md),
-          WeekStrip(days: weekProgress),
-          const SizedBox(height: AppSpacing.md),
+          const SizedBox(height: AppSpacing.sm),
           Row(
             children: [
               DailyGoalRing(
+                onDark: true,
                 from: previousGoalProgress,
                 to: streak.goalProgress,
                 reviewsToday: streak.reviewsToday,
@@ -104,32 +109,18 @@ class TodayHeroCard extends StatelessWidget {
               ),
               const SizedBox(width: AppSpacing.md),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      // Past the goal, "47 of 10" reads like a bug - the
-                      // ring's check already says the goal was met.
-                      streak.goalMet
-                          ? LocaleKeys.homeCardsToday.trParams({
-                              'count': '${streak.reviewsToday}',
-                            })
-                          : LocaleKeys.homeGoalToday.trParams({
-                              'done': '${streak.reviewsToday}',
-                              'goal': '${streak.dailyGoal}',
-                            }),
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: context.colorInk,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _streakLine,
-                      style: AppTextStyles.caption.copyWith(
-                        color: context.colorInkMuted,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  // Past the goal, "47 of 10" reads like a bug - the
+                  // ring's check already says the goal was met.
+                  streak.goalMet
+                      ? LocaleKeys.homeCardsToday.trParams({
+                          'count': '${streak.reviewsToday}',
+                        })
+                      : LocaleKeys.homeGoalToday.trParams({
+                          'done': '${streak.reviewsToday}',
+                          'goal': '${streak.dailyGoal}',
+                        }),
+                  style: AppTextStyles.heading3.copyWith(color: Colors.white),
                 ),
               ),
             ],
@@ -144,27 +135,13 @@ class TodayHeroCard extends StatelessWidget {
     );
   }
 
-  String get _streakLine {
-    if (streak.current == 0) return LocaleKeys.homeStreakStartHint.tr;
-
-    final days = LocaleKeys.studyStreakDays.trParams({
-      'count': '${streak.current}',
-    });
-    if (streak.longest <= streak.current) return days;
-
-    final best = LocaleKeys.homeStreakBest.trParams({
-      'count': '${streak.longest}',
-    });
-    return '$days · $best';
-  }
-
   Widget _buildAction(BuildContext context) {
     if (isLoading && !hasDecks) {
       return Container(
         key: const ValueKey('loading'),
-        height: 52,
+        height: 56,
         decoration: BoxDecoration(
-          color: context.colorBorder.withValues(alpha: 0.4),
+          color: Colors.white.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(AppRadius.md),
         ),
       );
@@ -173,58 +150,7 @@ class TodayHeroCard extends StatelessWidget {
     // Nothing to study yet: the scan tile below carries the screen.
     if (!hasDecks) return const SizedBox.shrink(key: ValueKey('empty'));
 
-    if (sessionSize == 0) {
-      return Column(
-        key: const ValueKey('caught-up'),
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(
-                Icons.check_circle_rounded,
-                color: AppColors.confirm,
-                size: 20,
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              Expanded(
-                child: Text(
-                  // "Come back tomorrow" is a lie once there's an extra
-                  // round on offer right below it.
-                  canPractice
-                      ? LocaleKeys.homeCaughtUpToday.tr
-                      : LocaleKeys.homeAllCaughtUp.tr,
-                  style: AppTextStyles.caption.copyWith(
-                    color: AppColors.confirm,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          // Clearing the day is an achievement, not a locked door. Someone
-          // who wants to keep going gets another short round - outlined,
-          // not filled, because it's a bonus rather than the day's work.
-          if (canPractice) ...[
-            const SizedBox(height: AppSpacing.md),
-            AppButton(
-              variant: AppButtonVariant.outlined,
-              label: LocaleKeys.homePracticeCta.trParams({
-                'count': '$practiceCount',
-              }),
-              icon: const Icon(Icons.refresh_rounded, size: 20),
-              isLoading: isLoadingPractice,
-              onPressed: onPractice,
-            ),
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              LocaleKeys.homePracticeNote.tr,
-              style: AppTextStyles.caption.copyWith(
-                color: context.colorInkMuted,
-              ),
-            ),
-          ],
-        ],
-      );
-    }
+    if (sessionSize == 0) return _buildCaughtUp(context);
 
     final isListening = mode == StudyMode.listen;
 
@@ -235,8 +161,15 @@ class TodayHeroCard extends StatelessWidget {
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
         decoration: BoxDecoration(
-          color: AppColors.accent,
+          gradient: AppGradients.action,
           borderRadius: BorderRadius.circular(AppRadius.md),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accent.withValues(alpha: 0.32),
+              blurRadius: 16,
+              offset: const Offset(0, 6),
+            ),
+          ],
         ),
         child: Column(
           children: [
@@ -251,15 +184,23 @@ class TodayHeroCard extends StatelessWidget {
                   size: 20,
                 ),
                 const SizedBox(width: AppSpacing.sm),
-                Text(
-                  isListening
-                      ? LocaleKeys.deckListen.tr
-                      : sessionSize == 1
-                      ? LocaleKeys.homeReviewCtaOne.tr
-                      : LocaleKeys.homeReviewCta.trParams({
-                          'count': '$sessionSize',
-                        }),
-                  style: AppTextStyles.button.copyWith(color: Colors.white),
+                // Flexible, not bare: the label is translated, and the
+                // longest locales ("13 Karten wiederholen") leave almost
+                // no room on a 320px phone. Wrapping to a second line is
+                // survivable; overflowing is not.
+                Flexible(
+                  child: Text(
+                    isListening
+                        ? LocaleKeys.deckListen.tr
+                        : sessionSize == 1
+                        ? LocaleKeys.homeReviewCtaOne.tr
+                        : LocaleKeys.homeReviewCta.trParams({
+                            'count': '$sessionSize',
+                          }),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    style: AppTextStyles.button.copyWith(color: Colors.white),
+                  ),
                 ),
               ],
             ),
@@ -279,6 +220,63 @@ class TodayHeroCard extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildCaughtUp(BuildContext context) {
+    return Column(
+      key: const ValueKey('caught-up'),
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            // `confirm` is a dark green tuned for paper - on navy it comes
+            // out at roughly 2.5:1. Moss's dark value is the same idea at
+            // a contrast that works here.
+            Icon(
+              Icons.check_circle_rounded,
+              color: AppColors.moss.dark,
+              size: 20,
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            Expanded(
+              child: Text(
+                // "Come back tomorrow" is a lie once there's an extra
+                // round on offer right below it.
+                canPractice
+                    ? LocaleKeys.homeCaughtUpToday.tr
+                    : LocaleKeys.homeAllCaughtUp.tr,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: AppColors.moss.dark,
+                ),
+              ),
+            ),
+          ],
+        ),
+        // Clearing the day is an achievement, not a locked door. Someone
+        // who wants to keep going gets another short round - outlined,
+        // not filled, because it's a bonus rather than the day's work.
+        if (canPractice) ...[
+          const SizedBox(height: AppSpacing.md),
+          AppButton(
+            variant: AppButtonVariant.outlined,
+            color: Colors.white,
+            label: LocaleKeys.homePracticeCta.trParams({
+              'count': '$practiceCount',
+            }),
+            icon: const Icon(Icons.refresh_rounded, size: 20),
+            isLoading: isLoadingPractice,
+            onPressed: onPractice,
+          ),
+          const SizedBox(height: AppSpacing.xs),
+          Text(
+            LocaleKeys.homePracticeNote.tr,
+            style: AppTextStyles.caption.copyWith(
+              color: Colors.white.withValues(alpha: 0.7),
+            ),
+          ),
+        ],
+      ],
+    );
+  }
 }
 
 /// Opens the study-mode picker. Small on purpose: the mode is a setting
@@ -291,7 +289,9 @@ class _ModeChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: context.colorPaper,
+      // On the navy panel, so it tints the panel rather than punching a
+      // paper-coloured hole in it.
+      color: Colors.white.withValues(alpha: 0.14),
       borderRadius: BorderRadius.circular(AppRadius.sm),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.sm),
@@ -307,19 +307,19 @@ class _ModeChip extends StatelessWidget {
               Icon(
                 studyModeIcons[mode],
                 size: 16,
-                color: context.colorInkMuted,
+                color: Colors.white.withValues(alpha: 0.85),
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
                 studyModeLabels[mode]!.tr,
                 style: AppTextStyles.caption.copyWith(
-                  color: context.colorInkMuted,
+                  color: Colors.white.withValues(alpha: 0.85),
                 ),
               ),
               Icon(
                 Icons.expand_more_rounded,
                 size: 16,
-                color: context.colorInkMuted,
+                color: Colors.white.withValues(alpha: 0.85),
               ),
             ],
           ),

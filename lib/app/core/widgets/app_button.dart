@@ -53,7 +53,12 @@ class AppButton extends StatelessWidget {
             children: [
               icon!,
               const SizedBox(width: AppSpacing.sm),
-              Text(label),
+              // Labels are translated, so the longest locale decides
+              // whether this fits. Flexible lets it wrap instead of
+              // overflowing the button on a narrow phone.
+              Flexible(
+                child: Text(label, textAlign: TextAlign.center, maxLines: 2),
+              ),
             ],
           );
 

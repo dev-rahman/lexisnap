@@ -29,7 +29,13 @@ class StreakFlame extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDim = count == 0;
-    final color = isDim ? context.colorInkMuted : AppColors.accent;
+    // Amber, not coral: a streak is something you own, not something to
+    // tap, and coral is reserved for the one action on the screen. Shared
+    // with [WeekStrip] so streak history and streak count read as one
+    // thing.
+    final color = isDim
+        ? context.colorInkMuted
+        : AppColors.amber.resolve(context);
 
     return TweenAnimationBuilder<double>(
       key: ValueKey(replayToken),

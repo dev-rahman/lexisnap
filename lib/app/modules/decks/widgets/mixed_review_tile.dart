@@ -33,7 +33,7 @@ class MixedReviewTile extends StatelessWidget {
 
     return Material(
       color: hasDue
-          ? AppColors.accent.withValues(alpha: 0.1)
+          ? AppColors.accentHue.tint(context)
           : context.colorSurface,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(

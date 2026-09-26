@@ -89,6 +89,10 @@ const Map<String, String> de = {
   LocaleKeys.decksMixedTitle: 'Gemischte Wiederholung',
   LocaleKeys.decksMixedDue: '@count fällig in allen Stapeln',
   LocaleKeys.decksMixedPractice: 'Nichts fällig - übe trotzdem ein paar',
+  LocaleKeys.decksStatDecks: 'Stapel',
+  LocaleKeys.decksStatWords: 'Wörter',
+  LocaleKeys.decksStatDue: 'Jetzt fällig',
+  LocaleKeys.decksAll: 'Alle Stapel',
 
   LocaleKeys.navHome: 'Start',
   LocaleKeys.navScan: 'Scannen',

@@ -28,9 +28,31 @@ class AppBottomNavBar extends StatelessWidget {
   static const double bottomMargin = AppSpacing.sm;
   static const double scanButtonSize = 64;
 
-  /// Reserve this much bottom space in scrollable tab content so it never
-  /// sits behind the bar, on either platform.
-  static const double clearance = bottomMargin + barHeight + AppSpacing.lg;
+  /// Height of the Android bar's tappable content, above the gesture inset.
+  static const double androidBarHeight = 56;
+
+  /// Bottom space scrollable tab content must reserve so it never ends up
+  /// behind the bar.
+  ///
+  /// This has to be read from context, not a constant. The old constant
+  /// assumed the iOS floating pill on every platform and ignored the
+  /// device's bottom inset entirely, so it was ~40px too tall on an
+  /// Android phone with gesture navigation - a dead band above the bar
+  /// that pushed every screen's content up for no reason - while being
+  /// too short on an iPhone, where the inset is real and content could
+  /// slide under the pill.
+  static double clearanceFor(BuildContext context) {
+    final inset = MediaQuery.of(context).padding.bottom;
+
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      // The pill floats clear of the bottom edge, so its margin and the
+      // inset both sit below it.
+      return bottomMargin + inset + barHeight + AppSpacing.md;
+    }
+    // NavigationBar draws its background into the inset and pads only its
+    // content above it, so the inset is part of its height, not below it.
+    return androidBarHeight + inset + AppSpacing.md;
+  }
 
   final int currentIndex;
   final bool isMinimized;
@@ -74,11 +96,6 @@ class _StockAndroidNavBar extends StatelessWidget {
   final VoidCallback onDecksTap;
   final VoidCallback onScanTap;
 
-  // Material 3's default NavigationBar height (80) reads as oversized next
-  // to the rest of the app; this is a more compact, still-comfortable
-  // touch target.
-  static const double _barContentHeight = 56;
-
   @override
   Widget build(BuildContext context) {
     // Map our 2 persistent tabs (Home/Decks) onto 3 visible
@@ -86,71 +103,97 @@ class _StockAndroidNavBar extends StatelessWidget {
     // tapping it pushes a route rather than switching tabs.
     final materialIndex = currentIndex == 0 ? 0 : 2;
 
-    // NavigationBar already wraps itself in Material + SafeArea internally
-    // (that's what it's designed for - the same as when it's placed via
-    // Scaffold.bottomNavigationBar), so it handles the bottom gesture
-    // inset correctly on its own: its Material background reaches the
-    // true edge, and only its tappable content is padded above the
-    // gesture handle. Our own outer SafeArea must skip both top and
-    // bottom here, or it would consume the bottom inset *before*
-    // NavigationBar sees it, pushing the whole bar (background included)
-    // up and leaving a plain paper-colored gap below it - which is
-    // exactly the bug being fixed.
-    return SafeArea(
-      top: false,
-      bottom: false,
-      child: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          backgroundColor: context.colorPaper,
-          indicatorColor: AppColors.accent.withValues(alpha: 0.16),
-          surfaceTintColor: Colors.transparent,
-          labelTextStyle: WidgetStateProperty.resolveWith(
-            (states) => TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w600,
-              color: states.contains(WidgetState.selected)
-                  ? AppColors.accent
-                  : context.colorInkMuted,
+    // NavigationBar wraps itself in Material + SafeArea internally, and that
+    // internal SafeArea is what gives it correct *bottom* inset handling:
+    // the Material background reaches the true screen edge while only the
+    // tappable content is padded above the gesture bar or button row.
+    //
+    // The trap is that a bare SafeArea applies every edge, not just the
+    // bottom - so it also applies the top inset. Measured on a Pixel 9a
+    // (3-button nav): padding is top 57.9, bottom 48, and the bar rendered
+    // at 161.9dp instead of 104dp. That surplus is exactly the top inset,
+    // landing as dead space above the bar's icons and pushing the whole
+    // screen's content up.
+    //
+    // Neither SafeArea(top: false) nor SafeArea(bottom: true) on the outside
+    // fixes it. The first only declines to *consume* the top inset, which
+    // leaves it in the MediaQuery for the bar's own SafeArea to find; the
+    // second consumes the bottom inset before the bar sees it, so the bar
+    // floats up and leaves a paper-coloured gap beneath it instead.
+    //
+    // Removing the top padding from the MediaQuery is what actually works:
+    // the bar's SafeArea then finds nothing at the top, and still finds the
+    // bottom inset it is there to handle.
+    // Painted explicitly rather than left to NavigationBar's own Material:
+    // the bottom inset region is composited under the system navigation
+    // bar, whose scrim stops short of the very bottom edge. Whatever the
+    // app draws there shows through, and what is behind the bar is the
+    // scrolling tab content - so a light deck card was visible under the
+    // system buttons in dark mode. An opaque box across the bar's whole
+    // height, inset included, is what actually guarantees coverage.
+    return ColoredBox(
+      color: context.colorPaper,
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: NavigationBarTheme(
+          data: NavigationBarThemeData(
+            backgroundColor: context.colorPaper,
+            indicatorColor: AppColors.accent.withValues(alpha: 0.16),
+            surfaceTintColor: Colors.transparent,
+            labelTextStyle: WidgetStateProperty.resolveWith(
+              (states) => TextStyle(
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                color: states.contains(WidgetState.selected)
+                    ? AppColors.accent
+                    : context.colorInkMuted,
+              ),
+            ),
+            iconTheme: WidgetStateProperty.resolveWith(
+              (states) => IconThemeData(
+                color: states.contains(WidgetState.selected)
+                    ? AppColors.accent
+                    : context.colorInkMuted,
+              ),
             ),
           ),
-          iconTheme: WidgetStateProperty.resolveWith(
-            (states) => IconThemeData(
-              color: states.contains(WidgetState.selected)
-                  ? AppColors.accent
-                  : context.colorInkMuted,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: NavigationBar(
+              // Material 3's default (80) reads as oversized next to the
+              // rest of the app; this is compact but still comfortable.
+              height: AppBottomNavBar.androidBarHeight,
+              selectedIndex: materialIndex,
+              onDestinationSelected: (index) {
+                switch (index) {
+                  case 0:
+                    onHomeTap();
+                  case 1:
+                    onScanTap();
+                  case 2:
+                    onDecksTap();
+                }
+              },
+              destinations: [
+                NavigationDestination(
+                  icon: const Icon(Icons.home_outlined),
+                  selectedIcon: const Icon(Icons.home_rounded),
+                  label: LocaleKeys.navHome.tr,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.document_scanner_outlined),
+                  selectedIcon: const Icon(Icons.document_scanner_rounded),
+                  label: LocaleKeys.navScan.tr,
+                ),
+                NavigationDestination(
+                  icon: const Icon(Icons.style_outlined),
+                  selectedIcon: const Icon(Icons.style_rounded),
+                  label: LocaleKeys.navDecks.tr,
+                ),
+              ],
             ),
           ),
-        ),
-        child: NavigationBar(
-          height: _barContentHeight,
-          selectedIndex: materialIndex,
-          onDestinationSelected: (index) {
-            switch (index) {
-              case 0:
-                onHomeTap();
-              case 1:
-                onScanTap();
-              case 2:
-                onDecksTap();
-            }
-          },
-          destinations: [
-            NavigationDestination(
-              icon: const Icon(Icons.home_outlined),
-              selectedIcon: const Icon(Icons.home_rounded),
-              label: LocaleKeys.navHome.tr,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.document_scanner_outlined),
-              selectedIcon: const Icon(Icons.document_scanner_rounded),
-              label: LocaleKeys.navScan.tr,
-            ),
-            NavigationDestination(
-              icon: const Icon(Icons.style_outlined),
-              selectedIcon: const Icon(Icons.style_rounded),
-              label: LocaleKeys.navDecks.tr,
-            ),
-          ],
         ),
       ),
     );

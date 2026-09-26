@@ -13,6 +13,7 @@ import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/initials.dart';
 import '../../core/utils/validators.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_shell_buttons.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/study_mode_sheet.dart';
 import '../../core/widgets/language_picker_sheet.dart';
@@ -25,157 +26,170 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: Get.back,
-        ),
-      ),
+      // No AppBar: this screen is opened by the floating avatar in the
+      // shell's top-right corner, and an AppBar's leading icon sits higher
+      // and further left than that avatar did, so the whole screen looked
+      // like it slid sideways on the way in. A floating back button on the
+      // shared geometry lands on exactly the avatar's spot instead.
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            AppSpacing.lg,
-          ),
-          child: Column(
-            children: [
-              Obx(() {
-                controller.refreshTrigger.value;
-                final user = controller.user;
-                final actualName = user?.fullName?.isNotEmpty == true
-                    ? user!.fullName!
-                    : null;
-                final displayName =
-                    actualName ?? LocaleKeys.profileYourAccount.tr;
-                final initials = initialsFor(actualName, user?.email);
-
-                return Column(
-                  children: [
-                    Container(
-                      height: 76,
-                      width: 76,
-                      decoration: const BoxDecoration(
-                        color: AppColors.ink,
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          initials,
-                          style: AppTextStyles.heading1.copyWith(
-                            color: Colors.white,
-                            fontSize: 26,
-                          ),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    InkWell(
-                      onTap: () =>
-                          _showEditNameSheet(context, controller, actualName),
-                      borderRadius: BorderRadius.circular(AppRadius.sm),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.sm,
-                          vertical: 2,
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(displayName, style: AppTextStyles.heading2),
-                            const SizedBox(width: AppSpacing.xs),
-                            Icon(
-                              Icons.edit_outlined,
-                              size: 16,
-                              color: context.colorInkMuted,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (user?.email != null) ...[
-                      const SizedBox(height: AppSpacing.xs),
-                      Text(
-                        user!.email!,
-                        style: Theme.of(context).textTheme.bodyMedium,
-                      ),
-                    ],
-                  ],
-                );
-              }),
-              const SizedBox(height: AppSpacing.lg * 1.5),
-              _SettingsGroup(
+        top: false,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppShellButton.verticalClearance(context),
+                AppSpacing.lg,
+                AppSpacing.lg,
+              ),
+              child: Column(
                 children: [
                   Obx(() {
-                    final reminder = Get.find<StudyReminderService>();
-                    return _SettingsTile(
-                      icon: Icons.notifications_outlined,
-                      label: LocaleKeys.reminderSettingsTitle.tr,
-                      value: reminder.isEnabled.value
-                          ? LocaleKeys.reminderEveryDayAt.trParams({
-                              'time': reminder.time.value.format(context),
-                            })
-                          : LocaleKeys.reminderOff.tr,
-                      onTap: () => _showReminderSheet(context),
+                    controller.refreshTrigger.value;
+                    final user = controller.user;
+                    final actualName = user?.fullName?.isNotEmpty == true
+                        ? user!.fullName!
+                        : null;
+                    final displayName =
+                        actualName ?? LocaleKeys.profileYourAccount.tr;
+                    final initials = initialsFor(actualName, user?.email);
+
+                    return Column(
+                      children: [
+                        Container(
+                          height: 76,
+                          width: 76,
+                          decoration: const BoxDecoration(
+                            color: AppColors.ink,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              initials,
+                              style: AppTextStyles.heading1.copyWith(
+                                color: Colors.white,
+                                fontSize: 26,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.md),
+                        InkWell(
+                          onTap: () => _showEditNameSheet(
+                            context,
+                            controller,
+                            actualName,
+                          ),
+                          borderRadius: BorderRadius.circular(AppRadius.sm),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.sm,
+                              vertical: 2,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  displayName,
+                                  style: AppTextStyles.heading2,
+                                ),
+                                const SizedBox(width: AppSpacing.xs),
+                                Icon(
+                                  Icons.edit_outlined,
+                                  size: 16,
+                                  color: context.colorInkMuted,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        if (user?.email != null) ...[
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            user!.email!,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ],
                     );
                   }),
-                  Obx(() {
-                    final mode = Get.find<StudyPreferencesService>().mode.value;
-                    return _SettingsTile(
-                      icon: studyModeIcons[mode]!,
-                      label: LocaleKeys.studyModeTitle.tr,
-                      value: studyModeLabels[mode]!.tr,
-                      onTap: () => showStudyModeSheet(context),
-                    );
-                  }),
-                  Obx(
-                    () => _SettingsTile(
-                      icon: Icons.flag_outlined,
-                      label: LocaleKeys.goalSettingsTitle.tr,
-                      value: LocaleKeys.goalCardsPerDay.trParams({
-                        'count':
-                            '${Get.find<StreakService>().streak.value.dailyGoal}',
+                  const SizedBox(height: AppSpacing.lg * 1.5),
+                  _SettingsGroup(
+                    children: [
+                      Obx(() {
+                        final reminder = Get.find<StudyReminderService>();
+                        return _SettingsTile(
+                          icon: Icons.notifications_outlined,
+                          label: LocaleKeys.reminderSettingsTitle.tr,
+                          value: reminder.isEnabled.value
+                              ? LocaleKeys.reminderEveryDayAt.trParams({
+                                  'time': reminder.time.value.format(context),
+                                })
+                              : LocaleKeys.reminderOff.tr,
+                          onTap: () => _showReminderSheet(context),
+                        );
                       }),
-                      onTap: () => _showGoalSheet(context),
+                      Obx(() {
+                        final mode =
+                            Get.find<StudyPreferencesService>().mode.value;
+                        return _SettingsTile(
+                          icon: studyModeIcons[mode]!,
+                          label: LocaleKeys.studyModeTitle.tr,
+                          value: studyModeLabels[mode]!.tr,
+                          onTap: () => showStudyModeSheet(context),
+                        );
+                      }),
+                      Obx(
+                        () => _SettingsTile(
+                          icon: Icons.flag_outlined,
+                          label: LocaleKeys.goalSettingsTitle.tr,
+                          value: LocaleKeys.goalCardsPerDay.trParams({
+                            'count':
+                                '${Get.find<StreakService>().streak.value.dailyGoal}',
+                          }),
+                          onTap: () => _showGoalSheet(context),
+                        ),
+                      ),
+                      _SettingsTile(
+                        icon: Icons.palette_outlined,
+                        label: LocaleKeys.profileAppearance.tr,
+                        onTap: () => _showThemePicker(context, controller),
+                      ),
+                      _SettingsTile(
+                        icon: Icons.language_outlined,
+                        label: LocaleKeys.profileLanguage.tr,
+                        onTap: () => showLanguagePickerSheet(context),
+                      ),
+                      _SettingsTile(
+                        icon: Icons.help_outline_rounded,
+                        label: LocaleKeys.profileHelpSupport.tr,
+                        onTap: () => Get.toNamed(AppRoutes.help),
+                      ),
+                      _SettingsTile(
+                        icon: Icons.info_outline_rounded,
+                        label: LocaleKeys.profileAbout.tr,
+                        onTap: () => AppSnackbar.info(
+                          LocaleKeys.profileAboutComingSoon.tr,
+                        ),
+                        showDivider: false,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.lg),
+                  Obx(
+                    () => AppButton(
+                      label: LocaleKeys.profileSignOut.tr,
+                      variant: AppButtonVariant.outlined,
+                      color: AppColors.alert,
+                      isLoading: controller.isSigningOut.value,
+                      onPressed: controller.signOut,
                     ),
-                  ),
-                  _SettingsTile(
-                    icon: Icons.palette_outlined,
-                    label: LocaleKeys.profileAppearance.tr,
-                    onTap: () => _showThemePicker(context, controller),
-                  ),
-                  _SettingsTile(
-                    icon: Icons.language_outlined,
-                    label: LocaleKeys.profileLanguage.tr,
-                    onTap: () => showLanguagePickerSheet(context),
-                  ),
-                  _SettingsTile(
-                    icon: Icons.help_outline_rounded,
-                    label: LocaleKeys.profileHelpSupport.tr,
-                    onTap: () => Get.toNamed(AppRoutes.help),
-                  ),
-                  _SettingsTile(
-                    icon: Icons.info_outline_rounded,
-                    label: LocaleKeys.profileAbout.tr,
-                    onTap: () =>
-                        AppSnackbar.info(LocaleKeys.profileAboutComingSoon.tr),
-                    showDivider: false,
                   ),
                 ],
               ),
-              const SizedBox(height: AppSpacing.lg),
-              Obx(
-                () => AppButton(
-                  label: LocaleKeys.profileSignOut.tr,
-                  variant: AppButtonVariant.outlined,
-                  color: AppColors.alert,
-                  isLoading: controller.isSigningOut.value,
-                  onPressed: controller.signOut,
-                ),
-              ),
-            ],
-          ),
+            ),
+            const AppShellBackButton(),
+          ],
         ),
       ),
     );
@@ -547,12 +561,34 @@ class _SettingsTile extends StatelessWidget {
                 children: [
                   Icon(icon, size: 22, color: context.colorInk),
                   const SizedBox(width: AppSpacing.md),
-                  Expanded(child: Text(label, style: AppTextStyles.bodyMedium)),
-                  if (value != null) ...[
+                  // With a value present the label must be Flexible, not
+                  // Expanded. Two flex children split the free space by
+                  // flex factor, so an Expanded label claimed its whole
+                  // half and the value began right where the label's box
+                  // ended - stranded mid-row, with `textAlign.end` doing
+                  // nothing because it only aligns inside a box already
+                  // shrunk to fit. Flexible lets the label give back what
+                  // it doesn't use, leaving the value's box to reach the
+                  // chevron so it can actually align right.
+                  if (value == null)
+                    Expanded(
+                      child: Text(label, style: AppTextStyles.bodyMedium),
+                    )
+                  else ...[
                     Flexible(
+                      child: Text(
+                        label,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.bodyMedium,
+                      ),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    Expanded(
                       child: Text(
                         value!,
                         textAlign: TextAlign.end,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: AppTextStyles.caption.copyWith(
                           color: context.colorInkMuted,

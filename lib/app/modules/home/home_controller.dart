@@ -6,7 +6,6 @@ import '../../core/services/auth/auth_service.dart';
 import '../../core/services/streak/streak_service.dart';
 import '../../core/services/study/study_preferences_service.dart';
 import '../../data/models/app_user.dart';
-import '../../routes/app_routes.dart';
 import '../decks/decks_controller.dart';
 import '../main/main_controller.dart';
 
@@ -52,8 +51,6 @@ class HomeController extends GetxController {
 
   int get reviewMinutes =>
       max(1, (reviewSessionSize * _secondsPerCard / 60).ceil());
-
-  void goToScan() => Get.toNamed(AppRoutes.scan);
 
   void goToDecksTab() => Get.find<MainController>().changeTab(1);
 

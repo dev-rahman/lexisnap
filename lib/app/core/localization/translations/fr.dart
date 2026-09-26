@@ -91,6 +91,10 @@ const Map<String, String> fr = {
   LocaleKeys.decksMixedTitle: 'Révision mixte',
   LocaleKeys.decksMixedDue: '@count à revoir dans tous vos paquets',
   LocaleKeys.decksMixedPractice: 'Rien à revoir - entraînez-vous quand même',
+  LocaleKeys.decksStatDecks: 'Paquets',
+  LocaleKeys.decksStatWords: 'Mots',
+  LocaleKeys.decksStatDue: 'À revoir',
+  LocaleKeys.decksAll: 'Tous les paquets',
 
   LocaleKeys.navHome: 'Accueil',
   LocaleKeys.navScan: 'Scanner',

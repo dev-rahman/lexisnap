@@ -7,9 +7,19 @@ import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
+import 'deck_badge.dart';
 
 /// A single deck row, used on both Home's recent-decks preview and the
 /// full Decks tab list.
+///
+/// Each deck carries its own hue, derived from its id so it never changes
+/// (see [AppColors.hueFor]). A list of decks is something you scan for the
+/// one you want, and colour turns that from reading every row into
+/// recognising one - which is the whole job of this screen.
+///
+/// Only the icon tile is saturated. Washing the whole card in the hue
+/// would make six decks read as six warnings, and nothing on the screen
+/// would be quiet enough for the deck name to matter.
 class DeckCard extends StatelessWidget {
   const DeckCard({super.key, required this.deck, required this.onTap});
 
@@ -28,19 +38,7 @@ class DeckCard extends StatelessWidget {
           padding: const EdgeInsets.all(AppSpacing.md),
           child: Row(
             children: [
-              Container(
-                height: 44,
-                width: 44,
-                decoration: BoxDecoration(
-                  color: context.colorPaper,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.style_outlined,
-                  color: context.colorInkMuted,
-                  size: 20,
-                ),
-              ),
+              DeckBadge(deckId: deck.id),
               const SizedBox(width: AppSpacing.md),
               Expanded(
                 child: Column(
@@ -48,7 +46,9 @@ class DeckCard extends StatelessWidget {
                   children: [
                     Text(
                       deck.name,
-                      style: AppTextStyles.bodyMedium.copyWith(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.heading3.copyWith(
                         color: context.colorInk,
                       ),
                     ),

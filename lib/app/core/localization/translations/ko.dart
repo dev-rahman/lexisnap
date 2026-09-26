@@ -87,6 +87,10 @@ const Map<String, String> ko = {
   LocaleKeys.decksMixedTitle: '섞어서 복습',
   LocaleKeys.decksMixedDue: '모든 덱에서 @count개 대기 중',
   LocaleKeys.decksMixedPractice: '복습할 카드는 없지만 연습해 볼까요',
+  LocaleKeys.decksStatDecks: '덱',
+  LocaleKeys.decksStatWords: '단어',
+  LocaleKeys.decksStatDue: '복습 대기',
+  LocaleKeys.decksAll: '전체 덱',
 
   LocaleKeys.navHome: '홈',
   LocaleKeys.navScan: '스캔',

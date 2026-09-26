@@ -52,6 +52,10 @@ class DecksController extends GetxController {
 
   bool get hasCards => decks.any((deck) => deck.cardCount > 0);
 
+  /// Every card the user owns, across all decks.
+  int get totalCardCount =>
+      decks.fold(0, (sum, deck) => sum + deck.cardCount);
+
   /// Nothing is owed, but there are cards to practise ahead of schedule -
   /// the state that earns an extra round instead of a dead-end
   /// "come back tomorrow".
