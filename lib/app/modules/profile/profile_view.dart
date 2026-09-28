@@ -12,6 +12,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/initials.dart';
 import '../../core/utils/validators.dart';
+import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_shell_buttons.dart';
 import '../../core/widgets/app_text_field.dart';
@@ -204,20 +205,22 @@ void _showEditNameSheet(
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController(text: currentName ?? '');
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
+  showAppSheet(
+    context,
     isScrollControlled: true,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
     builder: (sheetContext) {
       return Padding(
         padding: EdgeInsets.fromLTRB(
           AppSpacing.lg,
+          // The drag handle already reserves the top gap.
+          0,
           AppSpacing.lg,
-          AppSpacing.lg,
-          AppSpacing.lg + MediaQuery.of(sheetContext).viewInsets.bottom,
+          // viewInsets covers the keyboard, padding.bottom the system
+          // nav bar - and they swap as the keyboard opens, so both are
+          // needed. Without the second, Save sat under the nav buttons.
+          AppSpacing.lg +
+              MediaQuery.of(sheetContext).viewInsets.bottom +
+              MediaQuery.of(sheetContext).padding.bottom,
         ),
         child: Form(
           key: formKey,
@@ -260,16 +263,20 @@ void _showEditNameSheet(
 }
 
 void _showThemePicker(BuildContext context, ProfileController controller) {
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  showAppSheet(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,16 +350,20 @@ void _showReminderSheet(BuildContext context) {
     if (!granted) AppSnackbar.error(LocaleKeys.reminderPermissionDenied.tr);
   }
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  showAppSheet(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Obx(
             () => Column(
               mainAxisSize: MainAxisSize.min,
@@ -408,16 +419,20 @@ void _showGoalSheet(BuildContext context) {
   const options = [10, 20, 30, 50];
   final streakService = Get.find<StreakService>();
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  showAppSheet(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -561,42 +576,44 @@ class _SettingsTile extends StatelessWidget {
                 children: [
                   Icon(icon, size: 22, color: context.colorInk),
                   const SizedBox(width: AppSpacing.md),
-                  // With a value present the label must be Flexible, not
-                  // Expanded. Two flex children split the free space by
-                  // flex factor, so an Expanded label claimed its whole
-                  // half and the value began right where the label's box
-                  // ended - stranded mid-row, with `textAlign.end` doing
-                  // nothing because it only aligns inside a box already
-                  // shrunk to fit. Flexible lets the label give back what
-                  // it doesn't use, leaving the value's box to reach the
-                  // chevron so it can actually align right.
-                  if (value == null)
-                    Expanded(
-                      child: Text(label, style: AppTextStyles.bodyMedium),
-                    )
-                  else ...[
-                    Flexible(
-                      child: Text(
-                        label,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.bodyMedium,
-                      ),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    Expanded(
-                      child: Text(
-                        value!,
-                        textAlign: TextAlign.end,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.caption.copyWith(
-                          color: context.colorInkMuted,
+                  // Label and value share one Expanded row rather than
+                  // being two flex children of the outer one. As siblings
+                  // they split the free space by flex factor, so whatever
+                  // the label did not use was simply lost - the row packed
+                  // left and the chevron stopped short, leaving the
+                  // chevrons ragged down the group. One Expanded row that
+                  // always fills, with spaceBetween inside it, pins the
+                  // label left and the value hard against the chevron.
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Flexible(
+                          child: Text(
+                            label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.bodyMedium,
+                          ),
                         ),
-                      ),
+                        if (value != null) ...[
+                          const SizedBox(width: AppSpacing.sm),
+                          Flexible(
+                            child: Text(
+                              value!,
+                              textAlign: TextAlign.end,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.caption.copyWith(
+                                color: context.colorInkMuted,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                    const SizedBox(width: AppSpacing.xs),
-                  ],
+                  ),
+                  const SizedBox(width: AppSpacing.xs),
                   Icon(
                     Icons.chevron_right_rounded,
                     color: context.colorInkMuted,

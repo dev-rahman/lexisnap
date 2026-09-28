@@ -35,11 +35,7 @@ class DeckBadge extends StatelessWidget {
           ),
         ],
       ),
-      child: Icon(
-        Icons.style_rounded,
-        color: Colors.white,
-        size: size * 0.48,
-      ),
+      child: Icon(Icons.style_rounded, color: Colors.white, size: size * 0.48),
     );
   }
 }

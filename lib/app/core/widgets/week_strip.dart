@@ -39,10 +39,11 @@ class WeekStrip extends StatelessWidget {
           _Day(
             // `days` is oldest-first and ends on today, so the entry at
             // `index` is that many days back from the end.
-            letter: narrowWeekdays[today
-                    .subtract(Duration(days: days.length - 1 - index))
-                    .weekday %
-                7],
+            letter:
+                narrowWeekdays[today
+                        .subtract(Duration(days: days.length - 1 - index))
+                        .weekday %
+                    7],
             isStudied: days[index],
             isToday: index == days.length - 1,
             // Staggered so the strip fills in left to right, reading as

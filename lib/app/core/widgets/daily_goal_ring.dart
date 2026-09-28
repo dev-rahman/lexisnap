@@ -66,11 +66,7 @@ class DailyGoalRing extends StatelessWidget {
             ),
             child: Center(
               child: goalMet
-                  ? Icon(
-                      Icons.check_rounded,
-                      color: toColor,
-                      size: size * 0.42,
-                    )
+                  ? Icon(Icons.check_rounded, color: toColor, size: size * 0.42)
                   : Text(
                       '$reviewsToday',
                       style: AppTextStyles.display.copyWith(

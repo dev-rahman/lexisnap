@@ -1,3 +1,5 @@
+import 'app_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 
 import '../../data/models/vocabulary_language.dart';
@@ -15,13 +17,9 @@ Future<VocabularyLanguage?> showLanguageSelectSheet(
   required String title,
   required String subtitle,
 }) {
-  return showModalBottomSheet<VocabularyLanguage>(
-    context: context,
+  return showAppSheet<VocabularyLanguage>(
+    context,
     isScrollControlled: true,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
     builder: (sheetContext) =>
         _LanguageSelectSheet(title: title, subtitle: subtitle),
   );
@@ -76,7 +74,8 @@ class _LanguageSelectSheetState extends State<_LanguageSelectSheet> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(
                   AppSpacing.lg,
-                  AppSpacing.lg,
+                  // The drag handle already reserves the top gap.
+                  0,
                   AppSpacing.lg,
                   0,
                 ),

@@ -102,6 +102,17 @@ class AppTheme {
           textStyle: AppTextStyles.bodyMedium,
         ),
       ),
+      // Every sheet's look lives here, so `showAppSheet` passes none of it.
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: paper,
+        modalBackgroundColor: paper,
+        surfaceTintColor: Colors.transparent,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.lg),
+          ),
+        ),
+      ),
       appBarTheme: AppBarTheme(
         backgroundColor: paper,
         foregroundColor: ink,

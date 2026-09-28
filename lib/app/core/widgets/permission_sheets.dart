@@ -1,10 +1,11 @@
+import 'app_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../localization/locale_keys.dart';
 import '../services/permission/permission_service.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
 import '../theme/app_text_styles.dart';
 import 'app_button.dart';
@@ -19,16 +20,20 @@ Future<bool> showPermissionPrimerSheet(
   required String title,
   required String body,
 }) async {
-  final result = await showModalBottomSheet<bool>(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  final result = await showAppSheet<bool>(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,16 +80,20 @@ Future<void> showPermissionDeniedSheet(
   required IconData icon,
   required String body,
 }) {
-  return showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  return showAppSheet<void>(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

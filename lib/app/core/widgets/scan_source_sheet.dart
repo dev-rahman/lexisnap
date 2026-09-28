@@ -1,3 +1,5 @@
+import 'app_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -26,15 +28,19 @@ import 'permission_sheets.dart';
 /// recognise. Asking after the push meant a primer sheet appearing over a
 /// black screen that had no content of its own to explain itself with.
 Future<void> startScanFlow(BuildContext context) async {
-  final source = await showModalBottomSheet<ScanSource>(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  final source = await showAppSheet<ScanSource>(
+    context,
     builder: (sheetContext) => SafeArea(
       child: Padding(
-        padding: const EdgeInsets.all(AppSpacing.lg),
+        // Top padding is 0: the drag handle above already
+        // reserves a 48dp block, and adding lg on top of it
+        // pushed every sheet title a third of the way down.
+        padding: const EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          AppSpacing.lg,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

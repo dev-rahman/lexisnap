@@ -1,3 +1,5 @@
+import 'app_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,24 +39,25 @@ const studyModeHints = {
 void showStudyModeSheet(BuildContext context) {
   final service = Get.find<StudyPreferencesService>();
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  showAppSheet(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                LocaleKeys.studyModeTitle.tr,
-                style: AppTextStyles.heading2,
-              ),
+              Text(LocaleKeys.studyModeTitle.tr, style: AppTextStyles.heading2),
               const SizedBox(height: AppSpacing.md),
               Obx(
                 () => Column(

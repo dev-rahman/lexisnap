@@ -1,3 +1,5 @@
+import 'app_bottom_sheet.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -15,16 +17,20 @@ import '../theme/app_text_styles.dart';
 void showLanguagePickerSheet(BuildContext context) {
   final localeService = Get.find<LocaleService>();
 
-  showModalBottomSheet(
-    context: context,
-    backgroundColor: context.colorPaper,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(AppRadius.lg)),
-    ),
+  showAppSheet(
+    context,
     builder: (sheetContext) {
       return SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
+          // Top padding is 0: the drag handle above already
+          // reserves a 48dp block, and adding lg on top of it
+          // pushed every sheet title a third of the way down.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            AppSpacing.lg,
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
