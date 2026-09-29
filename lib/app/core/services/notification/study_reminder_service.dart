@@ -9,6 +9,8 @@ import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../localization/locale_keys.dart';
+import '../../utils/study_day.dart';
+import '../streak/streak_service.dart';
 
 /// Schedules the one daily notification that asks the user to come back.
 ///
@@ -29,6 +31,8 @@ class StudyReminderService extends GetxService {
 
   final isEnabled = false.obs;
   final time = Rx<TimeOfDay>(defaultTime);
+
+  Worker? _studyWorker;
 
   bool get _isSupported => Platform.isAndroid || Platform.isIOS;
 
@@ -69,6 +73,7 @@ class StudyReminderService extends GetxService {
 
     // Re-arm on launch: an OS update or reboot can drop pending alarms.
     if (isEnabled.value) await _schedule(time.value);
+    _watchStudy();
     return this;
   }
 
@@ -115,7 +120,11 @@ class StudyReminderService extends GetxService {
         .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin
         >();
-    return await ios?.requestPermissions(alert: true, badge: true, sound: true) ??
+    return await ios?.requestPermissions(
+          alert: true,
+          badge: true,
+          sound: true,
+        ) ??
         false;
   }
 
@@ -142,16 +151,63 @@ class StudyReminderService extends GetxService {
     );
   }
 
+  /// When the reminder should next fire: the next [at] that is still ahead
+  /// *and* falls in a study day the user hasn't already studied in.
+  ///
+  /// The notification repeats daily from whatever date it is first
+  /// scheduled for, so skipping today is a matter of starting tomorrow. It
+  /// used to start on the next [at] unconditionally, which meant studying
+  /// at 8am still earned a "time to study" at 7:30pm - a nudge for
+  /// something already done, and the fastest way to teach someone to
+  /// swipe every notification away unread.
   tz.TZDateTime _nextOccurrenceOf(TimeOfDay at) {
     final now = tz.TZDateTime.now(tz.local);
-    final today = tz.TZDateTime(
+    // Built from calendar components rather than by adding a 24-hour
+    // Duration, which would land an hour off across a daylight-saving
+    // change.
+    tz.TZDateTime onDay(int dayOffset) => tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
-      now.day,
+      now.day + dayOffset,
       at.hour,
       at.minute,
     );
-    return today.isAfter(now) ? today : today.add(const Duration(days: 1));
+
+    var offset = onDay(0).isAfter(now) ? 0 : 1;
+    final lastStudied = Get.find<StreakService>().streak.value.lastStudiedAt;
+    if (lastStudied != null &&
+        studyDaysBetween(lastStudied, onDay(offset)) == 0) {
+      offset++;
+    }
+    return onDay(offset);
+  }
+
+  /// Re-arms the reminder the first time the user studies in a study day,
+  /// so today's occurrence is dropped as soon as there's nothing to remind
+  /// them of. Reviews are recorded per card; only the first one in a day
+  /// changes anything, so the rest are ignored.
+  void _watchStudy() {
+    final streak = Get.find<StreakService>().streak;
+    DateTime? armedFor = streak.value.lastStudiedAt == null
+        ? null
+        : studyDayStart(streak.value.lastStudiedAt!);
+
+    _studyWorker?.dispose();
+    _studyWorker = ever<StudyStreak>(streak, (s) {
+      final studied = s.lastStudiedAt;
+      if (studied == null || !isEnabled.value) return;
+
+      final day = studyDayStart(studied);
+      if (armedFor != null && day.isAtSameMomentAs(armedFor!)) return;
+      armedFor = day;
+      _schedule(time.value);
+    });
+  }
+
+  @override
+  void onClose() {
+    _studyWorker?.dispose();
+    super.onClose();
   }
 }

@@ -11,14 +11,24 @@ import '../theme/app_spacing.dart';
 /// sheet is a single component with a single look, so the look belongs in
 /// one place. Background and shape come from `AppTheme`'s
 /// `bottomSheetTheme`, which is why neither is passed here.
+///
+/// [maxHeightFraction] caps the whole sheet - handle included - at that
+/// share of the screen. The builder's content must then scroll on its own,
+/// since the sheet stops growing; the handle stays pinned above it.
 Future<T?> showAppSheet<T>(
   BuildContext context, {
   required WidgetBuilder builder,
   bool isScrollControlled = false,
+  double? maxHeightFraction,
 }) {
   return showModalBottomSheet<T>(
     context: context,
     isScrollControlled: isScrollControlled,
+    constraints: maxHeightFraction == null
+        ? null
+        : BoxConstraints(
+            maxHeight: MediaQuery.sizeOf(context).height * maxHeightFraction,
+          ),
     builder: (sheetContext) => Column(
       mainAxisSize: MainAxisSize.min,
       children: [

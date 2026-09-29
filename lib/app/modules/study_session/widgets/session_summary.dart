@@ -22,6 +22,7 @@ class SessionSummary extends StatelessWidget {
     required this.accuracy,
     required this.tally,
     required this.streak,
+    this.freezeEarned = false,
     required this.remainingDueCount,
     required this.onDone,
     required this.onContinue,
@@ -31,6 +32,10 @@ class SessionSummary extends StatelessWidget {
   final double accuracy;
   final Map<ReviewGrade, int> tally;
   final StudyStreak streak;
+
+  /// Whether this round pushed the streak onto a multiple of seven and
+  /// banked a freeze.
+  final bool freezeEarned;
 
   /// Cards that were due but fell outside this session's cap.
   final int remainingDueCount;
@@ -59,7 +64,7 @@ class SessionSummary extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.lg),
-          _StreakCard(streak: streak),
+          _StreakCard(streak: streak, freezeEarned: freezeEarned),
           const SizedBox(height: AppSpacing.md),
           Wrap(
             spacing: AppSpacing.sm,
@@ -166,9 +171,10 @@ class _AccuracyRing extends StatelessWidget {
 }
 
 class _StreakCard extends StatelessWidget {
-  const _StreakCard({required this.streak});
+  const _StreakCard({required this.streak, required this.freezeEarned});
 
   final StudyStreak streak;
+  final bool freezeEarned;
 
   @override
   Widget build(BuildContext context) {
@@ -201,6 +207,10 @@ class _StreakCard extends StatelessWidget {
               ),
             ],
           ),
+          if (freezeEarned) ...[
+            const SizedBox(height: AppSpacing.sm),
+            _FreezeEarned(),
+          ],
           const SizedBox(height: AppSpacing.md),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
@@ -222,9 +232,42 @@ class _StreakCard extends StatelessWidget {
                     'goal': '${streak.dailyGoal}',
                   }),
             style: AppTextStyles.caption.copyWith(
-              color: streak.goalMet
-                  ? AppColors.success
-                  : context.colorInkMuted,
+              color: streak.goalMet ? AppColors.success : context.colorInkMuted,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The one-line announcement that this session banked a freeze. Sky-blue,
+/// like every other freeze in the app, so it reads as the same thing the
+/// user will see beside their flame on Home.
+class _FreezeEarned extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final sky = AppColors.sky.resolve(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppSpacing.sm,
+        vertical: AppSpacing.xs,
+      ),
+      decoration: BoxDecoration(
+        color: AppColors.sky.tint(context),
+        borderRadius: BorderRadius.circular(AppRadius.sm),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(Icons.ac_unit_rounded, color: sky, size: 16),
+          const SizedBox(width: AppSpacing.xs),
+          Text(
+            LocaleKeys.streakFreezeEarned.tr,
+            style: AppTextStyles.caption.copyWith(
+              color: sky,
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],

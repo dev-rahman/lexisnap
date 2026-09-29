@@ -222,6 +222,33 @@ const Map<String, String> fr = {
   LocaleKeys.studyAccuracy: 'mémorisés',
   LocaleKeys.studyStreakDays: 'Série de @count jours',
   LocaleKeys.studyStreakStarted: 'Série lancée',
+  LocaleKeys.streakFreezeEarned: 'Gel de série obtenu',
+  LocaleKeys.streakFreezeSavedOne: 'Un gel a sauvé votre série hier',
+  LocaleKeys.streakFreezeSavedMany: 'Des gels ont couvert @count jours manqués',
+  LocaleKeys.streakFreezeNextOne: 'Encore 1 jour pour obtenir un gel',
+  LocaleKeys.streakFreezeNext: 'Encore @count jours pour obtenir un gel',
+  LocaleKeys.streakFreezesReady: '@count gels de série disponibles',
+  LocaleKeys.streakInfoTitle: 'Comment fonctionnent les séries',
+  LocaleKeys.streakInfoCurrent: 'Série actuelle',
+  LocaleKeys.streakInfoFreezes: 'Gels disponibles',
+  LocaleKeys.streakInfoFreezesFull:
+      'Gels au maximum : vous êtes couvert pour @count jours manqués',
+  LocaleKeys.streakRuleDailyTitle: 'Révisez une fois par jour',
+  LocaleKeys.streakRuleDailyBody:
+      "Terminez au moins une carte ; inutile d'atteindre votre objectif quotidien. Les séances d'entraînement comptent, l'écoute non.",
+  LocaleKeys.streakRuleDayEndsTitle: 'Votre journée se termine à @time',
+  LocaleKeys.streakRuleDayEndsBody:
+      'Une séance tard le soir compte pour la journée où elle a commencé.',
+  LocaleKeys.streakRuleEarnTitle: 'Gagnez des gels de série',
+  LocaleKeys.streakRuleEarnBody:
+      "Chaque série de @days jours en rapporte un. Vous pouvez en garder jusqu'à @max.",
+  LocaleKeys.streakRuleCoverTitle: 'Les gels couvrent les jours manqués',
+  LocaleKeys.streakRuleCoverBody:
+      "Un gel est utilisé automatiquement pour chaque jour manqué. Les jours gelés maintiennent votre série sans l'allonger.",
+  LocaleKeys.streakRuleResetTitle:
+      'Trop de jours manqués et elle repart à zéro',
+  LocaleKeys.streakRuleResetBody:
+      "Si vous manquez plus de jours que vous n'avez de gels, votre série recommence. Vous gardez vos gels.",
   LocaleKeys.studyGoalProgress: '@done sur @goal aujourd\'hui',
   LocaleKeys.studyGoalMet: 'Objectif du jour atteint',
   LocaleKeys.studyContinue: 'Réviser @count de plus',

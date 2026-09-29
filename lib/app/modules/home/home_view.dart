@@ -10,6 +10,7 @@ import '../../core/widgets/app_top_safe_area.dart';
 import '../../core/widgets/deck_card.dart';
 import '../../core/widgets/empty_decks_state.dart';
 import '../../core/widgets/scan_source_sheet.dart';
+import '../../core/widgets/streak_info_sheet.dart';
 import 'home_controller.dart';
 import 'widgets/scan_tile.dart';
 import 'widgets/today_hero_card.dart';
@@ -65,6 +66,9 @@ class HomeView extends GetView<HomeController> {
                   days: controller.streakService.weekProgress,
                   streak: controller.streakService.streak.value,
                   replayToken: controller.heroReplayToken.value,
+                  justCovered: controller.streakService.justCovered,
+                  daysToNextFreeze: controller.streakService.daysToNextFreeze,
+                  onTap: () => showStreakInfoSheet(context),
                 ),
               ),
               const SizedBox(height: AppSpacing.md),

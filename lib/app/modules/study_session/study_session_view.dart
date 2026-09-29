@@ -69,6 +69,20 @@ class _StudySessionViewState extends State<StudySessionView> {
   int _stepKey = 0;
   bool _isSubmitting = false;
 
+  /// Freezes banked when this round began. A higher count at the summary
+  /// means the round itself earned one, which is worth saying out loud.
+  ///
+  /// Captured in [initState], deliberately not a lazy `late` initializer:
+  /// that would run on first read - the summary - after the freeze had
+  /// already been banked, and the round would never report earning one.
+  late int _freezesAtStart;
+
+  @override
+  void initState() {
+    super.initState();
+    _freezesAtStart = _streakService.streak.value.freezes;
+  }
+
   StudySessionEngine _newEngine() => StudySessionEngine(
     deck: _deck,
     cap: widget.cap ?? _streakService.streak.value.dailyGoal,
@@ -92,6 +106,7 @@ class _StudySessionViewState extends State<StudySessionView> {
           : await _deckRepository.submitReview(step.card, grade);
       if (!mounted) return;
 
+      final retiredBefore = _engine.retiredCount;
       setState(() {
         _deck = [
           for (final card in _deck) card.id == updated.id ? updated : card,
@@ -100,9 +115,13 @@ class _StudySessionViewState extends State<StudySessionView> {
         _stepKey++;
       });
 
-      if (_engine.isComplete) {
-        await _streakService.recordReviews(_engine.retiredCount);
-      }
+      // Credited per card, the moment it's done - not once at the end.
+      // The reviews themselves were already saved card by card, so crediting
+      // only a *finished* session meant someone could answer fifteen of
+      // twenty cards, close the session, and still wake up to a broken
+      // streak for a day they plainly studied.
+      final retired = _engine.retiredCount - retiredBefore;
+      if (retired > 0) await _streakService.recordReviews(retired);
     } catch (_) {
       AppSnackbar.error(LocaleKeys.commonSomethingWentWrong.tr);
     } finally {
@@ -113,6 +132,8 @@ class _StudySessionViewState extends State<StudySessionView> {
   void _startNextRound() => setState(() {
     _engine = _newEngine();
     _stepKey++;
+    // Each round's summary reports only what that round earned.
+    _freezesAtStart = _streakService.streak.value.freezes;
   });
 
   @override
@@ -157,6 +178,7 @@ class _StudySessionViewState extends State<StudySessionView> {
         accuracy: _engine.accuracy,
         tally: _engine.tally,
         streak: _streakService.streak.value,
+        freezeEarned: _streakService.streak.value.freezes > _freezesAtStart,
         remainingDueCount: _engine.skippedDueCount,
         onDone: Get.back,
         onContinue: _startNextRound,

@@ -216,6 +216,33 @@ const Map<String, String> es = {
   LocaleKeys.studyAccuracy: 'recordadas',
   LocaleKeys.studyStreakDays: 'Racha de @count días',
   LocaleKeys.studyStreakStarted: 'Racha iniciada',
+  LocaleKeys.streakFreezeEarned: 'Protector de racha conseguido',
+  LocaleKeys.streakFreezeSavedOne: 'Un protector salvó tu racha ayer',
+  LocaleKeys.streakFreezeSavedMany:
+      'Los protectores cubrieron @count días perdidos',
+  LocaleKeys.streakFreezeNextOne: '1 día más para ganar un protector',
+  LocaleKeys.streakFreezeNext: '@count días más para ganar un protector',
+  LocaleKeys.streakFreezesReady: '@count protectores de racha listos',
+  LocaleKeys.streakInfoTitle: 'Cómo funcionan las rachas',
+  LocaleKeys.streakInfoCurrent: 'Racha actual',
+  LocaleKeys.streakInfoFreezes: 'Protectores listos',
+  LocaleKeys.streakInfoFreezesFull:
+      'Protectores al máximo: cubres @count días perdidos',
+  LocaleKeys.streakRuleDailyTitle: 'Estudia una vez al día',
+  LocaleKeys.streakRuleDailyBody:
+      'Completa al menos una tarjeta; no hace falta llegar a tu meta diaria. Las rondas de práctica cuentan; escuchar no.',
+  LocaleKeys.streakRuleDayEndsTitle: 'Tu día termina a las @time',
+  LocaleKeys.streakRuleDayEndsBody:
+      'Una sesión de madrugada cuenta para el día en que empezó.',
+  LocaleKeys.streakRuleEarnTitle: 'Gana protectores de racha',
+  LocaleKeys.streakRuleEarnBody:
+      'Cada @days días de racha ganas uno. Puedes tener hasta @max.',
+  LocaleKeys.streakRuleCoverTitle: 'Los protectores cubren días perdidos',
+  LocaleKeys.streakRuleCoverBody:
+      'Se usa uno automáticamente por cada día que faltes. Los días protegidos mantienen tu racha, pero no la aumentan.',
+  LocaleKeys.streakRuleResetTitle: 'Si faltas demasiado, se reinicia',
+  LocaleKeys.streakRuleResetBody:
+      'Si faltas más días que protectores tienes, tu racha vuelve a empezar. Conservas tus protectores.',
   LocaleKeys.studyGoalProgress: '@done de @goal hoy',
   LocaleKeys.studyGoalMet: 'Meta diaria alcanzada',
   LocaleKeys.studyContinue: 'Repasar @count más',

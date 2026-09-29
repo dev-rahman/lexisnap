@@ -219,6 +219,34 @@ const Map<String, String> de = {
   LocaleKeys.studyAccuracy: 'gewusst',
   LocaleKeys.studyStreakDays: '@count Tage in Folge',
   LocaleKeys.studyStreakStarted: 'Serie gestartet',
+  LocaleKeys.streakFreezeEarned: 'Serienschutz verdient',
+  LocaleKeys.streakFreezeSavedOne:
+      'Ein Serienschutz hat gestern deine Serie gerettet',
+  LocaleKeys.streakFreezeSavedMany:
+      'Serienschutz hat @count verpasste Tage abgedeckt',
+  LocaleKeys.streakFreezeNextOne: 'Noch 1 Tag bis zum nächsten Serienschutz',
+  LocaleKeys.streakFreezeNext: 'Noch @count Tage bis zum nächsten Serienschutz',
+  LocaleKeys.streakFreezesReady: '@count Serienschutz bereit',
+  LocaleKeys.streakInfoTitle: 'So funktionieren Serien',
+  LocaleKeys.streakInfoCurrent: 'Aktuelle Serie',
+  LocaleKeys.streakInfoFreezes: 'Serienschutz bereit',
+  LocaleKeys.streakInfoFreezesFull:
+      'Serienschutz voll – du bist für @count verpasste Tage abgesichert',
+  LocaleKeys.streakRuleDailyTitle: 'Lerne einmal am Tag',
+  LocaleKeys.streakRuleDailyBody:
+      'Schließe mindestens eine Karte ab – dein Tagesziel musst du dafür nicht erreichen. Übungsrunden zählen, Zuhören nicht.',
+  LocaleKeys.streakRuleDayEndsTitle: 'Dein Tag endet um @time',
+  LocaleKeys.streakRuleDayEndsBody:
+      'Eine Sitzung spät in der Nacht zählt noch für den Tag, an dem sie begann.',
+  LocaleKeys.streakRuleEarnTitle: 'Verdiene Serienschutz',
+  LocaleKeys.streakRuleEarnBody:
+      'Alle @days Tage Serie bekommst du einen. Du kannst bis zu @max ansammeln.',
+  LocaleKeys.streakRuleCoverTitle: 'Serienschutz deckt verpasste Tage ab',
+  LocaleKeys.streakRuleCoverBody:
+      'Für jeden verpassten Tag wird automatisch einer verwendet. Geschützte Tage halten deine Serie am Leben, verlängern sie aber nicht.',
+  LocaleKeys.streakRuleResetTitle: 'Zu viele verpasst? Dann beginnt sie neu',
+  LocaleKeys.streakRuleResetBody:
+      'Verpasst du mehr Tage, als du Serienschutz hast, startet deine Serie neu. Deinen Serienschutz behältst du.',
   LocaleKeys.studyGoalProgress: '@done von @goal heute',
   LocaleKeys.studyGoalMet: 'Tagesziel erreicht',
   LocaleKeys.studyContinue: '@count weitere wiederholen',

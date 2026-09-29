@@ -210,6 +210,32 @@ const Map<String, String> en = {
   LocaleKeys.studyAccuracy: 'recalled',
   LocaleKeys.studyStreakDays: '@count-day streak',
   LocaleKeys.studyStreakStarted: 'Streak started',
+  LocaleKeys.streakFreezeEarned: 'Streak freeze earned',
+  LocaleKeys.streakFreezeSavedOne: 'A freeze saved your streak yesterday',
+  LocaleKeys.streakFreezeSavedMany: 'Freezes covered @count missed days',
+  LocaleKeys.streakFreezeNextOne: '1 more day to earn a freeze',
+  LocaleKeys.streakFreezeNext: '@count more days to earn a freeze',
+  LocaleKeys.streakFreezesReady: '@count streak freezes ready',
+  LocaleKeys.streakInfoTitle: 'How streaks work',
+  LocaleKeys.streakInfoCurrent: 'Current streak',
+  LocaleKeys.streakInfoFreezes: 'Freezes ready',
+  LocaleKeys.streakInfoFreezesFull:
+      "Freezes full — you're covered for @count missed days",
+  LocaleKeys.streakRuleDailyTitle: 'Study once a day',
+  LocaleKeys.streakRuleDailyBody:
+      "Complete at least one card — you don't need to hit your daily goal. Practice rounds count; listening doesn't.",
+  LocaleKeys.streakRuleDayEndsTitle: 'Your day ends at @time',
+  LocaleKeys.streakRuleDayEndsBody:
+      'A late-night session still counts for the day it started.',
+  LocaleKeys.streakRuleEarnTitle: 'Earn streak freezes',
+  LocaleKeys.streakRuleEarnBody:
+      'Every @days days of streak earns one. You can hold up to @max.',
+  LocaleKeys.streakRuleCoverTitle: 'Freezes cover missed days',
+  LocaleKeys.streakRuleCoverBody:
+      "One is used automatically for each day you miss. Frozen days keep your streak alive but don't add to it.",
+  LocaleKeys.streakRuleResetTitle: 'Miss too many and it restarts',
+  LocaleKeys.streakRuleResetBody:
+      'If you miss more days than you have freezes, your streak starts over. Your freezes are kept.',
   LocaleKeys.studyGoalProgress: '@done of @goal today',
   LocaleKeys.studyGoalMet: 'Daily goal reached',
   LocaleKeys.studyContinue: 'Review @count more',
