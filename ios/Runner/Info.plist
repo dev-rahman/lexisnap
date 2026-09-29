@@ -22,10 +22,25 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.REPLACE_WITH_YOUR_IOS_CLIENT_ID</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>LexiSnap needs camera access to scan text from books, menus, signs, and more.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>LexiSnap needs photo access so you can choose a picture to pull text from.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
@@ -49,26 +64,6 @@
 	</dict>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<!-- Google Sign-In: required so Google's SDK can redirect back into the
-	     app. Replace with your iOS client's REVERSED_CLIENT_ID from Google
-	     Cloud Console (see SETUP.md, step "Google sign-in"). -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>com.googleusercontent.apps.REPLACE_WITH_YOUR_IOS_CLIENT_ID</string>
-			</array>
-		</dict>
-	</array>
-	<!-- Scan flow: capturing a photo of text to turn into flashcards, and
-	     picking an existing photo from the library to do the same. -->
-	<key>NSCameraUsageDescription</key>
-	<string>LexiSnap needs camera access to scan text from books, menus, signs, and more.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>LexiSnap needs photo access so you can choose a picture to pull text from.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
