@@ -82,6 +82,31 @@ class SupabaseAuthService implements AuthService {
   }
 
   @override
+  Future<void> verifyPasswordResetCode({
+    required String email,
+    required String code,
+  }) async {
+    try {
+      await _auth.verifyOTP(
+        type: sb.OtpType.recovery,
+        email: email.trim(),
+        token: code.trim(),
+      );
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
+  Future<void> updatePassword({required String password}) async {
+    try {
+      await _auth.updateUser(sb.UserAttributes(password: password));
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
   Future<void> updateProfile({String? fullName}) async {
     try {
       await _auth.updateUser(

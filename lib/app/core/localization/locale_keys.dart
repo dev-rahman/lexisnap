@@ -58,7 +58,16 @@ class LocaleKeys {
       'forgot_password_check_email_title';
   static const forgotPasswordCheckEmailBody =
       'forgot_password_check_email_body';
-  static const forgotPasswordBackToLogin = 'forgot_password_back_to_login';
+  static const forgotPasswordVerifyButton = 'forgot_password_verify_button';
+  static const forgotPasswordResend = 'forgot_password_resend';
+  static const forgotPasswordResendIn = 'forgot_password_resend_in';
+  static const forgotPasswordChangeEmail = 'forgot_password_change_email';
+  static const forgotPasswordCodeResent = 'forgot_password_code_resent';
+  static const forgotPasswordNewTitle = 'forgot_password_new_title';
+  static const forgotPasswordNewSubtitle = 'forgot_password_new_subtitle';
+  static const forgotPasswordNewPassword = 'forgot_password_new_password';
+  static const forgotPasswordSaveButton = 'forgot_password_save_button';
+  static const forgotPasswordUpdated = 'forgot_password_updated';
 
   // Validators
   static const validatorEmailRequired = 'validator_email_required';
@@ -70,6 +79,8 @@ class LocaleKeys {
   static const validatorPasswordsDontMatch = 'validator_passwords_dont_match';
   static const validatorFieldRequired = 'validator_field_required';
   static const validatorNameRequired = 'validator_name_required';
+  static const validatorCodeRequired = 'validator_code_required';
+  static const validatorCodeInvalid = 'validator_code_invalid';
 
   // Home
   static const homeGreeting = 'home_greeting';

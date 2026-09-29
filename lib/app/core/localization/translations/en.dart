@@ -45,12 +45,21 @@ const Map<String, String> en = {
 
   LocaleKeys.forgotPasswordTitle: 'Reset your password',
   LocaleKeys.forgotPasswordSubtitle:
-      "Enter your email and we'll send you a link to reset your password.",
-  LocaleKeys.forgotPasswordButton: 'Send reset link',
+      "Enter your email and we'll send you a code to reset your password.",
+  LocaleKeys.forgotPasswordButton: 'Send code',
   LocaleKeys.forgotPasswordCheckEmailTitle: 'Check your email',
   LocaleKeys.forgotPasswordCheckEmailBody:
-      "We've sent a password reset link to @email",
-  LocaleKeys.forgotPasswordBackToLogin: 'Back to login',
+      'We sent a code to @email. Enter it below to reset your password.',
+  LocaleKeys.forgotPasswordVerifyButton: 'Verify code',
+  LocaleKeys.forgotPasswordResend: 'Resend code',
+  LocaleKeys.forgotPasswordResendIn: 'Resend code in @seconds s',
+  LocaleKeys.forgotPasswordChangeEmail: 'Use a different email',
+  LocaleKeys.forgotPasswordCodeResent: 'We sent you a new code.',
+  LocaleKeys.forgotPasswordNewTitle: 'Choose a new password',
+  LocaleKeys.forgotPasswordNewSubtitle: 'Use at least 8 characters.',
+  LocaleKeys.forgotPasswordNewPassword: 'New password',
+  LocaleKeys.forgotPasswordSaveButton: 'Save password',
+  LocaleKeys.forgotPasswordUpdated: 'Your password has been updated.',
 
   LocaleKeys.validatorEmailRequired: 'Email is required',
   LocaleKeys.validatorEmailInvalid: 'Enter a valid email address',
@@ -61,6 +70,8 @@ const Map<String, String> en = {
   LocaleKeys.validatorPasswordsDontMatch: 'Passwords do not match',
   LocaleKeys.validatorFieldRequired: 'This field is required',
   LocaleKeys.validatorNameRequired: 'Enter a name',
+  LocaleKeys.validatorCodeRequired: 'Enter the code from the email',
+  LocaleKeys.validatorCodeInvalid: 'Enter the full code from the email',
 
   LocaleKeys.homeGreeting: 'Hi, @name',
   LocaleKeys.homeGreetingGeneric: 'Hi there',

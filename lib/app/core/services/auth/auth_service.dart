@@ -25,7 +25,19 @@ abstract class AuthService {
     String? fullName,
   });
 
+  /// Emails a one-time code the user types into the app to reset their
+  /// password - no link to open. Check it with [verifyPasswordResetCode].
   Future<void> sendPasswordResetEmail({required String email});
+
+  /// Checks the code sent by [sendPasswordResetEmail]. On success the user
+  /// is signed in, so [updatePassword] can set their new password.
+  Future<void> verifyPasswordResetCode({
+    required String email,
+    required String code,
+  });
+
+  /// Sets a new password for the signed-in user.
+  Future<void> updatePassword({required String password});
 
   /// Updates the signed-in user's profile fields. Pass only what should
   /// change; omitted fields are left as-is.

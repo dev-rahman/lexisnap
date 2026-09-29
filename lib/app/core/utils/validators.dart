@@ -7,6 +7,10 @@ class Validators {
 
   static final RegExp _emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
 
+  /// Supabase email codes are 6 digits by default, but a project can raise
+  /// the length to 10, so accept the whole range.
+  static final RegExp _oneTimeCodeRegex = RegExp(r'^\d{6,10}$');
+
   static String? email(String? value) {
     final trimmed = value?.trim() ?? '';
     if (trimmed.isEmpty) return LocaleKeys.validatorEmailRequired.tr;
@@ -29,6 +33,15 @@ class Validators {
       return LocaleKeys.validatorConfirmPasswordRequired.tr;
     }
     if (value != password) return LocaleKeys.validatorPasswordsDontMatch.tr;
+    return null;
+  }
+
+  static String? oneTimeCode(String? value) {
+    final trimmed = value?.trim() ?? '';
+    if (trimmed.isEmpty) return LocaleKeys.validatorCodeRequired.tr;
+    if (!_oneTimeCodeRegex.hasMatch(trimmed)) {
+      return LocaleKeys.validatorCodeInvalid.tr;
+    }
     return null;
   }
 
