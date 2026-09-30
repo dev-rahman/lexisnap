@@ -10,7 +10,7 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
-import '../../core/utils/initials.dart';
+import '../../core/widgets/app_avatar.dart';
 import '../../core/utils/validators.dart';
 import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
@@ -27,11 +27,11 @@ class ProfileView extends GetView<ProfileController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // No AppBar: this screen is opened by the floating avatar in the
-      // shell's top-right corner, and an AppBar's leading icon sits higher
-      // and further left than that avatar did, so the whole screen looked
-      // like it slid sideways on the way in. A floating back button on the
-      // shared geometry lands on exactly the avatar's spot instead.
+      // No AppBar: this screen opens out of the floating avatar in the
+      // shell's top-right corner, and an AppBar's icons sit higher than
+      // that avatar did, so the whole screen looked like it shifted on the
+      // way in. A floating close button on the shared geometry lands on
+      // exactly the avatar's spot instead.
       body: SafeArea(
         top: false,
         child: Stack(
@@ -53,25 +53,17 @@ class ProfileView extends GetView<ProfileController> {
                         : null;
                     final displayName =
                         actualName ?? LocaleKeys.profileYourAccount.tr;
-                    final initials = initialsFor(actualName, user?.email);
 
                     return Column(
                       children: [
-                        Container(
-                          height: 76,
-                          width: 76,
-                          decoration: const BoxDecoration(
-                            color: AppColors.ink,
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              initials,
-                              style: AppTextStyles.heading1.copyWith(
-                                color: Colors.white,
-                                fontSize: 26,
-                              ),
-                            ),
+                        // Lands the avatar that flies over from the
+                        // shell's corner button as this screen opens.
+                        SizedBox.square(
+                          dimension: 76,
+                          child: Hero(
+                            tag: AppAvatar.heroTag,
+                            transitionOnUserGestures: true,
+                            child: AppAvatar(user: user),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
@@ -189,7 +181,7 @@ class ProfileView extends GetView<ProfileController> {
                 ],
               ),
             ),
-            const AppShellBackButton(),
+            const AppShellCloseButton(),
           ],
         ),
       ),

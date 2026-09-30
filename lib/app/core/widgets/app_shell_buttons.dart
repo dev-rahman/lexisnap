@@ -5,14 +5,13 @@ import '../../routes/app_routes.dart';
 import '../services/auth/auth_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
-import '../theme/app_text_styles.dart';
-import '../utils/initials.dart';
+import 'app_avatar.dart';
 
 /// The floating round buttons that live in a screen's top corners - the
-/// account avatar on the app shell, the back button on the screens it
+/// account avatar on the app shell, the close button on the screens it
 /// opens.
 ///
-/// They share one set of numbers deliberately. A back button that lands a
+/// They share one set of numbers deliberately. A close button that lands a
 /// few pixels off where the avatar was makes the whole screen look like it
 /// shifted during the transition, and content that doesn't know how much
 /// room they take ends up running underneath them - which is exactly what
@@ -81,45 +80,53 @@ class AppShellButton extends StatelessWidget {
 
 /// The account avatar in the top-right of the app shell, over both tabs,
 /// opening the account/settings screen that used to be the Profile tab.
+///
+/// Profile opens by growing out of this button (see
+/// `AvatarRevealTransition`) while the avatar itself flies to the Profile
+/// header as a Hero.
 class AppProfileButton extends StatelessWidget {
   const AppProfileButton({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = Get.find<AuthService>().currentUser;
-    final name = user?.fullName?.isNotEmpty == true ? user!.fullName : null;
-
     return AppShellButton(
       alignEnd: true,
       onTap: () => Get.toNamed(AppRoutes.profile),
-      child: Text(
-        initialsFor(name, user?.email),
-        style: AppTextStyles.bodyMedium.copyWith(
-          color: Colors.white,
-          fontSize: 14,
-        ),
+      // The avatar draws its own disc and ring.
+      background: Colors.transparent,
+      child: Hero(
+        tag: AppAvatar.heroTag,
+        transitionOnUserGestures: true,
+        child: AppAvatar(user: Get.find<AuthService>().currentUser),
       ),
     );
   }
 }
 
-/// The back button on screens the shell pushes, sized and placed to land
-/// exactly where the avatar was so nothing appears to jump on the way in.
+/// The close button on screens that open out of the shell's avatar, in the
+/// avatar's exact spot: the screen opens from that corner, so it closes
+/// from the same one, and nothing appears to jump on the way in or out.
 ///
 /// Surface-coloured rather than filled navy: it occupies the avatar's
 /// geometry, but it shouldn't read as an avatar.
-class AppShellBackButton extends StatelessWidget {
-  const AppShellBackButton({super.key, this.onTap});
+class AppShellCloseButton extends StatelessWidget {
+  const AppShellCloseButton({super.key, this.onTap});
 
   final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
     return AppShellButton(
+      alignEnd: true,
       onTap: onTap ?? Get.back,
       background: context.colorSurface,
       border: context.colorBorder,
-      child: Icon(Icons.arrow_back_rounded, size: 20, color: context.colorInk),
+      child: Icon(
+        Icons.close_rounded,
+        size: 20,
+        color: context.colorInk,
+        semanticLabel: MaterialLocalizations.of(context).closeButtonTooltip,
+      ),
     );
   }
 }

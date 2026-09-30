@@ -1,6 +1,6 @@
 /// Up to two initials for [name], falling back to the first letter of
-/// [email], or '?' if neither is available. Shared by the Profile screen's
-/// own avatar and the floating profile button in the main app shell.
+/// [email], or '?' if neither is available. Drawn by `AppAvatar`, which
+/// both the shell's profile button and the Profile header use.
 String initialsFor(String? name, String? email) {
   if (name != null && name.isNotEmpty) {
     final parts = name.trim().split(RegExp(r'\s+'));

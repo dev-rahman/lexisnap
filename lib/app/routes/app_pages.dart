@@ -22,6 +22,7 @@ import '../modules/splash/splash_binding.dart';
 import '../modules/splash/splash_view.dart';
 import 'app_routes.dart';
 import 'auth_middleware.dart';
+import 'avatar_reveal_transition.dart';
 
 class AppPages {
   AppPages._();
@@ -80,6 +81,11 @@ class AppPages {
       page: () => const ProfileView(),
       binding: ProfileBinding(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
+      customTransition: AvatarRevealTransition(),
+      transitionDuration: AvatarRevealTransition.duration,
+      // The shell should stay put while Profile opens out of its corner;
+      // iOS's default parallax would slide it sideways underneath.
+      showCupertinoParallax: false,
     ),
     GetPage(
       name: AppRoutes.help,
