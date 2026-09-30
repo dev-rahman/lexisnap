@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../routes/app_routes.dart';
-import '../services/auth/auth_service.dart';
+import '../services/auth/user_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'app_avatar.dart';
@@ -97,7 +97,7 @@ class AppProfileButton extends StatelessWidget {
       child: Hero(
         tag: AppAvatar.heroTag,
         transitionOnUserGestures: true,
-        child: AppAvatar(user: Get.find<AuthService>().currentUser),
+        child: Obx(() => AppAvatar(user: Get.find<UserService>().user.value)),
       ),
     );
   }

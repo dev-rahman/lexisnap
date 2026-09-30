@@ -29,14 +29,28 @@ class SupabaseAuthService implements AuthService {
   @override
   AppUser? get currentUser => _mapUser(_auth.currentUser);
 
+  /// The user's own uploaded photo lives under its own metadata key, not
+  /// `avatar_url`: Supabase refreshes `avatar_url` from Google on every
+  /// Google sign-in, which would quietly replace a photo the user chose.
+  static const _photoUrlKey = 'photo_url';
+
   AppUser? _mapUser(sb.User? user) {
     if (user == null) return null;
     final metadata = user.userMetadata ?? const {};
+    final ownPhoto = metadata[_photoUrlKey] as String?;
+    final providers = user.appMetadata['providers'];
     return AppUser(
       id: user.id,
       email: user.email,
       fullName: metadata['full_name'] as String? ?? metadata['name'] as String?,
-      avatarUrl: metadata['avatar_url'] as String?,
+      avatarUrl:
+          ownPhoto ??
+          metadata['avatar_url'] as String? ??
+          metadata['picture'] as String?,
+      hasOwnPhoto: ownPhoto != null,
+      hasPassword: providers is List
+          ? providers.contains('email')
+          : user.appMetadata['provider'] == 'email',
       emailConfirmed: user.emailConfirmedAt != null,
     );
   }
@@ -107,6 +121,49 @@ class SupabaseAuthService implements AuthService {
   }
 
   @override
+  Future<void> reauthenticate({required String password}) async {
+    final email = _auth.currentUser?.email;
+    if (email == null) throw const AppAuthException('Not signed in.');
+    try {
+      await _auth.signInWithPassword(email: email, password: password);
+    } on sb.AuthException catch (e) {
+      if (e.code == 'invalid_credentials') {
+        throw WrongPasswordException(e.message);
+      }
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
+  Future<void> requestEmailChange({required String newEmail}) async {
+    try {
+      await _auth.updateUser(sb.UserAttributes(email: newEmail.trim()));
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
+  Future<bool> verifyEmailChangeCode({
+    required String email,
+    required String code,
+  }) async {
+    try {
+      final response = await _auth.verifyOTP(
+        type: sb.OtpType.emailChange,
+        email: email.trim(),
+        token: code.trim(),
+      );
+      // With "secure email change" on, the first of the two codes is
+      // accepted without a session; the session - and the new email -
+      // only arrive once the second one is verified.
+      return response.session != null;
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
   Future<void> updateProfile({String? fullName}) async {
     try {
       await _auth.updateUser(
@@ -115,6 +172,41 @@ class SupabaseAuthService implements AuthService {
     } on sb.AuthException catch (e) {
       throw AppAuthException(e.message);
     }
+  }
+
+  @override
+  Future<void> updateProfilePhoto(String? url) async {
+    try {
+      // A null value removes the key rather than storing null.
+      await _auth.updateUser(sb.UserAttributes(data: {_photoUrlKey: url}));
+    } on sb.AuthException catch (e) {
+      throw AppAuthException(e.message);
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    // Deleting a user takes the service role key, which must never ship in
+    // the app, so the `delete-account` Edge Function does the actual work.
+    try {
+      await sb.Supabase.instance.client.functions.invoke('delete-account');
+    } on sb.FunctionException catch (e) {
+      final details = e.details;
+      throw AppAuthException(
+        details is Map && details['error'] is String
+            ? details['error'] as String
+            : 'Account deletion failed (${e.status}).',
+      );
+    }
+
+    try {
+      await GoogleSignIn.instance.signOut();
+    } catch (_) {
+      // Not signed in via Google - ignore.
+    }
+    // The server already revoked every session along with the user, so
+    // there's nothing to tell it; just drop the one stored on this device.
+    await _auth.signOut(scope: sb.SignOutScope.local);
   }
 
   /// `GoogleSignIn.instance.initialize` must be called exactly once, and

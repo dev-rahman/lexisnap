@@ -118,6 +118,26 @@ class StreakService extends GetxService with WidgetsBindingObserver {
     await prefs.setInt(_dailyGoalKey, clamped);
   }
 
+  /// Forgets all of the user's study history on this device. Used when
+  /// the account itself is deleted, so none of it outlives the account.
+  Future<void> reset() async {
+    streak.value = const StudyStreak();
+
+    final prefs = await SharedPreferences.getInstance();
+    for (final key in [
+      _currentKey,
+      _longestKey,
+      _reviewsTodayKey,
+      _dailyGoalKey,
+      _lastStudiedKey,
+      _historyKey,
+      _freezesKey,
+      _frozenDaysKey,
+    ]) {
+      await prefs.remove(key);
+    }
+  }
+
   Future<void> _reconcile() async {
     final before = streak.value;
     final after = StreakRules.reconcile(before, DateTime.now());

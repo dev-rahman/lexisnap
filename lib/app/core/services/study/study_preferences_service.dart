@@ -32,4 +32,13 @@ class StudyPreferencesService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_modeKey, value.name);
   }
+
+  /// Back to the default mode, forgetting the stored choice. Used when the
+  /// account is deleted.
+  Future<void> reset() async {
+    mode.value = StudyMode.smart;
+
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_modeKey);
+  }
 }

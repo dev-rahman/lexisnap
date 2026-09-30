@@ -24,4 +24,15 @@ abstract class AppRoutes {
 
   /// Help & support, pushed from Profile.
   static const help = '/help';
+
+  /// Photo, name, email, password and account deletion, pushed from
+  /// Profile.
+  static const editProfile = '/edit-profile';
+
+  /// Moving the account to a new email address, pushed from [editProfile].
+  static const changeEmail = '/change-email';
+
+  /// The multi-step, can't-be-undone account deletion, pushed from
+  /// [editProfile].
+  static const deleteAccount = '/delete-account';
 }

@@ -38,9 +38,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>LexiSnap needs camera access to scan text from books, menus, signs, and more.</string>
+	<string>LexiSnap needs camera access to scan text from books, menus, signs, and more, and to take your profile photo.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>LexiSnap needs photo access so you can choose a picture to pull text from.</string>
+	<string>LexiSnap needs photo access so you can choose a picture to pull text from, or to use as your profile photo.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

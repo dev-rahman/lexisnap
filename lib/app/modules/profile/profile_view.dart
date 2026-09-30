@@ -11,11 +11,11 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
 import '../../core/widgets/app_avatar.dart';
-import '../../core/utils/validators.dart';
 import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/confirm_sheet.dart';
+import '../../core/widgets/app_settings_group.dart';
 import '../../core/widgets/app_shell_buttons.dart';
-import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/study_mode_sheet.dart';
 import '../../core/widgets/language_picker_sheet.dart';
 import '../../routes/app_routes.dart';
@@ -46,7 +46,6 @@ class ProfileView extends GetView<ProfileController> {
               child: Column(
                 children: [
                   Obx(() {
-                    controller.refreshTrigger.value;
                     final user = controller.user;
                     final actualName = user?.fullName?.isNotEmpty == true
                         ? user!.fullName!
@@ -58,21 +57,20 @@ class ProfileView extends GetView<ProfileController> {
                       children: [
                         // Lands the avatar that flies over from the
                         // shell's corner button as this screen opens.
-                        SizedBox.square(
-                          dimension: 76,
-                          child: Hero(
-                            tag: AppAvatar.heroTag,
-                            transitionOnUserGestures: true,
-                            child: AppAvatar(user: user),
+                        GestureDetector(
+                          onTap: controller.openEditProfile,
+                          child: SizedBox.square(
+                            dimension: 76,
+                            child: Hero(
+                              tag: AppAvatar.heroTag,
+                              transitionOnUserGestures: true,
+                              child: AppAvatar(user: user),
+                            ),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.md),
                         InkWell(
-                          onTap: () => _showEditNameSheet(
-                            context,
-                            controller,
-                            actualName,
-                          ),
+                          onTap: controller.openEditProfile,
                           borderRadius: BorderRadius.circular(AppRadius.sm),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
@@ -103,15 +101,30 @@ class ProfileView extends GetView<ProfileController> {
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ],
+                        const SizedBox(height: AppSpacing.md),
+                        OutlinedButton.icon(
+                          onPressed: controller.openEditProfile,
+                          icon: const Icon(Icons.edit_outlined, size: 18),
+                          label: Text(LocaleKeys.profileEditProfile.tr),
+                          // The theme's buttons are full-width 52pt blocks
+                          // for a screen's main action; this is a small
+                          // secondary one under the name.
+                          style: OutlinedButton.styleFrom(
+                            minimumSize: const Size(0, 38),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: AppSpacing.md,
+                            ),
+                          ),
+                        ),
                       ],
                     );
                   }),
                   const SizedBox(height: AppSpacing.lg * 1.5),
-                  _SettingsGroup(
+                  AppSettingsGroup(
                     children: [
                       Obx(() {
                         final reminder = Get.find<StudyReminderService>();
-                        return _SettingsTile(
+                        return AppSettingsTile(
                           icon: Icons.notifications_outlined,
                           label: LocaleKeys.reminderSettingsTitle.tr,
                           value: reminder.isEnabled.value
@@ -125,7 +138,7 @@ class ProfileView extends GetView<ProfileController> {
                       Obx(() {
                         final mode =
                             Get.find<StudyPreferencesService>().mode.value;
-                        return _SettingsTile(
+                        return AppSettingsTile(
                           icon: studyModeIcons[mode]!,
                           label: LocaleKeys.studyModeTitle.tr,
                           value: studyModeLabels[mode]!.tr,
@@ -133,7 +146,7 @@ class ProfileView extends GetView<ProfileController> {
                         );
                       }),
                       Obx(
-                        () => _SettingsTile(
+                        () => AppSettingsTile(
                           icon: Icons.flag_outlined,
                           label: LocaleKeys.goalSettingsTitle.tr,
                           value: LocaleKeys.goalCardsPerDay.trParams({
@@ -143,22 +156,22 @@ class ProfileView extends GetView<ProfileController> {
                           onTap: () => _showGoalSheet(context),
                         ),
                       ),
-                      _SettingsTile(
+                      AppSettingsTile(
                         icon: Icons.palette_outlined,
                         label: LocaleKeys.profileAppearance.tr,
                         onTap: () => _showThemePicker(context, controller),
                       ),
-                      _SettingsTile(
+                      AppSettingsTile(
                         icon: Icons.language_outlined,
                         label: LocaleKeys.profileLanguage.tr,
                         onTap: () => showLanguagePickerSheet(context),
                       ),
-                      _SettingsTile(
+                      AppSettingsTile(
                         icon: Icons.help_outline_rounded,
                         label: LocaleKeys.profileHelpSupport.tr,
                         onTap: () => Get.toNamed(AppRoutes.help),
                       ),
-                      _SettingsTile(
+                      AppSettingsTile(
                         icon: Icons.info_outline_rounded,
                         label: LocaleKeys.profileAbout.tr,
                         onTap: () => AppSnackbar.info(
@@ -175,7 +188,7 @@ class ProfileView extends GetView<ProfileController> {
                       variant: AppButtonVariant.outlined,
                       color: AppColors.alert,
                       isLoading: controller.isSigningOut.value,
-                      onPressed: controller.signOut,
+                      onPressed: () => _confirmSignOut(context, controller),
                     ),
                   ),
                 ],
@@ -189,69 +202,18 @@ class ProfileView extends GetView<ProfileController> {
   }
 }
 
-void _showEditNameSheet(
+Future<void> _confirmSignOut(
   BuildContext context,
   ProfileController controller,
-  String? currentName,
-) {
-  final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController(text: currentName ?? '');
-
-  showAppSheet(
+) async {
+  final confirmed = await showConfirmSheet(
     context,
-    isScrollControlled: true,
-    builder: (sheetContext) {
-      return Padding(
-        padding: EdgeInsets.fromLTRB(
-          AppSpacing.lg,
-          // The drag handle already reserves the top gap.
-          0,
-          AppSpacing.lg,
-          // viewInsets covers the keyboard, padding.bottom the system
-          // nav bar - and they swap as the keyboard opens, so both are
-          // needed. Without the second, Save sat under the nav buttons.
-          AppSpacing.lg +
-              MediaQuery.of(sheetContext).viewInsets.bottom +
-              MediaQuery.of(sheetContext).padding.bottom,
-        ),
-        child: Form(
-          key: formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                LocaleKeys.profileEditName.tr,
-                style: AppTextStyles.heading2,
-              ),
-              const SizedBox(height: AppSpacing.md),
-              AppTextField(
-                label: LocaleKeys.commonFullName.tr,
-                controller: nameController,
-                textInputAction: TextInputAction.done,
-                validator: (v) => Validators.required(
-                  v,
-                  message: LocaleKeys.validatorNameRequired.tr,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.lg),
-              Obx(
-                () => AppButton(
-                  label: LocaleKeys.commonSave.tr,
-                  isLoading: controller.isUpdatingName.value,
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      controller.updateName(nameController.text.trim());
-                    }
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    },
+    icon: Icons.logout_rounded,
+    title: LocaleKeys.signOutConfirmTitle.tr,
+    body: LocaleKeys.signOutConfirmBody.tr,
+    confirmLabel: LocaleKeys.profileSignOut.tr,
   );
+  if (confirmed) await controller.signOut();
 }
 
 void _showThemePicker(BuildContext context, ProfileController controller) {
@@ -510,119 +472,6 @@ class _PickerOption extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _SettingsGroup extends StatelessWidget {
-  const _SettingsGroup({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: context.colorSurface,
-        borderRadius: BorderRadius.circular(AppRadius.lg),
-      ),
-      child: Column(children: children),
-    );
-  }
-}
-
-class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-    this.value,
-    this.showDivider = true,
-  });
-
-  final IconData icon;
-  final String label;
-  final VoidCallback onTap;
-
-  /// Current setting, shown muted at the end of the row so the state is
-  /// readable without opening the tile.
-  final String? value;
-
-  final bool showDivider;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.md,
-                vertical: AppSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  Icon(icon, size: 22, color: context.colorInk),
-                  const SizedBox(width: AppSpacing.md),
-                  // Label and value share one Expanded row rather than
-                  // being two flex children of the outer one. As siblings
-                  // they split the free space by flex factor, so whatever
-                  // the label did not use was simply lost - the row packed
-                  // left and the chevron stopped short, leaving the
-                  // chevrons ragged down the group. One Expanded row that
-                  // always fills, with spaceBetween inside it, pins the
-                  // label left and the value hard against the chevron.
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Flexible(
-                          child: Text(
-                            label,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.bodyMedium,
-                          ),
-                        ),
-                        if (value != null) ...[
-                          const SizedBox(width: AppSpacing.sm),
-                          Flexible(
-                            child: Text(
-                              value!,
-                              textAlign: TextAlign.end,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.caption.copyWith(
-                                color: context.colorInkMuted,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
-                  const SizedBox(width: AppSpacing.xs),
-                  Icon(
-                    Icons.chevron_right_rounded,
-                    color: context.colorInkMuted,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-        if (showDivider)
-          Divider(
-            height: 1,
-            color: context.colorBorder,
-            indent: AppSpacing.md,
-            endIndent: AppSpacing.md,
-          ),
-      ],
     );
   }
 }

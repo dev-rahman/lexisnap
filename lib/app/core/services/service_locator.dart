@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 
 import 'auth/auth_service.dart';
 import 'auth/supabase_auth_service.dart';
+import 'auth/user_service.dart';
 import 'deck/deck_repository.dart';
 import 'deck/supabase_deck_repository.dart';
 import 'locale/locale_service.dart';
@@ -10,6 +11,8 @@ import 'ocr/mlkit_text_recognition_service.dart';
 import 'ocr/text_recognition_service.dart';
 import 'onboarding/onboarding_service.dart';
 import 'permission/permission_service.dart';
+import 'profile_photo/profile_photo_service.dart';
+import 'profile_photo/supabase_profile_photo_service.dart';
 import 'speech/flutter_tts_service.dart';
 import 'speech/text_to_speech_service.dart';
 import 'streak/streak_service.dart';
@@ -31,6 +34,11 @@ class ServiceLocator {
 
   static Future<void> init() async {
     Get.put<AuthService>(SupabaseAuthService(), permanent: true);
+    Get.put<UserService>(UserService(), permanent: true);
+    Get.put<ProfilePhotoService>(
+      SupabaseProfilePhotoService(),
+      permanent: true,
+    );
     Get.put<OnboardingService>(OnboardingService(), permanent: true);
     Get.put<PermissionService>(PermissionService(), permanent: true);
     Get.put<TextRecognitionService>(

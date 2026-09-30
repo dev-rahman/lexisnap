@@ -5,9 +5,10 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../utils/initials.dart';
 
-/// The signed-in user's initials avatar: a navy disc inside a ring in the
-/// user's own hue, with a sliver of page colour between the two so the
-/// avatar stays crisp over whatever scrolls underneath it in the shell.
+/// The signed-in user's avatar - their photo, or their initials on a navy
+/// disc - inside a ring in the user's own hue, with a sliver of page colour
+/// between the two so it stays crisp over whatever scrolls underneath it
+/// in the shell.
 ///
 /// Drawn once at Profile's header size and scaled by [FittedBox] to
 /// whatever it's given. The same widget is a Hero between the shell's 40pt
@@ -44,19 +45,38 @@ class AppAvatar extends StatelessWidget {
           border: Border.all(color: hue.resolve(context), width: _ring),
         ),
         child: Container(
-          alignment: Alignment.center,
+          clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
             color: context.colorPanel,
             shape: BoxShape.circle,
           ),
-          child: Text(
-            initialsFor(name, user?.email),
-            maxLines: 1,
-            style: AppTextStyles.heading1.copyWith(
-              color: Colors.white,
-              fontSize: 26,
-              height: 1,
-            ),
+          // Initials sit under the photo rather than instead of it: they
+          // show while it loads, and stay if it never does.
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Center(
+                child: Text(
+                  initialsFor(name, user?.email),
+                  maxLines: 1,
+                  style: AppTextStyles.heading1.copyWith(
+                    color: Colors.white,
+                    fontSize: 26,
+                    height: 1,
+                  ),
+                ),
+              ),
+              if (user?.avatarUrl != null)
+                Image.network(
+                  user!.avatarUrl!,
+                  fit: BoxFit.cover,
+                  // Uploads are 256px already; this caps Google/Apple
+                  // pictures, which can be far larger, to the same.
+                  cacheWidth: 256,
+                  gaplessPlayback: true,
+                  errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                ),
+            ],
           ),
         ),
       ),

@@ -10,3 +10,11 @@ class AppAuthException implements Exception {
   @override
   String toString() => message;
 }
+
+/// The password given to `AuthService.reauthenticate` was wrong. Split out
+/// so a screen can say exactly that, rather than passing on the backend's
+/// generic "invalid login credentials" - and so a network failure isn't
+/// mistaken for a wrong password.
+class WrongPasswordException extends AppAuthException {
+  const WrongPasswordException(super.message);
+}

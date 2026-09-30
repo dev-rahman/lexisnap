@@ -6,8 +6,14 @@ import '../modules/auth/login/login_binding.dart';
 import '../modules/auth/login/login_view.dart';
 import '../modules/auth/signup/signup_binding.dart';
 import '../modules/auth/signup/signup_view.dart';
+import '../modules/change_email/change_email_binding.dart';
+import '../modules/change_email/change_email_view.dart';
 import '../modules/deck_detail/deck_detail_binding.dart';
 import '../modules/deck_detail/deck_detail_view.dart';
+import '../modules/delete_account/delete_account_binding.dart';
+import '../modules/delete_account/delete_account_view.dart';
+import '../modules/edit_profile/edit_profile_binding.dart';
+import '../modules/edit_profile/edit_profile_view.dart';
 import '../modules/help/help_binding.dart';
 import '../modules/help/help_view.dart';
 import '../modules/main/main_binding.dart';
@@ -91,6 +97,24 @@ class AppPages {
       name: AppRoutes.help,
       page: () => const HelpView(),
       binding: HelpBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.editProfile,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.changeEmail,
+      page: () => const ChangeEmailView(),
+      binding: ChangeEmailBinding(),
+      middlewares: [AuthMiddleware(requiresAuth: true)],
+    ),
+    GetPage(
+      name: AppRoutes.deleteAccount,
+      page: () => const DeleteAccountView(),
+      binding: DeleteAccountBinding(),
       middlewares: [AuthMiddleware(requiresAuth: true)],
     ),
   ];

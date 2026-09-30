@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../core/localization/locale_keys.dart';
@@ -9,6 +8,7 @@ import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
 import '../../../core/widgets/app_brand_header.dart';
 import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/app_code_field.dart';
 import '../../../core/widgets/app_text_field.dart';
 import 'forgot_password_controller.dart';
 
@@ -112,8 +112,6 @@ class _CodeStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final codeStyle = AppTextStyles.heading2.copyWith(letterSpacing: 8);
-
     return SingleChildScrollView(
       child: Form(
         key: controller.codeFormKey,
@@ -139,27 +137,9 @@ class _CodeStep extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium,
             ),
             const SizedBox(height: AppSpacing.lg),
-            TextFormField(
+            AppCodeField(
               controller: controller.codeController,
-              autofocus: true,
-              keyboardType: TextInputType.number,
-              textInputAction: TextInputAction.done,
-              // Lets iOS offer the code straight from the Mail app.
-              autofillHints: const [AutofillHints.oneTimeCode],
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(10),
-              ],
-              textAlign: TextAlign.center,
-              style: codeStyle,
-              decoration: InputDecoration(
-                hintText: '000000',
-                hintStyle: codeStyle.copyWith(
-                  color: Theme.of(context).hintColor,
-                ),
-              ),
-              validator: Validators.oneTimeCode,
-              onFieldSubmitted: (_) => controller.verifyCode(),
+              onSubmitted: controller.verifyCode,
             ),
             const SizedBox(height: AppSpacing.lg),
             Obx(
