@@ -20,9 +20,9 @@ import 'widgets/swipe_flashcard.dart';
 
 /// A spaced-repetition study session for one deck.
 ///
-/// The session asks each card the way that card deserves - multiple
-/// choice while it's still being learned, free recall once it's known -
-/// and never asks the learner to grade themselves. Answers are either a
+/// The session asks each card the way the chosen study mode says -
+/// multiple choice, a flip card, or in Smart mode a random mix of the two
+/// - and never asks the learner to grade themselves. Answers are either a
 /// tap on an option or a swipe, and the SM-2 grade is inferred from the
 /// answer plus how long it took (see [ReviewGrade.infer]).
 ///

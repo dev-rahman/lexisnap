@@ -331,7 +331,7 @@ const Map<String, String> fr = {
 
 
   LocaleKeys.studyModeSmart: 'Auto',
-  LocaleKeys.studyModeSmartHint: "S'adapte à chaque carte",
+  LocaleKeys.studyModeSmartHint: 'Mélange aléatoire de quiz et de cartes à retourner',
   LocaleKeys.studyModeQuiz: 'Quiz',
   LocaleKeys.studyModeQuizHint: 'Choisir parmi quatre options',
   LocaleKeys.studyModeFlip: 'Retourner',

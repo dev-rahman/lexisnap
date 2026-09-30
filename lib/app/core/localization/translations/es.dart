@@ -325,7 +325,7 @@ const Map<String, String> es = {
 
 
   LocaleKeys.studyModeSmart: 'Inteligente',
-  LocaleKeys.studyModeSmartHint: 'Se adapta a cada tarjeta',
+  LocaleKeys.studyModeSmartHint: 'Mezcla aleatoria de test y girar',
   LocaleKeys.studyModeQuiz: 'Test',
   LocaleKeys.studyModeQuizHint: 'Elige entre cuatro opciones',
   LocaleKeys.studyModeFlip: 'Girar',

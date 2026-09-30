@@ -6,13 +6,12 @@ import '../../data/models/study_mode.dart';
 
 /// How a single card is being asked this time round.
 enum StudyStepKind {
-  /// Pick the right translation out of four. Cheap to answer, grades
-  /// itself, and gives a card the learner barely knows a way to be
-  /// answered right - which a blank flip card does not.
+  /// Pick the right translation out of four. Cheap to answer, and grades
+  /// itself.
   choice,
 
   /// Free recall: look at the word, answer in your head, flip to check.
-  /// Harder and more valuable, so it's reserved for cards already known.
+  /// Harder, and better for retention.
   recall,
 }
 
@@ -62,9 +61,13 @@ class StudySessionEngine {
   /// isn't just echoed back, close enough to be re-earned in this sitting.
   static const _requeueGap = 3;
 
-  /// Below this many successful reviews a card is still being learned, so
-  /// it's asked as multiple choice rather than free recall.
-  static const _recallFromRepetitions = 3;
+  /// The longest run of one kind Smart mode allows before switching.
+  ///
+  /// Smart picks each card's kind at random, whatever the card's history.
+  /// Pure coin flips can still hand a short session four of a kind in a
+  /// row, which looks like the mode isn't mixing at all - so after two of
+  /// one kind, the next card is the other.
+  static const _maxSameKindInARow = 2;
 
   /// How the learner asked to be quizzed. [StudyMode.smart] leaves the
   /// choice to the engine; the others override it for every card.
@@ -93,12 +96,14 @@ class StudySessionEngine {
   int _retired = 0;
   StudyStep? _step;
 
+  StudyStepKind? _lastKind;
+  int _sameKindRun = 0;
+
   StudyStep? get currentStep => _step;
 
   bool get isComplete => _step == null;
 
-  int get reviewedCount =>
-      tally.values.fold(0, (sum, count) => sum + count);
+  int get reviewedCount => tally.values.fold(0, (sum, count) => sum + count);
 
   /// Cards finished for good, over cards planned. Lapses deliberately
   /// don't advance it - the bar stalling is honest feedback.
@@ -140,21 +145,37 @@ class StudySessionEngine {
     final wantsChoice = switch (mode) {
       StudyMode.quiz => true,
       StudyMode.flip => false,
-      StudyMode.smart ||
-      StudyMode.listen => card.repetitions < _recallFromRepetitions,
+      StudyMode.smart || StudyMode.listen => _smartWantsChoice(),
     };
 
     if (!canOfferChoice || !wantsChoice) {
-      return StudyStep(card: card, kind: StudyStepKind.recall);
+      return _served(StudyStep(card: card, kind: StudyStepKind.recall));
     }
 
     final options = [...distractors, card.translation]..shuffle(_random);
-    return StudyStep(
-      card: card,
-      kind: StudyStepKind.choice,
-      options: options,
-      answerIndex: options.indexOf(card.translation),
+    return _served(
+      StudyStep(
+        card: card,
+        kind: StudyStepKind.choice,
+        options: options,
+        answerIndex: options.indexOf(card.translation),
+      ),
     );
+  }
+
+  /// A coin flip, unless the last [_maxSameKindInARow] cards were all one
+  /// kind - then the other kind, to keep the mix visible.
+  bool _smartWantsChoice() {
+    if (_sameKindRun >= _maxSameKindInARow) {
+      return _lastKind == StudyStepKind.recall;
+    }
+    return _random.nextBool();
+  }
+
+  StudyStep _served(StudyStep step) {
+    _sameKindRun = step.kind == _lastKind ? _sameKindRun + 1 : 1;
+    _lastKind = step.kind;
+    return step;
   }
 
   /// Wrong answers drawn from other cards, so they're plausible enough to

@@ -329,7 +329,7 @@ const Map<String, String> de = {
 
 
   LocaleKeys.studyModeSmart: 'Smart',
-  LocaleKeys.studyModeSmartHint: 'Passt sich jeder Karte an',
+  LocaleKeys.studyModeSmartHint: 'Zufälliger Mix aus Quiz und Umdrehen',
   LocaleKeys.studyModeQuiz: 'Quiz',
   LocaleKeys.studyModeQuizHint: 'Aus vier Optionen wählen',
   LocaleKeys.studyModeFlip: 'Umdrehen',

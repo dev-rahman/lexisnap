@@ -313,7 +313,7 @@ const Map<String, String> ko = {
 
 
   LocaleKeys.studyModeSmart: '스마트',
-  LocaleKeys.studyModeSmartHint: '카드에 맞춰 자동 선택',
+  LocaleKeys.studyModeSmartHint: '퀴즈와 뒤집기를 무작위로 섞어요',
   LocaleKeys.studyModeQuiz: '퀴즈',
   LocaleKeys.studyModeQuizHint: '네 개 중에서 고르기',
   LocaleKeys.studyModeFlip: '뒤집기',

@@ -319,7 +319,7 @@ const Map<String, String> en = {
 
 
   LocaleKeys.studyModeSmart: 'Smart',
-  LocaleKeys.studyModeSmartHint: 'Adapts to each card',
+  LocaleKeys.studyModeSmartHint: 'A random mix of quiz and flip',
   LocaleKeys.studyModeQuiz: 'Quiz',
   LocaleKeys.studyModeQuizHint: 'Pick from four options',
   LocaleKeys.studyModeFlip: 'Flip',
