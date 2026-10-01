@@ -268,6 +268,11 @@ const Map<String, String> de = {
   LocaleKeys.studyNothingDueTitle: 'Gerade nichts fällig',
   LocaleKeys.studyNothingDueBody:
       'Es ist nichts fällig, das hier ist also zusätzliches Üben - dein Plan ändert sich nicht.',
+  LocaleKeys.studyLeaveTitle: 'Sitzung verlassen?',
+  LocaleKeys.studyLeaveBody: 'Du hast noch @count Karten vor dir. Was du schon beantwortet hast, zählt trotzdem.',
+  LocaleKeys.studyLeaveBodyOne: 'Du hast noch 1 Karte vor dir. Was du schon beantwortet hast, zählt trotzdem.',
+  LocaleKeys.studyLeaveKeepGoing: 'Weiterlernen',
+  LocaleKeys.studyLeaveConfirm: 'Sitzung verlassen',
   LocaleKeys.studyCompleteTitle: 'Sitzung abgeschlossen!',
   LocaleKeys.studyCompleteBody: 'Du hast @count Karten wiederholt.',
   LocaleKeys.studyDone: 'Fertig',

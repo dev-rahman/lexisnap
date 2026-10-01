@@ -265,6 +265,11 @@ const Map<String, String> es = {
   LocaleKeys.studyNothingDueTitle: 'Nada pendiente por ahora',
   LocaleKeys.studyNothingDueBody:
       'No hay nada pendiente, así que esto es práctica extra: tu calendario no cambiará.',
+  LocaleKeys.studyLeaveTitle: '¿Salir de la sesión?',
+  LocaleKeys.studyLeaveBody: 'Te quedan @count tarjetas. Las que ya has respondido siguen contando.',
+  LocaleKeys.studyLeaveBodyOne: 'Te queda 1 tarjeta. Las que ya has respondido siguen contando.',
+  LocaleKeys.studyLeaveKeepGoing: 'Seguir estudiando',
+  LocaleKeys.studyLeaveConfirm: 'Salir de la sesión',
   LocaleKeys.studyCompleteTitle: '¡Sesión completa!',
   LocaleKeys.studyCompleteBody: 'Repasaste @count tarjetas.',
   LocaleKeys.studyDone: 'Listo',

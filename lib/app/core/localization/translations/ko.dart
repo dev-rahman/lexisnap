@@ -261,6 +261,11 @@ const Map<String, String> ko = {
   LocaleKeys.studyNothingDueTitle: '지금은 복습할 카드가 없어요',
   LocaleKeys.studyNothingDueBody:
       '복습할 카드가 없어서 추가 연습이에요. 복습 일정은 바뀌지 않아요.',
+  LocaleKeys.studyLeaveTitle: '학습을 그만할까요?',
+  LocaleKeys.studyLeaveBody: '@count장의 카드가 남았어요. 이미 답한 카드는 그대로 기록돼요.',
+  LocaleKeys.studyLeaveBodyOne: '1장의 카드가 남았어요. 이미 답한 카드는 그대로 기록돼요.',
+  LocaleKeys.studyLeaveKeepGoing: '계속 학습하기',
+  LocaleKeys.studyLeaveConfirm: '그만하기',
   LocaleKeys.studyCompleteTitle: '학습 완료!',
   LocaleKeys.studyCompleteBody: '카드 @count개를 복습했어요.',
   LocaleKeys.studyDone: '완료',

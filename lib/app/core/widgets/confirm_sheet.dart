@@ -9,7 +9,13 @@ import 'app_bottom_sheet.dart';
 import 'app_button.dart';
 
 /// Asks the user to confirm an action that's hard to take back - signing
-/// out, deleting the account - and resolves to whether they did.
+/// out, deleting the account, walking out of a study session - and
+/// resolves to whether they did.
+///
+/// A [destructive] ask (the default) leads with the confirm button in
+/// alert red. Otherwise the sheet leads with [cancelLabel] as the main
+/// button and the confirm action sits quietly under it: leaving a session
+/// loses nothing, and staying is the choice worth making easy.
 ///
 /// Only asks; the caller performs the action afterwards, so its progress
 /// shows on the screen the user is looking at once the sheet is gone,
@@ -20,10 +26,19 @@ Future<bool> showConfirmSheet(
   required String title,
   required String body,
   required String confirmLabel,
+  String? cancelLabel,
+  bool destructive = true,
 }) async {
   // Alert red on the dark sheet is too dim to carry the icon, so dark
   // mode flips to a white icon on a stronger tint.
   final isDark = Theme.of(context).brightness == Brightness.dark;
+  final badgeColor = destructive
+      ? AppColors.alert.withValues(alpha: isDark ? 0.28 : 0.12)
+      : AppColors.amber.tint(context);
+  final iconColor = destructive
+      ? (isDark ? Colors.white : AppColors.alert)
+      : AppColors.amber.resolve(context);
+  final cancelText = cancelLabel ?? LocaleKeys.commonCancel.tr;
 
   final confirmed = await showAppSheet<bool>(
     context,
@@ -48,10 +63,10 @@ Future<bool> showConfirmSheet(
               height: 48,
               width: 48,
               decoration: BoxDecoration(
-                color: AppColors.alert.withValues(alpha: isDark ? 0.28 : 0.12),
+                color: badgeColor,
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, color: isDark ? Colors.white : AppColors.alert),
+              child: Icon(icon, color: iconColor),
             ),
             const SizedBox(height: AppSpacing.md),
             Text(title, style: AppTextStyles.heading2),
@@ -61,17 +76,31 @@ Future<bool> showConfirmSheet(
               style: AppTextStyles.body.copyWith(color: context.colorInkMuted),
             ),
             const SizedBox(height: AppSpacing.lg),
-            AppButton(
-              label: confirmLabel,
-              color: AppColors.alert,
-              onPressed: () => Navigator.pop(sheetContext, true),
-            ),
-            const SizedBox(height: AppSpacing.sm),
-            AppButton(
-              label: LocaleKeys.commonCancel.tr,
-              variant: AppButtonVariant.text,
-              onPressed: () => Navigator.pop(sheetContext, false),
-            ),
+            if (destructive) ...[
+              AppButton(
+                label: confirmLabel,
+                color: AppColors.alert,
+                onPressed: () => Navigator.pop(sheetContext, true),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: cancelText,
+                variant: AppButtonVariant.text,
+                onPressed: () => Navigator.pop(sheetContext, false),
+              ),
+            ] else ...[
+              AppButton(
+                label: cancelText,
+                onPressed: () => Navigator.pop(sheetContext, false),
+              ),
+              const SizedBox(height: AppSpacing.sm),
+              AppButton(
+                label: confirmLabel,
+                variant: AppButtonVariant.text,
+                color: context.colorInkMuted,
+                onPressed: () => Navigator.pop(sheetContext, true),
+              ),
+            ],
           ],
         ),
       ),

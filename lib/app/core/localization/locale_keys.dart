@@ -275,6 +275,11 @@ class LocaleKeys {
   static const studyGradeEasy = 'study_grade_easy';
   static const studyNothingDueTitle = 'study_nothing_due_title';
   static const studyNothingDueBody = 'study_nothing_due_body';
+  static const studyLeaveTitle = 'study_leave_title';
+  static const studyLeaveBody = 'study_leave_body';
+  static const studyLeaveBodyOne = 'study_leave_body_one';
+  static const studyLeaveKeepGoing = 'study_leave_keep_going';
+  static const studyLeaveConfirm = 'study_leave_confirm';
   static const studyCompleteTitle = 'study_complete_title';
   static const studyCompleteBody = 'study_complete_body';
   static const studyDone = 'study_done';

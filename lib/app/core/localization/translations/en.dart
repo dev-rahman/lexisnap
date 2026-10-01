@@ -260,6 +260,11 @@ const Map<String, String> en = {
   LocaleKeys.studyNothingDueTitle: 'Nothing due right now',
   LocaleKeys.studyNothingDueBody:
       "Nothing is due, so these are extra practice - your schedule won't change.",
+  LocaleKeys.studyLeaveTitle: 'Leave this session?',
+  LocaleKeys.studyLeaveBody: "You have @count cards left. The ones you've already answered still count.",
+  LocaleKeys.studyLeaveBodyOne: "You have 1 card left. The ones you've already answered still count.",
+  LocaleKeys.studyLeaveKeepGoing: 'Keep studying',
+  LocaleKeys.studyLeaveConfirm: 'Leave session',
   LocaleKeys.studyCompleteTitle: 'Session complete!',
   LocaleKeys.studyCompleteBody: 'You reviewed @count cards.',
   LocaleKeys.studyDone: 'Done',

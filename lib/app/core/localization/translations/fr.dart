@@ -271,6 +271,11 @@ const Map<String, String> fr = {
   LocaleKeys.studyNothingDueTitle: 'Rien à revoir pour le moment',
   LocaleKeys.studyNothingDueBody:
       "Rien n'est à revoir : ceci est un entraînement libre, votre planning ne changera pas.",
+  LocaleKeys.studyLeaveTitle: 'Quitter la session ?',
+  LocaleKeys.studyLeaveBody: 'Il vous reste @count cartes. Celles auxquelles vous avez déjà répondu comptent quand même.',
+  LocaleKeys.studyLeaveBodyOne: 'Il vous reste 1 carte. Celles auxquelles vous avez déjà répondu comptent quand même.',
+  LocaleKeys.studyLeaveKeepGoing: 'Continuer à réviser',
+  LocaleKeys.studyLeaveConfirm: 'Quitter la session',
   LocaleKeys.studyCompleteTitle: 'Session terminée !',
   LocaleKeys.studyCompleteBody: 'Vous avez révisé @count cartes.',
   LocaleKeys.studyDone: 'Terminé',

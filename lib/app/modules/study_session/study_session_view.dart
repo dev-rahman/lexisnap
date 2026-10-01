@@ -9,6 +9,7 @@ import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
+import '../../core/widgets/confirm_sheet.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/models/review_grade.dart';
 import '../card_detail/card_detail_view.dart';
@@ -129,6 +130,34 @@ class _StudySessionViewState extends State<StudySessionView> {
     }
   }
 
+  bool _isConfirmingLeave = false;
+
+  /// Asks before walking out of a session part-way through. Every answer is
+  /// saved the moment it's given, so leaving loses nothing - the sheet is
+  /// there for the accidental tap on the X or a stray back swipe.
+  Future<void> _confirmLeave() async {
+    if (_isConfirmingLeave) return;
+    _isConfirmingLeave = true;
+
+    final remaining = _engine.plannedTotal - _engine.retiredCount;
+    final leave = await showConfirmSheet(
+      context,
+      icon: Icons.exit_to_app_rounded,
+      title: LocaleKeys.studyLeaveTitle.tr,
+      body: remaining == 1
+          ? LocaleKeys.studyLeaveBodyOne.tr
+          : LocaleKeys.studyLeaveBody.trParams({'count': '$remaining'}),
+      confirmLabel: LocaleKeys.studyLeaveConfirm.tr,
+      cancelLabel: LocaleKeys.studyLeaveKeepGoing.tr,
+      destructive: false,
+    );
+
+    _isConfirmingLeave = false;
+    // A direct pop, not Get.back: that one closes an open snackbar instead
+    // of the screen.
+    if (leave && mounted) Navigator.of(context).pop();
+  }
+
   void _startNextRound() => setState(() {
     _engine = _newEngine();
     _stepKey++;
@@ -140,33 +169,42 @@ class _StudySessionViewState extends State<StudySessionView> {
   Widget build(BuildContext context) {
     final step = _engine.currentStep;
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.close_rounded),
-          onPressed: Get.back,
-        ),
-        title: step == null
-            ? null
-            : Text(
-                LocaleKeys.studyProgress.trParams({
-                  'current': '${_engine.retiredCount}',
-                  'total': '${_engine.plannedTotal}',
-                }),
-                style: AppTextStyles.caption.copyWith(
-                  color: context.colorInkMuted,
+    // Mid-session, every way out - the X, Android's back button, the iOS
+    // swipe - goes through [_confirmLeave]. Once the summary is up there's
+    // nothing left to interrupt, so leaving is free.
+    return PopScope(
+      canPop: step == null,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _confirmLeave();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.close_rounded),
+            onPressed: () => Navigator.maybePop(context),
+          ),
+          title: step == null
+              ? null
+              : Text(
+                  LocaleKeys.studyProgress.trParams({
+                    'current': '${_engine.retiredCount}',
+                    'total': '${_engine.plannedTotal}',
+                  }),
+                  style: AppTextStyles.caption.copyWith(
+                    color: context.colorInkMuted,
+                  ),
                 ),
+          actions: [
+            if (step != null)
+              IconButton(
+                icon: const Icon(Icons.info_outline_rounded),
+                onPressed: () => Get.to(() => CardDetailView(card: step.card)),
               ),
-        actions: [
-          if (step != null)
-            IconButton(
-              icon: const Icon(Icons.info_outline_rounded),
-              onPressed: () => Get.to(() => CardDetailView(card: step.card)),
-            ),
-        ],
-      ),
-      body: SafeArea(
-        child: step == null ? _buildSummary() : _buildStep(context, step),
+          ],
+        ),
+        body: SafeArea(
+          child: step == null ? _buildSummary() : _buildStep(context, step),
+        ),
       ),
     );
   }
