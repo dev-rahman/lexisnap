@@ -94,7 +94,7 @@ class TodayHeroCard extends StatelessWidget {
           // a small phone's width after a 64px ring and a 90px chip.
           Align(
             alignment: Alignment.centerRight,
-            child: _ModeChip(mode: mode),
+            child: StudyModeChip(mode: mode, onDark: true),
           ),
           const SizedBox(height: AppSpacing.sm),
           Row(
@@ -281,50 +281,3 @@ class TodayHeroCard extends StatelessWidget {
 
 /// Opens the study-mode picker. Small on purpose: the mode is a setting
 /// people change rarely, so it shouldn't compete with the action.
-class _ModeChip extends StatelessWidget {
-  const _ModeChip({required this.mode});
-
-  final StudyMode mode;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      // On the navy panel, so it tints the panel rather than punching a
-      // paper-coloured hole in it.
-      color: Colors.white.withValues(alpha: 0.14),
-      borderRadius: BorderRadius.circular(AppRadius.sm),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.sm),
-        onTap: () => showStudyModeSheet(context),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.sm,
-            vertical: AppSpacing.xs,
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                studyModeIcons[mode],
-                size: 16,
-                color: Colors.white.withValues(alpha: 0.85),
-              ),
-              const SizedBox(width: AppSpacing.xs),
-              Text(
-                studyModeLabels[mode]!.tr,
-                style: AppTextStyles.caption.copyWith(
-                  color: Colors.white.withValues(alpha: 0.85),
-                ),
-              ),
-              Icon(
-                Icons.expand_more_rounded,
-                size: 16,
-                color: Colors.white.withValues(alpha: 0.85),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}

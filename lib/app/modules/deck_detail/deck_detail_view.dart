@@ -12,6 +12,7 @@ import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/deck_badge.dart';
+import '../../core/widgets/study_mode_sheet.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/models/study_mode.dart';
 import '../../data/vocabulary_languages.dart';
@@ -154,7 +155,9 @@ class DeckDetailView extends GetView<DeckDetailController> {
 }
 
 /// The deck's entry point into studying: what's waiting, how the streak
-/// is doing, and the two ways in.
+/// is doing, the two ways in, and the study mode they'll use - changeable
+/// right here, so trying a deck as flip cards doesn't mean a trip to
+/// Profile first.
 ///
 /// It leads with the due count and the streak rather than the deck's card
 /// list because those are the two numbers that decide whether the user
@@ -222,6 +225,12 @@ class _StudyHeroCard extends StatelessWidget {
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Obx(
+                () => StudyModeChip(
+                  mode: Get.find<StudyPreferencesService>().mode.value,
                 ),
               ),
             ],

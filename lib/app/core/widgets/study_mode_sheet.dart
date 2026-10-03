@@ -41,9 +41,14 @@ void showStudyModeSheet(BuildContext context) {
 
   showAppSheet(
     context,
+    // A plain sheet is capped at 9/16 of the screen. Four modes with their
+    // hints outgrow that on a small phone - in German most of all - and
+    // the cap silently cut the last option off. Scroll-controlled, the
+    // sheet is as tall as its options.
+    isScrollControlled: true,
     builder: (sheetContext) {
       return SafeArea(
-        child: Padding(
+        child: SingleChildScrollView(
           // Top padding is 0: the drag handle above already
           // reserves a 48dp block, and adding lg on top of it
           // pushed every sheet title a third of the way down.
@@ -130,6 +135,60 @@ class _ModeOption extends StatelessWidget {
               ),
               if (isSelected)
                 const Icon(Icons.check_rounded, color: AppColors.accent),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The current study mode as a small chip that opens [showStudyModeSheet],
+/// shown wherever a session is started - the Home card and each deck - so
+/// the mode can be changed right before studying rather than in Profile.
+///
+/// The mode is one app-wide preference, so changing it here changes it
+/// everywhere.
+class StudyModeChip extends StatelessWidget {
+  const StudyModeChip({super.key, required this.mode, this.onDark = false});
+
+  final StudyMode mode;
+
+  /// On Home's navy panel the chip tints the panel rather than punching a
+  /// paper-coloured hole in it; on a light card it's an outlined pill.
+  final bool onDark;
+
+  @override
+  Widget build(BuildContext context) {
+    final foreground = onDark
+        ? Colors.white.withValues(alpha: 0.85)
+        : context.colorInk;
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppRadius.sm),
+      side: onDark ? BorderSide.none : BorderSide(color: context.colorBorder),
+    );
+
+    return Material(
+      color: onDark ? Colors.white.withValues(alpha: 0.14) : context.colorPaper,
+      shape: shape,
+      child: InkWell(
+        customBorder: shape,
+        onTap: () => showStudyModeSheet(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(studyModeIcons[mode], size: 16, color: foreground),
+              const SizedBox(width: AppSpacing.xs),
+              Text(
+                studyModeLabels[mode]!.tr,
+                style: AppTextStyles.caption.copyWith(color: foreground),
+              ),
+              Icon(Icons.expand_more_rounded, size: 16, color: foreground),
             ],
           ),
         ),

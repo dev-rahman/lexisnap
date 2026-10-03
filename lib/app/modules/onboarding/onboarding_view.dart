@@ -27,22 +27,27 @@ class OnboardingView extends GetView<OnboardingController> {
                   horizontal: AppSpacing.lg,
                   vertical: AppSpacing.sm,
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Image.asset(
-                      'assets/images/lexisnap_wordmark.png',
-                      height: 56,
-                    ),
                     Row(
-                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const LanguageSelector(),
-                        TextButton(
-                          onPressed: controller.complete,
-                          child: Text(LocaleKeys.onboardingSkip.tr),
+                        Image.asset(
+                          'assets/images/lexisnap_wordmark.png',
+                          height: 56,
                         ),
+                        const LanguageSelector(),
                       ],
+                    ),
+                    TextButton(
+                      onPressed: controller.complete,
+                      style: TextButton.styleFrom(
+                        minimumSize: const Size(0, 36),
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(LocaleKeys.onboardingSkip.tr),
                     ),
                   ],
                 ),
