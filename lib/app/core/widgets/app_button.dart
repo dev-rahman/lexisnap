@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';
+import '../theme/app_text_styles.dart';
 
 enum AppButtonVariant { filled, outlined, text }
 
@@ -85,9 +87,22 @@ class AppButton extends StatelessWidget {
       case AppButtonVariant.text:
         return TextButton(
           onPressed: _disabled ? null : onPressed,
-          style: color == null
-              ? null
-              : TextButton.styleFrom(foregroundColor: color),
+          // The same box as the filled and outlined variants, which get
+          // theirs from the theme: full width, 52 tall, the same corners
+          // and the same label size. A secondary action usually sits right
+          // under a primary one, and a shorter, narrower button there
+          // shows as a mismatched tap highlight and drifts to the left in
+          // start-aligned sheets. Set here, not in the text button theme,
+          // because plain TextButtons elsewhere are inline links
+          // ("See all", "Forgot password?") that must stay compact.
+          style: TextButton.styleFrom(
+            foregroundColor: color,
+            minimumSize: const Size.fromHeight(52),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(AppRadius.md),
+            ),
+            textStyle: AppTextStyles.button,
+          ),
           child: child,
         );
     }

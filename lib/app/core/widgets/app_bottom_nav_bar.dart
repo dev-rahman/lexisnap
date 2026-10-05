@@ -81,8 +81,10 @@ class AppBottomNavBar extends StatelessWidget {
 }
 
 /// Android/other platforms: the real Material 3 NavigationBar, themed to
-/// the app palette. Scan is a normal destination (no floating button) -
-/// this is deliberately the platform's own component, not a custom design.
+/// the app palette. Scan is a destination like the others (no floating
+/// button) - this is deliberately the platform's own component, not a
+/// custom design. What marks Scan as the app's main action is only its
+/// look: a solid coral pill and a coral label, see [_ScanDestinationIcon].
 class _StockAndroidNavBar extends StatelessWidget {
   const _StockAndroidNavBar({
     required this.currentIndex,
@@ -131,33 +133,35 @@ class _StockAndroidNavBar extends StatelessWidget {
     // scrolling tab content - so a light deck card was visible under the
     // system buttons in dark mode. An opaque box across the bar's whole
     // height, inset included, is what actually guarantees coverage.
+    final navTheme = NavigationBarThemeData(
+      backgroundColor: context.colorPaper,
+      indicatorColor: AppColors.accent.withValues(alpha: 0.16),
+      surfaceTintColor: Colors.transparent,
+      labelTextStyle: WidgetStateProperty.resolveWith(
+        (states) => TextStyle(
+          fontSize: 11,
+          fontWeight: FontWeight.w600,
+          color: states.contains(WidgetState.selected)
+              ? AppColors.accent
+              : context.colorInkMuted,
+        ),
+      ),
+      iconTheme: WidgetStateProperty.resolveWith(
+        (states) => IconThemeData(
+          color: states.contains(WidgetState.selected)
+              ? AppColors.accent
+              : context.colorInkMuted,
+        ),
+      ),
+    );
+
     return ColoredBox(
       color: context.colorPaper,
       child: MediaQuery.removePadding(
         context: context,
         removeTop: true,
         child: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            backgroundColor: context.colorPaper,
-            indicatorColor: AppColors.accent.withValues(alpha: 0.16),
-            surfaceTintColor: Colors.transparent,
-            labelTextStyle: WidgetStateProperty.resolveWith(
-              (states) => TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-                color: states.contains(WidgetState.selected)
-                    ? AppColors.accent
-                    : context.colorInkMuted,
-              ),
-            ),
-            iconTheme: WidgetStateProperty.resolveWith(
-              (states) => IconThemeData(
-                color: states.contains(WidgetState.selected)
-                    ? AppColors.accent
-                    : context.colorInkMuted,
-              ),
-            ),
-          ),
+          data: navTheme,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: NavigationBar(
@@ -181,10 +185,24 @@ class _StockAndroidNavBar extends StatelessWidget {
                   selectedIcon: const Icon(Icons.home_rounded),
                   label: LocaleKeys.navHome.tr,
                 ),
-                NavigationDestination(
-                  icon: const Icon(Icons.document_scanner_outlined),
-                  selectedIcon: const Icon(Icons.document_scanner_rounded),
-                  label: LocaleKeys.navScan.tr,
+                // Scan is never the selected destination - it opens the
+                // scan flow instead of switching tabs - so the theme's
+                // selected colour never reaches its label. This local
+                // theme gives it the coral the pill above it carries.
+                NavigationBarTheme(
+                  data: navTheme.copyWith(
+                    labelTextStyle: const WidgetStatePropertyAll(
+                      TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        color: AppColors.accent,
+                      ),
+                    ),
+                  ),
+                  child: NavigationDestination(
+                    icon: const _ScanDestinationIcon(),
+                    label: LocaleKeys.navScan.tr,
+                  ),
                 ),
                 NavigationDestination(
                   icon: const Icon(Icons.style_outlined),
@@ -195,6 +213,42 @@ class _StockAndroidNavBar extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// The Scan destination's icon on Android: a solid coral pill with a white
+/// icon, the same size and shape as Material's selection indicator.
+///
+/// Matching the indicator is what keeps this from being a custom design
+/// bolted onto the stock bar. It reads as a destination that is always lit,
+/// sits exactly where the indicator would, and leaves the bar's height
+/// untouched. A larger, floating button would have to grow the bar or
+/// overlap the content above it.
+class _ScanDestinationIcon extends StatelessWidget {
+  const _ScanDestinationIcon();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 64,
+      height: 32,
+      decoration: BoxDecoration(
+        color: AppColors.accent,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.accent.withValues(alpha: 0.35),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: const Icon(
+        Icons.document_scanner_rounded,
+        color: Colors.white,
+        size: 20,
       ),
     );
   }
