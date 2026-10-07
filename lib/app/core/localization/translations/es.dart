@@ -217,9 +217,24 @@ const Map<String, String> es = {
   LocaleKeys.scanTargetLanguageBody:
       '¿A qué idioma te gustaría traducir estas palabras?',
   LocaleKeys.scanSavingDeck: 'Guardando tu mazo…',
+  LocaleKeys.scanSavingWords: 'Guardando tus palabras…',
   LocaleKeys.scanDeckCreatedSuccess: '¡@name está listo con @count palabras!',
   LocaleKeys.scanDeckSaveError:
       'No se pudo guardar tu mazo. Inténtalo de nuevo.',
+  LocaleKeys.scanAddToDeckButton: 'Añadir al mazo',
+  LocaleKeys.scanDestinationTitle: 'Añadir @count palabras a…',
+  LocaleKeys.scanDestinationSubtitle:
+      'Crea un mazo nuevo o añádelas a uno que ya tengas.',
+  LocaleKeys.scanDestinationNewDeck: 'Mazo nuevo',
+  LocaleKeys.scanDestinationNewDeckHint:
+      'Elige un idioma y crea un mazo nuevo',
+  LocaleKeys.scanDestinationExistingHeader: 'Añadir a un mazo existente',
+  LocaleKeys.scanSelectMoreSubtitle:
+      'Elige el siguiente grupo para otro mazo, o cierra cuando termines.',
+  LocaleKeys.scanFiledProgress: '@count palabras guardadas hasta ahora',
+  LocaleKeys.scanWordsAddedSuccess: '@count palabras añadidas a @name',
+  LocaleKeys.scanWordsSavedSummary:
+      '@count palabras guardadas en @decks mazos',
 
   LocaleKeys.permissionCameraTitle: 'Permitir acceso a la cámara',
   LocaleKeys.permissionCameraBody: 'LexiSnap necesita tu cámara para escanear texto de libros, menús, letreros y más.',
@@ -255,6 +270,24 @@ const Map<String, String> es = {
   LocaleKeys.cardDetailNotReviewedYet: 'Aún no repasada',
   LocaleKeys.cardDetailNextReviewToday: 'Próximo repaso: hoy',
   LocaleKeys.cardDetailNextReviewInDays: 'Próximo repaso: en @count días',
+  LocaleKeys.cardEditTitle: 'Editar tarjeta',
+  LocaleKeys.cardEditWord: 'Palabra',
+  LocaleKeys.cardEditTranslation: 'Traducción',
+  LocaleKeys.cardEditDescription: 'Descripción',
+  LocaleKeys.cardEditDescriptionHint: 'Una nota opcional sobre esta palabra',
+  LocaleKeys.cardEditExamples: 'Frases de ejemplo',
+  LocaleKeys.cardEditExampleHint: 'Frase de ejemplo',
+  LocaleKeys.cardEditAddExample: 'Añadir frase de ejemplo',
+  LocaleKeys.cardEditSavedSuccess: 'Tarjeta actualizada.',
+  LocaleKeys.cardEditSaveError:
+      'No se pudo guardar la tarjeta. Inténtalo de nuevo.',
+  LocaleKeys.cardDeleteTitle: '¿Eliminar esta tarjeta?',
+  LocaleKeys.cardDeleteBody:
+      '@word se quitará de este mazo. No se puede deshacer.',
+  LocaleKeys.cardDeleteConfirm: 'Eliminar tarjeta',
+  LocaleKeys.cardDeletedSuccess: 'Tarjeta eliminada.',
+  LocaleKeys.cardDeleteError:
+      'No se pudo eliminar la tarjeta. Inténtalo de nuevo.',
 
   LocaleKeys.studyProgress: '@current de @total',
   LocaleKeys.studyTapToReveal: 'Toca para revelar',

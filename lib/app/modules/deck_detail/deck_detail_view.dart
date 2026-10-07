@@ -259,7 +259,7 @@ class _StudyHeroCard extends StatelessWidget {
   }
 }
 
-class _FlashcardTile extends StatelessWidget {
+class _FlashcardTile extends GetView<DeckDetailController> {
   const _FlashcardTile({required this.card});
 
   final Flashcard card;
@@ -271,7 +271,13 @@ class _FlashcardTile extends StatelessWidget {
       borderRadius: BorderRadius.circular(AppRadius.md),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.md),
-        onTap: () => Get.to(() => CardDetailView(card: card)),
+        // Silent reload on return: a card may have been edited or deleted,
+        // and the list is already on screen, so refresh it without the
+        // full-screen loading spinner.
+        onTap: () async {
+          await Get.to(() => CardDetailView(card: card));
+          controller.reload(silent: true);
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.md,

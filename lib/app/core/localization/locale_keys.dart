@@ -228,8 +228,19 @@ class LocaleKeys {
   static const scanTargetLanguageTitle = 'scan_target_language_title';
   static const scanTargetLanguageBody = 'scan_target_language_body';
   static const scanSavingDeck = 'scan_saving_deck';
+  static const scanSavingWords = 'scan_saving_words';
   static const scanDeckCreatedSuccess = 'scan_deck_created_success';
   static const scanDeckSaveError = 'scan_deck_save_error';
+  static const scanAddToDeckButton = 'scan_add_to_deck_button';
+  static const scanDestinationTitle = 'scan_destination_title';
+  static const scanDestinationSubtitle = 'scan_destination_subtitle';
+  static const scanDestinationNewDeck = 'scan_destination_new_deck';
+  static const scanDestinationNewDeckHint = 'scan_destination_new_deck_hint';
+  static const scanDestinationExistingHeader = 'scan_destination_existing_header';
+  static const scanSelectMoreSubtitle = 'scan_select_more_subtitle';
+  static const scanFiledProgress = 'scan_filed_progress';
+  static const scanWordsAddedSuccess = 'scan_words_added_success';
+  static const scanWordsSavedSummary = 'scan_words_saved_summary';
 
   // Permissions
   static const permissionCameraTitle = 'permission_camera_title';
@@ -265,6 +276,23 @@ class LocaleKeys {
   static const cardDetailNotReviewedYet = 'card_detail_not_reviewed_yet';
   static const cardDetailNextReviewToday = 'card_detail_next_review_today';
   static const cardDetailNextReviewInDays = 'card_detail_next_review_in_days';
+
+  // Card edit / delete
+  static const cardEditTitle = 'card_edit_title';
+  static const cardEditWord = 'card_edit_word';
+  static const cardEditTranslation = 'card_edit_translation';
+  static const cardEditDescription = 'card_edit_description';
+  static const cardEditDescriptionHint = 'card_edit_description_hint';
+  static const cardEditExamples = 'card_edit_examples';
+  static const cardEditExampleHint = 'card_edit_example_hint';
+  static const cardEditAddExample = 'card_edit_add_example';
+  static const cardEditSavedSuccess = 'card_edit_saved_success';
+  static const cardEditSaveError = 'card_edit_save_error';
+  static const cardDeleteTitle = 'card_delete_title';
+  static const cardDeleteBody = 'card_delete_body';
+  static const cardDeleteConfirm = 'card_delete_confirm';
+  static const cardDeletedSuccess = 'card_deleted_success';
+  static const cardDeleteError = 'card_delete_error';
 
   // Study session
   static const studyProgress = 'study_progress';

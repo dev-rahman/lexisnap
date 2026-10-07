@@ -222,9 +222,24 @@ const Map<String, String> fr = {
   LocaleKeys.scanTargetLanguageBody:
       'Dans quelle langue souhaitez-vous traduire ces mots ?',
   LocaleKeys.scanSavingDeck: 'Enregistrement de votre paquet…',
+  LocaleKeys.scanSavingWords: 'Enregistrement de vos mots…',
   LocaleKeys.scanDeckCreatedSuccess: '@name est prêt avec @count mots !',
   LocaleKeys.scanDeckSaveError:
       "Impossible d'enregistrer votre paquet. Veuillez réessayer.",
+  LocaleKeys.scanAddToDeckButton: 'Ajouter au paquet',
+  LocaleKeys.scanDestinationTitle: 'Ajouter @count mots à…',
+  LocaleKeys.scanDestinationSubtitle:
+      'Créez un nouveau paquet ou ajoutez-les à un paquet existant.',
+  LocaleKeys.scanDestinationNewDeck: 'Nouveau paquet',
+  LocaleKeys.scanDestinationNewDeckHint:
+      'Choisissez une langue et créez un nouveau paquet',
+  LocaleKeys.scanDestinationExistingHeader: 'Ajouter à un paquet existant',
+  LocaleKeys.scanSelectMoreSubtitle:
+      'Choisissez le lot suivant pour un autre paquet, ou fermez quand vous avez terminé.',
+  LocaleKeys.scanFiledProgress: '@count mots enregistrés jusqu\'ici',
+  LocaleKeys.scanWordsAddedSuccess: '@count mots ajoutés à @name',
+  LocaleKeys.scanWordsSavedSummary:
+      '@count mots enregistrés dans @decks paquets',
 
   LocaleKeys.permissionCameraTitle: "Autoriser l'accès à l'appareil photo",
   LocaleKeys.permissionCameraBody: "LexiSnap a besoin de votre appareil photo pour scanner du texte depuis des livres, menus, panneaux, et plus encore.",
@@ -261,6 +276,24 @@ const Map<String, String> fr = {
   LocaleKeys.cardDetailNextReviewToday: "Prochaine révision : aujourd'hui",
   LocaleKeys.cardDetailNextReviewInDays:
       'Prochaine révision : dans @count jours',
+  LocaleKeys.cardEditTitle: 'Modifier la carte',
+  LocaleKeys.cardEditWord: 'Mot',
+  LocaleKeys.cardEditTranslation: 'Traduction',
+  LocaleKeys.cardEditDescription: 'Description',
+  LocaleKeys.cardEditDescriptionHint: 'Une note facultative sur ce mot',
+  LocaleKeys.cardEditExamples: "Phrases d'exemple",
+  LocaleKeys.cardEditExampleHint: "Phrase d'exemple",
+  LocaleKeys.cardEditAddExample: "Ajouter une phrase d'exemple",
+  LocaleKeys.cardEditSavedSuccess: 'Carte mise à jour.',
+  LocaleKeys.cardEditSaveError:
+      "Impossible d'enregistrer la carte. Veuillez réessayer.",
+  LocaleKeys.cardDeleteTitle: 'Supprimer cette carte ?',
+  LocaleKeys.cardDeleteBody:
+      '@word sera retiré de ce paquet. Action irréversible.',
+  LocaleKeys.cardDeleteConfirm: 'Supprimer la carte',
+  LocaleKeys.cardDeletedSuccess: 'Carte supprimée.',
+  LocaleKeys.cardDeleteError:
+      'Impossible de supprimer la carte. Veuillez réessayer.',
 
   LocaleKeys.studyProgress: '@current sur @total',
   LocaleKeys.studyTapToReveal: 'Touchez pour révéler',

@@ -11,14 +11,17 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/deck_destination_sheet.dart';
 import '../../core/widgets/language_select_sheet.dart';
 import '../../data/models/vocabulary_word.dart';
 import 'scan_controller.dart';
 
 /// The scan flow: pick a source (camera/gallery) -> review the photo -> run
 /// on-device OCR + AI extraction -> tap-to-select the words worth learning
-/// -> pick a target language -> translate and save the selection as a deck
-/// in Supabase. See [ScanController.saveDeck].
+/// -> choose where they go (a new deck, or one you already have) -> translate
+/// and save that batch. The remaining words stay selectable, so one scan can
+/// be split across several decks. See [ScanController.fileToNewDeck] and
+/// [ScanController.fileToExistingDeck].
 class ScanView extends GetView<ScanController> {
   const ScanView({super.key});
 
@@ -49,7 +52,7 @@ class ScanView extends GetView<ScanController> {
               ),
               ScanStage.wordSelection => const _WordSelection(),
               ScanStage.savingDeck => _ProcessingOverlay(
-                label: LocaleKeys.scanSavingDeck.tr,
+                label: controller.savingLabel.value ?? LocaleKeys.scanSavingDeck.tr,
               ),
               ScanStage.empty => const _NoTextFound(),
             },
@@ -61,9 +64,13 @@ class ScanView extends GetView<ScanController> {
 }
 
 class _CloseButton extends StatelessWidget {
-  const _CloseButton({this.dark = true});
+  const _CloseButton({this.dark = true, this.onPressed});
 
   final bool dark;
+
+  /// Defaults to a plain pop; the word-selection screen overrides it so
+  /// closing after filing some words still finishes with a summary.
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -76,7 +83,7 @@ class _CloseButton extends StatelessWidget {
             Icons.close_rounded,
             color: dark ? Colors.white : context.colorInk,
           ),
-          onPressed: Get.back,
+          onPressed: onPressed ?? Get.back,
         ),
       ),
     );
@@ -197,7 +204,7 @@ class _WordSelection extends GetView<ScanController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const _CloseButton(dark: false),
+        _CloseButton(dark: false, onPressed: controller.requestClose),
         Padding(
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.lg,
@@ -214,9 +221,15 @@ class _WordSelection extends GetView<ScanController> {
               ),
               const SizedBox(height: AppSpacing.xs),
               Text(
-                LocaleKeys.scanSelectWordsSubtitle.tr,
+                controller.hasFiled
+                    ? LocaleKeys.scanSelectMoreSubtitle.tr
+                    : LocaleKeys.scanSelectWordsSubtitle.tr,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
+              if (controller.hasFiled) ...[
+                const SizedBox(height: AppSpacing.sm),
+                _FiledProgress(count: controller.filedWordCount.value),
+              ],
               if (controller.sourceLanguageName.value != null) ...[
                 const SizedBox(height: AppSpacing.xs),
                 Text(
@@ -288,10 +301,10 @@ class _WordSelection extends GetView<ScanController> {
           ),
           child: Obx(
             () => AppButton(
-              label: LocaleKeys.scanContinueButton.tr,
+              label: LocaleKeys.scanAddToDeckButton.tr,
               onPressed: controller.selectedWords.isEmpty
                   ? null
-                  : () => _pickTargetLanguage(context, controller),
+                  : () => _chooseDestination(context, controller),
             ),
           ),
         ),
@@ -300,18 +313,59 @@ class _WordSelection extends GetView<ScanController> {
   }
 }
 
-Future<void> _pickTargetLanguage(
+/// A quiet line under the header once the first batch is filed, so the user
+/// can see the split is adding up rather than replacing earlier choices.
+class _FiledProgress extends StatelessWidget {
+  const _FiledProgress({required this.count});
+
+  final int count;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          Icons.check_circle_rounded,
+          size: 16,
+          color: AppColors.accent,
+        ),
+        const SizedBox(width: AppSpacing.xs),
+        Text(
+          LocaleKeys.scanFiledProgress.trParams({'count': '$count'}),
+          style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+        ),
+      ],
+    );
+  }
+}
+
+/// Asks where the selected words should go, then hands off to the matching
+/// controller method. A new deck needs a target language first; an existing
+/// one already has one.
+Future<void> _chooseDestination(
   BuildContext context,
   ScanController controller,
 ) async {
-  final targetLanguage = await showLanguageSelectSheet(
+  final destination = await showDeckDestinationSheet(
     context,
-    title: LocaleKeys.scanTargetLanguageTitle.tr,
-    subtitle: LocaleKeys.scanTargetLanguageBody.tr,
+    decks: controller.existingDecks,
+    wordCount: controller.selectedWords.length,
   );
+  if (destination == null) return;
 
-  if (targetLanguage != null) {
-    await controller.saveDeck(targetLanguage);
+  switch (destination) {
+    case NewDeckDestination():
+      if (!context.mounted) return;
+      final targetLanguage = await showLanguageSelectSheet(
+        context,
+        title: LocaleKeys.scanTargetLanguageTitle.tr,
+        subtitle: LocaleKeys.scanTargetLanguageBody.tr,
+      );
+      if (targetLanguage != null) {
+        await controller.fileToNewDeck(targetLanguage);
+      }
+    case ExistingDeckDestination(:final deck):
+      await controller.fileToExistingDeck(deck);
   }
 }
 

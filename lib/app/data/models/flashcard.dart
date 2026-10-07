@@ -1,3 +1,7 @@
+/// Sentinel for [Flashcard.copyWith]'s nullable [wordDescription], so
+/// "leave unchanged" (the default) can be told apart from "set to null".
+const Object _unset = Object();
+
 /// A single saved flashcard, as shown in deck detail and studied in a
 /// spaced-repetition session.
 class Flashcard {
@@ -50,6 +54,10 @@ class Flashcard {
   bool get isDue => !dueAt.isAfter(DateTime.now());
 
   Flashcard copyWith({
+    String? word,
+    String? translation,
+    Object? wordDescription = _unset,
+    List<String>? exampleSentences,
     double? easeFactor,
     int? intervalDays,
     int? repetitions,
@@ -58,11 +66,15 @@ class Flashcard {
   }) {
     return Flashcard(
       id: id,
-      word: word,
+      word: word ?? this.word,
       level: level,
-      wordDescription: wordDescription,
-      translation: translation,
-      exampleSentences: exampleSentences,
+      // Sentinel rather than `?? this.wordDescription`, so an edit that
+      // clears the description (passing null) actually clears it.
+      wordDescription: wordDescription == _unset
+          ? this.wordDescription
+          : wordDescription as String?,
+      translation: translation ?? this.translation,
+      exampleSentences: exampleSentences ?? this.exampleSentences,
       notes: notes,
       audioUrl: audioUrl,
       sourceLanguage: sourceLanguage,

@@ -2,22 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
+import '../../core/services/deck/deck_repository.dart';
 import '../../core/services/speech/text_to_speech_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/study_day.dart';
+import '../../core/widgets/confirm_sheet.dart';
 import '../../data/models/flashcard.dart';
+import 'card_edit_view.dart';
 
 /// Full detail for a single flashcard - word, translation, description,
 /// every example sentence, and its spaced-repetition status. Pushed from
 /// deck detail's compact card row, or from within a study session via the
 /// "show details" button.
-class CardDetailView extends StatelessWidget {
+///
+/// The card can be edited or deleted from here (see [CardEditView]); the
+/// screen holds the card in state so an edit shows immediately, and a
+/// delete pops back to the deck.
+class CardDetailView extends StatefulWidget {
   const CardDetailView({super.key, required this.card});
 
   final Flashcard card;
+
+  @override
+  State<CardDetailView> createState() => _CardDetailViewState();
+}
+
+class _CardDetailViewState extends State<CardDetailView> {
+  late Flashcard _card = widget.card;
+
+  Future<void> _edit() async {
+    final updated = await Get.to<Flashcard>(
+      () => CardEditView(card: _card),
+    );
+    if (updated != null) {
+      setState(() => _card = updated);
+    }
+  }
+
+  Future<void> _delete() async {
+    final confirmed = await showConfirmSheet(
+      context,
+      icon: Icons.delete_outline_rounded,
+      title: LocaleKeys.cardDeleteTitle.tr,
+      body: LocaleKeys.cardDeleteBody.trParams({'word': _card.word}),
+      confirmLabel: LocaleKeys.cardDeleteConfirm.tr,
+    );
+    if (!confirmed) return;
+
+    try {
+      await Get.find<DeckRepository>().deleteFlashcard(_card.id);
+      Get.back();
+      AppSnackbar.success(LocaleKeys.cardDeletedSuccess.tr);
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.cardDeleteError.tr);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +70,16 @@ class CardDetailView extends StatelessWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: Get.back,
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_outlined),
+            onPressed: _edit,
+          ),
+          IconButton(
+            icon: const Icon(Icons.delete_outline_rounded),
+            onPressed: _delete,
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,18 +95,18 @@ class CardDetailView extends StatelessWidget {
               Row(
                 children: [
                   Flexible(
-                    child: Text(card.word, style: AppTextStyles.heading1),
+                    child: Text(_card.word, style: AppTextStyles.heading1),
                   ),
-                  if (card.level != null) ...[
+                  if (_card.level != null) ...[
                     const SizedBox(width: AppSpacing.sm),
-                    _LevelBadge(level: card.level!),
+                    _LevelBadge(level: _card.level!),
                   ],
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.volume_up_outlined),
                     onPressed: () => Get.find<TextToSpeechService>().speak(
-                      card.word,
-                      languageCode: card.sourceLanguage,
+                      _card.word,
+                      languageCode: _card.sourceLanguage,
                     ),
                     color: AppColors.accent,
                   ),
@@ -63,7 +116,7 @@ class CardDetailView extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      card.translation,
+                      _card.translation,
                       style: AppTextStyles.heading2.copyWith(
                         color: AppColors.accent,
                       ),
@@ -72,8 +125,8 @@ class CardDetailView extends StatelessWidget {
                   IconButton(
                     icon: const Icon(Icons.volume_up_outlined),
                     onPressed: () => Get.find<TextToSpeechService>().speak(
-                      card.translation,
-                      languageCode: card.targetLanguage,
+                      _card.translation,
+                      languageCode: _card.targetLanguage,
                     ),
                     color: AppColors.accent,
                   ),
@@ -86,13 +139,13 @@ class CardDetailView extends StatelessWidget {
                   color: context.colorInkMuted,
                 ),
               ),
-              if (card.wordDescription != null) ...[
+              if (_card.wordDescription != null) ...[
                 const SizedBox(height: AppSpacing.lg),
-                Text(card.wordDescription!, style: AppTextStyles.body),
+                Text(_card.wordDescription!, style: AppTextStyles.body),
               ],
-              if (card.exampleSentences.isNotEmpty) ...[
+              if (_card.exampleSentences.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.lg),
-                for (final sentence in card.exampleSentences) ...[
+                for (final sentence in _card.exampleSentences) ...[
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.only(bottom: AppSpacing.sm),
@@ -118,18 +171,18 @@ class CardDetailView extends StatelessWidget {
   }
 
   String _srsStatus(BuildContext context) {
-    if (card.repetitions == 0) return LocaleKeys.cardDetailNotReviewedYet.tr;
+    if (_card.repetitions == 0) return LocaleKeys.cardDetailNotReviewedYet.tr;
 
-    final reviewedLabel = card.repetitions == 1
+    final reviewedLabel = _card.repetitions == 1
         ? LocaleKeys.cardDetailReviewedOnce.tr
         : LocaleKeys.cardDetailReviewedTimes.trParams({
-            'count': '${card.repetitions}',
+            'count': '${_card.repetitions}',
           });
 
     // Counted in whole study days rather than raw 24-hour spans: due dates
     // sit on the 4am boundary, so a truncating subtraction reports a card
     // due in six days as five.
-    final daysUntilDue = studyDaysBetween(DateTime.now(), card.dueAt);
+    final daysUntilDue = studyDaysBetween(DateTime.now(), _card.dueAt);
     final dueLabel = daysUntilDue <= 0
         ? LocaleKeys.cardDetailNextReviewToday.tr
         : LocaleKeys.cardDetailNextReviewInDays.trParams({

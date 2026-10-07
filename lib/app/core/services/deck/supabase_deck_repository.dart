@@ -28,7 +28,23 @@ class SupabaseDeckRepository implements DeckRepository {
         .single();
 
     final deckId = deck['id'] as String;
+    await _insertFlashcards(deckId, words);
+  }
 
+  @override
+  Future<void> addWordsToDeck({
+    required String deckId,
+    required List<DeckWord> words,
+  }) async {
+    if (words.isEmpty) return;
+    await _insertFlashcards(deckId, words);
+  }
+
+  /// Inserts [words] as flashcards under [deckId] plus their example
+  /// sentences. Shared by [createDeck] (on a freshly inserted deck) and
+  /// [addWordsToDeck] (on an existing one), so a scanned batch is saved
+  /// the same way whichever deck it lands in.
+  Future<void> _insertFlashcards(String deckId, List<DeckWord> words) async {
     final insertedFlashcards = await _client.from('flashcards').insert([
       for (final word in words)
         {
@@ -137,6 +153,48 @@ class SupabaseDeckRepository implements DeckRepository {
   @override
   Future<void> deleteDeck(String deckId) async {
     await _client.from('decks').delete().eq('id', deckId);
+  }
+
+  @override
+  Future<void> updateFlashcard({
+    required String flashcardId,
+    required String word,
+    required String translation,
+    String? wordDescription,
+    required List<String> exampleSentences,
+  }) async {
+    await _client
+        .from('flashcards')
+        .update({
+          'word': word,
+          'translation': translation,
+          'word_description': wordDescription,
+        })
+        .eq('id', flashcardId);
+
+    // Example sentences live in their own table with no natural key to diff
+    // against, so the simplest correct update is to clear the card's rows
+    // and re-insert the current list in order. The set is small (a handful
+    // at most), so the extra writes are cheap.
+    await _client
+        .from('example_sentences')
+        .delete()
+        .eq('flashcard_id', flashcardId);
+
+    final sentenceRows = <Map<String, dynamic>>[
+      for (final sentence in exampleSentences)
+        if (sentence.trim().isNotEmpty)
+          {'flashcard_id': flashcardId, 'sentence': sentence.trim()},
+    ];
+
+    if (sentenceRows.isNotEmpty) {
+      await _client.from('example_sentences').insert(sentenceRows);
+    }
+  }
+
+  @override
+  Future<void> deleteFlashcard(String flashcardId) async {
+    await _client.from('flashcards').delete().eq('id', flashcardId);
   }
 
   @override

@@ -219,9 +219,24 @@ const Map<String, String> de = {
   LocaleKeys.scanTargetLanguageBody:
       'In welche Sprache möchtest du diese Wörter übersetzen lassen?',
   LocaleKeys.scanSavingDeck: 'Dein Stapel wird gespeichert …',
+  LocaleKeys.scanSavingWords: 'Deine Wörter werden gespeichert …',
   LocaleKeys.scanDeckCreatedSuccess: '@name ist bereit mit @count Wörtern!',
   LocaleKeys.scanDeckSaveError:
       'Dein Stapel konnte nicht gespeichert werden. Bitte versuche es erneut.',
+  LocaleKeys.scanAddToDeckButton: 'Zum Stapel hinzufügen',
+  LocaleKeys.scanDestinationTitle: '@count Wörter hinzufügen zu …',
+  LocaleKeys.scanDestinationSubtitle:
+      'Erstelle einen neuen Stapel oder füge sie einem vorhandenen hinzu.',
+  LocaleKeys.scanDestinationNewDeck: 'Neuer Stapel',
+  LocaleKeys.scanDestinationNewDeckHint:
+      'Sprache wählen und einen neuen Stapel anlegen',
+  LocaleKeys.scanDestinationExistingHeader: 'Zu vorhandenem Stapel hinzufügen',
+  LocaleKeys.scanSelectMoreSubtitle:
+      'Wähle die nächste Gruppe für einen anderen Stapel oder schließe, wenn du fertig bist.',
+  LocaleKeys.scanFiledProgress: '@count Wörter bisher gespeichert',
+  LocaleKeys.scanWordsAddedSuccess: '@count Wörter zu @name hinzugefügt',
+  LocaleKeys.scanWordsSavedSummary:
+      '@count Wörter in @decks Stapeln gespeichert',
 
   LocaleKeys.permissionCameraTitle: 'Kamerazugriff erlauben',
   LocaleKeys.permissionCameraBody: 'LexiSnap braucht Zugriff auf deine Kamera, um Text aus Büchern, Speisekarten, Schildern und mehr zu scannen.',
@@ -258,6 +273,24 @@ const Map<String, String> de = {
   LocaleKeys.cardDetailNextReviewToday: 'Nächste Wiederholung: heute',
   LocaleKeys.cardDetailNextReviewInDays:
       'Nächste Wiederholung: in @count Tagen',
+  LocaleKeys.cardEditTitle: 'Karte bearbeiten',
+  LocaleKeys.cardEditWord: 'Wort',
+  LocaleKeys.cardEditTranslation: 'Übersetzung',
+  LocaleKeys.cardEditDescription: 'Beschreibung',
+  LocaleKeys.cardEditDescriptionHint: 'Eine optionale Notiz zu diesem Wort',
+  LocaleKeys.cardEditExamples: 'Beispielsätze',
+  LocaleKeys.cardEditExampleHint: 'Beispielsatz',
+  LocaleKeys.cardEditAddExample: 'Beispielsatz hinzufügen',
+  LocaleKeys.cardEditSavedSuccess: 'Karte aktualisiert.',
+  LocaleKeys.cardEditSaveError:
+      'Die Karte konnte nicht gespeichert werden. Bitte versuche es erneut.',
+  LocaleKeys.cardDeleteTitle: 'Diese Karte löschen?',
+  LocaleKeys.cardDeleteBody:
+      '@word wird aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.cardDeleteConfirm: 'Karte löschen',
+  LocaleKeys.cardDeletedSuccess: 'Karte gelöscht.',
+  LocaleKeys.cardDeleteError:
+      'Die Karte konnte nicht gelöscht werden. Bitte versuche es erneut.',
 
   LocaleKeys.studyProgress: '@current von @total',
   LocaleKeys.studyTapToReveal: 'Zum Aufdecken tippen',

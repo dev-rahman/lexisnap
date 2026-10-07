@@ -26,10 +26,14 @@ class DeckDetailController extends GetxController {
 
   /// Re-fetches the deck and its flashcards - used after a study session so
   /// due counts and cards reflect the just-recorded reviews.
-  Future<void> reload() => _load();
+  ///
+  /// [silent] skips the loading spinner, for a refresh that follows a small
+  /// change the user just made (editing or deleting a card) where the list
+  /// is already on screen and a full-screen spinner would only flicker.
+  Future<void> reload({bool silent = false}) => _load(silent: silent);
 
-  Future<void> _load() async {
-    isLoading.value = true;
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) isLoading.value = true;
     try {
       final (loadedDeck, loadedFlashcards) = await _deckRepository.getDeck(
         _deckId,

@@ -19,6 +19,15 @@ abstract class DeckRepository {
     required List<DeckWord> words,
   });
 
+  /// Appends [words] as new flashcards to an existing deck. Used by the
+  /// scan flow when the user files a batch of scanned words into a deck
+  /// they already have, rather than creating a new one. The words must
+  /// already be translated into that deck's target language.
+  Future<void> addWordsToDeck({
+    required String deckId,
+    required List<DeckWord> words,
+  });
+
   /// The signed-in user's decks, most recently created first.
   Future<List<Deck>> listDecks();
 
@@ -29,6 +38,21 @@ abstract class DeckRepository {
 
   /// Deletes the deck and all of its flashcards.
   Future<void> deleteDeck(String deckId);
+
+  /// Updates a single card's editable content - its word, translation,
+  /// optional description, and the full set of example sentences. The
+  /// sentences are replaced wholesale, so the list passed is exactly what
+  /// the card ends up with. Scheduling state is left untouched.
+  Future<void> updateFlashcard({
+    required String flashcardId,
+    required String word,
+    required String translation,
+    String? wordDescription,
+    required List<String> exampleSentences,
+  });
+
+  /// Deletes a single card and its example sentences from its deck.
+  Future<void> deleteFlashcard(String flashcardId);
 
   /// Every card due for review right now, across all of the user's decks,
   /// soonest-due first. Each card carries its deck's language pair, so a
