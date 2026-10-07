@@ -11,6 +11,7 @@ import '../../core/theme/app_text_styles.dart';
 import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
+import '../../core/widgets/confirm_sheet.dart';
 import '../../core/widgets/deck_badge.dart';
 import '../../core/widgets/study_mode_sheet.dart';
 import '../../data/models/flashcard.dart';
@@ -141,10 +142,8 @@ class DeckDetailView extends GetView<DeckDetailController> {
                   ),
                 ),
                 const SizedBox(height: AppSpacing.lg),
-                for (final card in controller.flashcards) ...[
+                for (final card in controller.flashcards)
                   _FlashcardTile(card: card),
-                  const SizedBox(height: AppSpacing.sm),
-                ],
               ],
             ),
           );
@@ -266,75 +265,112 @@ class _FlashcardTile extends GetView<DeckDetailController> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: context.colorSurface,
-      borderRadius: BorderRadius.circular(AppRadius.md),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(AppRadius.md),
-        // Silent reload on return: a card may have been edited or deleted,
-        // and the list is already on screen, so refresh it without the
-        // full-screen loading spinner.
-        onTap: () async {
-          await Get.to(() => CardDetailView(card: card));
-          controller.reload(silent: true);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppSpacing.md,
-            vertical: AppSpacing.sm,
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.volume_up_outlined, size: 20),
-                onPressed: () => Get.find<TextToSpeechService>().speak(
-                  card.word,
-                  languageCode: card.sourceLanguage,
-                ),
-                color: AppColors.accent,
-                visualDensity: VisualDensity.compact,
+    // Swipe left to delete: the red panel is revealed as the row slides,
+    // and completing the swipe asks for confirmation before anything is
+    // removed. The bottom margin lives on both the panel and the row so the
+    // gap between cards slides away with the row instead of being orphaned.
+    return Dismissible(
+      key: ValueKey(card.id),
+      direction: DismissDirection.endToStart,
+      background: Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: AppSpacing.lg),
+        decoration: BoxDecoration(
+          color: AppColors.alert,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+        ),
+        child: const Icon(Icons.delete_outline_rounded, color: Colors.white),
+      ),
+      confirmDismiss: (_) async {
+        final confirmed = await showConfirmSheet(
+          context,
+          icon: Icons.delete_outline_rounded,
+          title: LocaleKeys.cardDeleteTitle.tr,
+          body: LocaleKeys.cardDeleteBody.trParams({'word': card.word}),
+          confirmLabel: LocaleKeys.cardDeleteConfirm.tr,
+        );
+        if (!confirmed) return false;
+        return controller.deleteCard(card);
+      },
+      onDismissed: (_) =>
+          controller.flashcards.removeWhere((c) => c.id == card.id),
+      child: Container(
+        margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+        child: Material(
+          color: context.colorSurface,
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(AppRadius.md),
+            // Silent reload on return: a card may have been edited, and the
+            // list is already on screen, so refresh it without the
+            // full-screen loading spinner.
+            onTap: () async {
+              await Get.to(() => CardDetailView(card: card));
+              controller.reload(silent: true);
+            },
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.md,
+                vertical: AppSpacing.sm,
               ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.volume_up_outlined, size: 20),
+                    onPressed: () => Get.find<TextToSpeechService>().speak(
+                      card.word,
+                      languageCode: card.sourceLanguage,
+                    ),
+                    color: AppColors.accent,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Flexible(
-                          child: Text(
-                            card.word,
-                            style: AppTextStyles.bodyMedium.copyWith(
-                              color: context.colorInk,
+                        Row(
+                          children: [
+                            Flexible(
+                              child: Text(
+                                card.word,
+                                style: AppTextStyles.bodyMedium.copyWith(
+                                  color: context.colorInk,
+                                ),
+                              ),
                             ),
+                            if (card.level != null) ...[
+                              const SizedBox(width: AppSpacing.xs),
+                              _LevelBadge(level: card.level!),
+                            ],
+                          ],
+                        ),
+                        Text(
+                          card.translation,
+                          style: AppTextStyles.caption.copyWith(
+                            color: AppColors.accent,
                           ),
                         ),
-                        if (card.level != null) ...[
-                          const SizedBox(width: AppSpacing.xs),
-                          _LevelBadge(level: card.level!),
-                        ],
                       ],
                     ),
-                    Text(
-                      card.translation,
-                      style: AppTextStyles.caption.copyWith(
+                  ),
+                  if (card.isDue)
+                    Container(
+                      width: 8,
+                      height: 8,
+                      margin: const EdgeInsets.only(right: AppSpacing.sm),
+                      decoration: const BoxDecoration(
                         color: AppColors.accent,
+                        shape: BoxShape.circle,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              if (card.isDue)
-                Container(
-                  width: 8,
-                  height: 8,
-                  margin: const EdgeInsets.only(right: AppSpacing.sm),
-                  decoration: const BoxDecoration(
-                    color: AppColors.accent,
-                    shape: BoxShape.circle,
+                  Icon(
+                    Icons.chevron_right_rounded,
+                    color: context.colorInkMuted,
                   ),
-                ),
-              Icon(Icons.chevron_right_rounded, color: context.colorInkMuted),
-            ],
+                ],
+              ),
+            ),
           ),
         ),
       ),

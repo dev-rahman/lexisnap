@@ -2,15 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
-import '../../core/services/deck/deck_repository.dart';
 import '../../core/services/speech/text_to_speech_service.dart';
 import '../../core/theme/app_colors.dart';
 import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_text_styles.dart';
-import '../../core/utils/app_snackbar.dart';
 import '../../core/utils/study_day.dart';
-import '../../core/widgets/confirm_sheet.dart';
 import '../../data/models/flashcard.dart';
 import 'card_edit_view.dart';
 
@@ -19,9 +16,9 @@ import 'card_edit_view.dart';
 /// deck detail's compact card row, or from within a study session via the
 /// "show details" button.
 ///
-/// The card can be edited or deleted from here (see [CardEditView]); the
-/// screen holds the card in state so an edit shows immediately, and a
-/// delete pops back to the deck.
+/// The card can be edited from here (see [CardEditView]); the screen holds
+/// the card in state so an edit shows immediately. Deleting is done by
+/// swiping the card's row in the deck list, not from this screen.
 class CardDetailView extends StatefulWidget {
   const CardDetailView({super.key, required this.card});
 
@@ -35,30 +32,9 @@ class _CardDetailViewState extends State<CardDetailView> {
   late Flashcard _card = widget.card;
 
   Future<void> _edit() async {
-    final updated = await Get.to<Flashcard>(
-      () => CardEditView(card: _card),
-    );
+    final updated = await Get.to<Flashcard>(() => CardEditView(card: _card));
     if (updated != null) {
       setState(() => _card = updated);
-    }
-  }
-
-  Future<void> _delete() async {
-    final confirmed = await showConfirmSheet(
-      context,
-      icon: Icons.delete_outline_rounded,
-      title: LocaleKeys.cardDeleteTitle.tr,
-      body: LocaleKeys.cardDeleteBody.trParams({'word': _card.word}),
-      confirmLabel: LocaleKeys.cardDeleteConfirm.tr,
-    );
-    if (!confirmed) return;
-
-    try {
-      await Get.find<DeckRepository>().deleteFlashcard(_card.id);
-      Get.back();
-      AppSnackbar.success(LocaleKeys.cardDeletedSuccess.tr);
-    } catch (_) {
-      AppSnackbar.error(LocaleKeys.cardDeleteError.tr);
     }
   }
 
@@ -71,14 +47,7 @@ class _CardDetailViewState extends State<CardDetailView> {
           onPressed: Get.back,
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.edit_outlined),
-            onPressed: _edit,
-          ),
-          IconButton(
-            icon: const Icon(Icons.delete_outline_rounded),
-            onPressed: _delete,
-          ),
+          IconButton(icon: const Icon(Icons.edit_outlined), onPressed: _edit),
         ],
       ),
       body: SafeArea(

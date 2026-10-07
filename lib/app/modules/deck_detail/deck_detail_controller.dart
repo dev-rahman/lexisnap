@@ -78,4 +78,35 @@ class DeckDetailController extends GetxController {
       AppSnackbar.error(LocaleKeys.deckDeleteError.tr);
     }
   }
+
+  /// Deletes a single [card] from this deck, for swipe-to-delete on the
+  /// card list. Returns whether it succeeded, so the row can snap back
+  /// into place when the delete fails rather than vanishing.
+  ///
+  /// The caller removes the row itself once the swipe is confirmed (see the
+  /// `Dismissible` in the view); here we only correct the deck's own count
+  /// and the decks list, and report the outcome.
+  Future<bool> deleteCard(Flashcard card) async {
+    final current = deck.value;
+    try {
+      await _deckRepository.deleteFlashcard(card.id);
+      if (current != null) {
+        deck.value = Deck(
+          id: current.id,
+          name: current.name,
+          sourceLanguage: current.sourceLanguage,
+          targetLanguage: current.targetLanguage,
+          cardCount: current.cardCount > 0 ? current.cardCount - 1 : 0,
+          createdAt: current.createdAt,
+          notes: current.notes,
+        );
+      }
+      await Get.find<DecksController>().refreshDecks();
+      AppSnackbar.success(LocaleKeys.cardDeletedSuccess.tr);
+      return true;
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.cardDeleteError.tr);
+      return false;
+    }
+  }
 }
