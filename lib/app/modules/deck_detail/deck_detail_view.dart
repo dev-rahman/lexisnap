@@ -13,7 +13,9 @@ import '../../core/widgets/app_button.dart';
 import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/confirm_sheet.dart';
 import '../../core/widgets/deck_badge.dart';
+import '../../core/widgets/deck_destination_sheet.dart';
 import '../../core/widgets/study_mode_sheet.dart';
+import '../../core/utils/app_snackbar.dart';
 import '../../data/models/flashcard.dart';
 import '../../data/models/study_mode.dart';
 import '../../data/vocabulary_languages.dart';
@@ -28,17 +30,34 @@ class DeckDetailView extends GetView<DeckDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: Get.back,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: Obx(
+          () => controller.isSelecting.value
+              ? _selectionAppBar(context)
+              : AppBar(
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back),
+                    onPressed: Get.back,
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.delete_outline_rounded),
+                      onPressed: () =>
+                          _showDeleteConfirmation(context, controller),
+                    ),
+                  ],
+                ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_outline_rounded),
-            onPressed: () => _showDeleteConfirmation(context, controller),
-          ),
-        ],
+      ),
+      bottomNavigationBar: Obx(
+        () => controller.isSelecting.value
+            ? _SelectionActionBar(
+                onMove: () => _pickDestination(context, copy: false),
+                onCopy: () => _pickDestination(context, copy: true),
+                onDelete: () => _confirmDeleteSelected(context),
+              )
+            : const SizedBox.shrink(),
       ),
       body: SafeArea(
         child: Obx(() {
@@ -148,6 +167,179 @@ class DeckDetailView extends GetView<DeckDetailController> {
             ),
           );
         }),
+      ),
+    );
+  }
+
+  /// The app bar while picking cards: close the mode, show the count, and
+  /// select or clear everything.
+  AppBar _selectionAppBar(BuildContext context) {
+    return AppBar(
+      leading: IconButton(
+        icon: const Icon(Icons.close_rounded),
+        onPressed: controller.exitSelection,
+      ),
+      title: Text(
+        LocaleKeys.cardsSelectedCount.trParams({
+          'count': '${controller.selectedCount}',
+        }),
+      ),
+      actions: [
+        TextButton(
+          onPressed: controller.toggleSelectAll,
+          child: Text(
+            controller.allSelected
+                ? LocaleKeys.cardsDeselectAll.tr
+                : LocaleKeys.cardsSelectAll.tr,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Opens the deck picker for a move or a copy. Only decks sharing this
+  /// deck's languages are offered; if there are none, it says so instead of
+  /// showing an empty sheet.
+  Future<void> _pickDestination(
+    BuildContext context, {
+    required bool copy,
+  }) async {
+    if (controller.selectedCount == 0) return;
+
+    final targets = controller.compatibleDecks;
+    if (targets.isEmpty) {
+      AppSnackbar.info(LocaleKeys.cardsNoTargetDecks.tr);
+      return;
+    }
+
+    final count = controller.selectedCount;
+    final destination = await showDeckDestinationSheet(
+      context,
+      decks: targets,
+      wordCount: count,
+      allowNewDeck: false,
+      title: (copy ? LocaleKeys.cardsCopyTitle : LocaleKeys.cardsMoveTitle)
+          .trParams({'count': '$count'}),
+      subtitle: LocaleKeys.cardsDestinationSubtitle.tr,
+    );
+
+    if (destination is! ExistingDeckDestination) return;
+    if (copy) {
+      await controller.copySelectedTo(destination.deck);
+    } else {
+      await controller.moveSelectedTo(destination.deck);
+    }
+  }
+
+  Future<void> _confirmDeleteSelected(BuildContext context) async {
+    if (controller.selectedCount == 0) return;
+
+    final confirmed = await showConfirmSheet(
+      context,
+      icon: Icons.delete_outline_rounded,
+      title: LocaleKeys.cardsDeleteTitle.trParams({
+        'count': '${controller.selectedCount}',
+      }),
+      body: LocaleKeys.cardsDeleteBody.tr,
+      confirmLabel: LocaleKeys.cardsDeleteConfirm.tr,
+    );
+    if (confirmed) await controller.deleteSelected();
+  }
+}
+
+/// The action bar shown while picking cards: move, copy, or delete the
+/// selection. The actions are disabled until at least one card is picked, so
+/// the bar is visible the moment selection starts without offering a no-op.
+class _SelectionActionBar extends GetView<DeckDetailController> {
+  const _SelectionActionBar({
+    required this.onMove,
+    required this.onCopy,
+    required this.onDelete,
+  });
+
+  final VoidCallback onMove;
+  final VoidCallback onCopy;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: context.colorPaper,
+      elevation: 8,
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.sm,
+            vertical: AppSpacing.xs,
+          ),
+          child: Obx(() {
+            final enabled = controller.hasSelection;
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _SelectionAction(
+                  icon: Icons.drive_file_move_rounded,
+                  label: LocaleKeys.cardsMove.tr,
+                  onTap: enabled ? onMove : null,
+                ),
+                _SelectionAction(
+                  icon: Icons.copy_all_rounded,
+                  label: LocaleKeys.cardsCopy.tr,
+                  onTap: enabled ? onCopy : null,
+                ),
+                _SelectionAction(
+                  icon: Icons.delete_outline_rounded,
+                  label: LocaleKeys.cardsDelete.tr,
+                  onTap: enabled ? onDelete : null,
+                  destructive: true,
+                ),
+              ],
+            );
+          }),
+        ),
+      ),
+    );
+  }
+}
+
+class _SelectionAction extends StatelessWidget {
+  const _SelectionAction({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    this.destructive = false,
+  });
+
+  final IconData icon;
+  final String label;
+  final VoidCallback? onTap;
+  final bool destructive;
+
+  @override
+  Widget build(BuildContext context) {
+    final enabled = onTap != null;
+    final color = !enabled
+        ? context.colorInkMuted.withValues(alpha: 0.4)
+        : destructive
+        ? AppColors.alert
+        : context.colorInk;
+
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppSpacing.sm),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, color: color, size: 24),
+              const SizedBox(height: 2),
+              Text(label, style: AppTextStyles.caption.copyWith(color: color)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -265,6 +457,64 @@ class _FlashcardTile extends GetView<DeckDetailController> {
 
   @override
   Widget build(BuildContext context) {
+    // The tile has two modes. In selection mode the whole list is a picker,
+    // so the row shows a checkbox and a tap toggles it; otherwise a tap opens
+    // the card, a long-press starts selecting, and a left-swipe deletes.
+    return Obx(() {
+      if (controller.isSelecting.value) {
+        return _selectableRow(
+          context,
+          selected: controller.isSelected(card.id),
+        );
+      }
+      return _swipeToDeleteRow(context);
+    });
+  }
+
+  Widget _selectableRow(BuildContext context, {required bool selected}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: AppSpacing.sm),
+      child: Material(
+        color: selected
+            ? AppColors.accent.withValues(alpha: 0.12)
+            : context.colorSurface,
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(AppRadius.md),
+          onTap: () => controller.toggleSelection(card.id),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppSpacing.md,
+              vertical: AppSpacing.sm,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  selected ? Icons.check_circle_rounded : Icons.circle_outlined,
+                  color: selected ? AppColors.accent : context.colorInkMuted,
+                  size: 24,
+                ),
+                const SizedBox(width: AppSpacing.md),
+                Expanded(child: _CardInfo(card: card)),
+                if (card.isDue)
+                  Container(
+                    width: 8,
+                    height: 8,
+                    margin: const EdgeInsets.only(left: AppSpacing.sm),
+                    decoration: const BoxDecoration(
+                      color: AppColors.accent,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _swipeToDeleteRow(BuildContext context) {
     // Swipe left to delete: the red panel is revealed as the row slides,
     // and completing the swipe asks for confirmation before anything is
     // removed. The bottom margin lives on both the panel and the row so the
@@ -309,6 +559,7 @@ class _FlashcardTile extends GetView<DeckDetailController> {
               await Get.to(() => CardDetailView(card: card));
               controller.reload(silent: true);
             },
+            onLongPress: () => controller.enterSelection(card.id),
             child: Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: AppSpacing.md,
@@ -325,35 +576,7 @@ class _FlashcardTile extends GetView<DeckDetailController> {
                     color: AppColors.accent,
                     visualDensity: VisualDensity.compact,
                   ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(
-                              child: Text(
-                                card.word,
-                                style: AppTextStyles.bodyMedium.copyWith(
-                                  color: context.colorInk,
-                                ),
-                              ),
-                            ),
-                            if (card.level != null) ...[
-                              const SizedBox(width: AppSpacing.xs),
-                              _LevelBadge(level: card.level!),
-                            ],
-                          ],
-                        ),
-                        Text(
-                          card.translation,
-                          style: AppTextStyles.caption.copyWith(
-                            color: AppColors.accent,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Expanded(child: _CardInfo(card: card)),
                   if (card.isDue)
                     Container(
                       width: 8,
@@ -374,6 +597,43 @@ class _FlashcardTile extends GetView<DeckDetailController> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The word, its level badge, and its translation - the part of a card row
+/// that is the same whether the list is being read or multi-selected.
+class _CardInfo extends StatelessWidget {
+  const _CardInfo({required this.card});
+
+  final Flashcard card;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Flexible(
+              child: Text(
+                card.word,
+                style: AppTextStyles.bodyMedium.copyWith(
+                  color: context.colorInk,
+                ),
+              ),
+            ),
+            if (card.level != null) ...[
+              const SizedBox(width: AppSpacing.xs),
+              _LevelBadge(level: card.level!),
+            ],
+          ],
+        ),
+        Text(
+          card.translation,
+          style: AppTextStyles.caption.copyWith(color: AppColors.accent),
+        ),
+      ],
     );
   }
 }

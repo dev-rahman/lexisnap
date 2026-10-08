@@ -294,6 +294,27 @@ class LocaleKeys {
   static const cardDeletedSuccess = 'card_deleted_success';
   static const cardDeleteError = 'card_delete_error';
 
+  // Card multi-select (move / copy / bulk delete)
+  static const cardsSelectedCount = 'cards_selected_count';
+  static const cardsSelectAll = 'cards_select_all';
+  static const cardsDeselectAll = 'cards_deselect_all';
+  static const cardsMove = 'cards_move';
+  static const cardsCopy = 'cards_copy';
+  static const cardsDelete = 'cards_delete';
+  static const cardsMoveTitle = 'cards_move_title';
+  static const cardsCopyTitle = 'cards_copy_title';
+  static const cardsDestinationSubtitle = 'cards_destination_subtitle';
+  static const cardsNoTargetDecks = 'cards_no_target_decks';
+  static const cardsMovedSuccess = 'cards_moved_success';
+  static const cardsCopiedSuccess = 'cards_copied_success';
+  static const cardsMoveError = 'cards_move_error';
+  static const cardsCopyError = 'cards_copy_error';
+  static const cardsDeleteTitle = 'cards_delete_title';
+  static const cardsDeleteBody = 'cards_delete_body';
+  static const cardsDeleteConfirm = 'cards_delete_confirm';
+  static const cardsDeletedSuccess = 'cards_deleted_success';
+  static const cardsDeleteError = 'cards_delete_error';
+
   // Study session
   static const studyProgress = 'study_progress';
   static const studyTapToReveal = 'study_tap_to_reveal';

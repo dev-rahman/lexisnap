@@ -18,6 +18,58 @@ class DeckDetailController extends GetxController {
 
   int get dueCount => flashcards.where((card) => card.isDue).length;
 
+  /// Multi-select state for the card list. [isSelecting] turns the list into
+  /// a picker (checkboxes, no swipe, tap toggles); [selectedCardIds] is what
+  /// the move/copy/delete actions operate on.
+  final isSelecting = false.obs;
+  final selectedCardIds = <String>{}.obs;
+
+  int get selectedCount => selectedCardIds.length;
+  bool get hasSelection => selectedCardIds.isNotEmpty;
+  bool isSelected(String cardId) => selectedCardIds.contains(cardId);
+
+  bool get allSelected =>
+      flashcards.isNotEmpty && selectedCardIds.length == flashcards.length;
+
+  /// Decks a selection can move or copy into: everything the user owns that
+  /// shares this deck's language pair, since a card's languages come from its
+  /// deck - putting it in a mismatched deck would misrepresent it. The deck
+  /// itself is excluded.
+  List<Deck> get compatibleDecks {
+    final current = deck.value;
+    if (current == null) return const [];
+    return Get.find<DecksController>().decks
+        .where(
+          (other) =>
+              other.id != current.id &&
+              other.sourceLanguage == current.sourceLanguage &&
+              other.targetLanguage == current.targetLanguage,
+        )
+        .toList();
+  }
+
+  void enterSelection(String cardId) {
+    isSelecting.value = true;
+    selectedCardIds.add(cardId);
+  }
+
+  void toggleSelection(String cardId) {
+    if (!selectedCardIds.remove(cardId)) selectedCardIds.add(cardId);
+  }
+
+  void toggleSelectAll() {
+    if (allSelected) {
+      selectedCardIds.clear();
+    } else {
+      selectedCardIds.assignAll(flashcards.map((card) => card.id));
+    }
+  }
+
+  void exitSelection() {
+    isSelecting.value = false;
+    selectedCardIds.clear();
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -107,6 +159,75 @@ class DeckDetailController extends GetxController {
     } catch (_) {
       AppSnackbar.error(LocaleKeys.cardDeleteError.tr);
       return false;
+    }
+  }
+
+  /// Moves the current selection into [target], then leaves selection mode
+  /// and refreshes so both decks' counts are current.
+  Future<void> moveSelectedTo(Deck target) async {
+    final ids = selectedCardIds.toList();
+    final count = ids.length;
+    if (ids.isEmpty) return;
+
+    try {
+      await _deckRepository.moveFlashcards(
+        flashcardIds: ids,
+        toDeckId: target.id,
+      );
+      exitSelection();
+      await _load(silent: true);
+      await Get.find<DecksController>().refreshDecks();
+      AppSnackbar.success(
+        LocaleKeys.cardsMovedSuccess.trParams({
+          'count': '$count',
+          'name': target.name,
+        }),
+      );
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.cardsMoveError.tr);
+    }
+  }
+
+  /// Copies the current selection into [target], leaving the originals here.
+  Future<void> copySelectedTo(Deck target) async {
+    final ids = selectedCardIds.toList();
+    final count = ids.length;
+    if (ids.isEmpty) return;
+
+    try {
+      await _deckRepository.copyFlashcards(
+        flashcardIds: ids,
+        toDeckId: target.id,
+      );
+      exitSelection();
+      await Get.find<DecksController>().refreshDecks();
+      AppSnackbar.success(
+        LocaleKeys.cardsCopiedSuccess.trParams({
+          'count': '$count',
+          'name': target.name,
+        }),
+      );
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.cardsCopyError.tr);
+    }
+  }
+
+  /// Deletes the current selection from this deck.
+  Future<void> deleteSelected() async {
+    final ids = selectedCardIds.toList();
+    final count = ids.length;
+    if (ids.isEmpty) return;
+
+    try {
+      await _deckRepository.deleteFlashcards(ids);
+      exitSelection();
+      await _load(silent: true);
+      await Get.find<DecksController>().refreshDecks();
+      AppSnackbar.success(
+        LocaleKeys.cardsDeletedSuccess.trParams({'count': '$count'}),
+      );
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.cardsDeleteError.tr);
     }
   }
 }

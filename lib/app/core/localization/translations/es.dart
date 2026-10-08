@@ -288,6 +288,31 @@ const Map<String, String> es = {
   LocaleKeys.cardDeletedSuccess: 'Tarjeta eliminada.',
   LocaleKeys.cardDeleteError:
       'No se pudo eliminar la tarjeta. Inténtalo de nuevo.',
+  LocaleKeys.cardsSelectedCount: '@count seleccionadas',
+  LocaleKeys.cardsSelectAll: 'Seleccionar todo',
+  LocaleKeys.cardsDeselectAll: 'Deseleccionar todo',
+  LocaleKeys.cardsMove: 'Mover',
+  LocaleKeys.cardsCopy: 'Copiar',
+  LocaleKeys.cardsDelete: 'Eliminar',
+  LocaleKeys.cardsMoveTitle: 'Mover @count tarjetas a…',
+  LocaleKeys.cardsCopyTitle: 'Copiar @count tarjetas a…',
+  LocaleKeys.cardsDestinationSubtitle:
+      'Solo se muestran mazos con los mismos idiomas.',
+  LocaleKeys.cardsNoTargetDecks:
+      'Aún no hay otro mazo con los mismos idiomas.',
+  LocaleKeys.cardsMovedSuccess: '@count tarjetas movidas a @name',
+  LocaleKeys.cardsCopiedSuccess: '@count tarjetas copiadas a @name',
+  LocaleKeys.cardsMoveError:
+      'No se pudieron mover las tarjetas. Inténtalo de nuevo.',
+  LocaleKeys.cardsCopyError:
+      'No se pudieron copiar las tarjetas. Inténtalo de nuevo.',
+  LocaleKeys.cardsDeleteTitle: '¿Eliminar @count tarjetas?',
+  LocaleKeys.cardsDeleteBody:
+      'Estas tarjetas se quitarán de este mazo. No se puede deshacer.',
+  LocaleKeys.cardsDeleteConfirm: 'Eliminar tarjetas',
+  LocaleKeys.cardsDeletedSuccess: '@count tarjetas eliminadas.',
+  LocaleKeys.cardsDeleteError:
+      'No se pudieron eliminar las tarjetas. Inténtalo de nuevo.',
 
   LocaleKeys.studyProgress: '@current de @total',
   LocaleKeys.studyTapToReveal: 'Toca para revelar',

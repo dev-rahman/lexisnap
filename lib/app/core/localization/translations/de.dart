@@ -291,6 +291,31 @@ const Map<String, String> de = {
   LocaleKeys.cardDeletedSuccess: 'Karte gelöscht.',
   LocaleKeys.cardDeleteError:
       'Die Karte konnte nicht gelöscht werden. Bitte versuche es erneut.',
+  LocaleKeys.cardsSelectedCount: '@count ausgewählt',
+  LocaleKeys.cardsSelectAll: 'Alle auswählen',
+  LocaleKeys.cardsDeselectAll: 'Auswahl aufheben',
+  LocaleKeys.cardsMove: 'Verschieben',
+  LocaleKeys.cardsCopy: 'Kopieren',
+  LocaleKeys.cardsDelete: 'Löschen',
+  LocaleKeys.cardsMoveTitle: '@count Karten verschieben nach…',
+  LocaleKeys.cardsCopyTitle: '@count Karten kopieren nach…',
+  LocaleKeys.cardsDestinationSubtitle:
+      'Es werden nur Stapel mit denselben Sprachen angezeigt.',
+  LocaleKeys.cardsNoTargetDecks:
+      'Noch kein anderer Stapel mit denselben Sprachen.',
+  LocaleKeys.cardsMovedSuccess: '@count Karten nach @name verschoben',
+  LocaleKeys.cardsCopiedSuccess: '@count Karten nach @name kopiert',
+  LocaleKeys.cardsMoveError:
+      'Die Karten konnten nicht verschoben werden. Bitte versuche es erneut.',
+  LocaleKeys.cardsCopyError:
+      'Die Karten konnten nicht kopiert werden. Bitte versuche es erneut.',
+  LocaleKeys.cardsDeleteTitle: '@count Karten löschen?',
+  LocaleKeys.cardsDeleteBody:
+      'Diese Karten werden aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.cardsDeleteConfirm: 'Karten löschen',
+  LocaleKeys.cardsDeletedSuccess: '@count Karten gelöscht.',
+  LocaleKeys.cardsDeleteError:
+      'Die Karten konnten nicht gelöscht werden. Bitte versuche es erneut.',
 
   LocaleKeys.studyProgress: '@current von @total',
   LocaleKeys.studyTapToReveal: 'Zum Aufdecken tippen',

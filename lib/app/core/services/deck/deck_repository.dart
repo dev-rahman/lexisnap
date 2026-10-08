@@ -54,6 +54,26 @@ abstract class DeckRepository {
   /// Deletes a single card and its example sentences from its deck.
   Future<void> deleteFlashcard(String flashcardId);
 
+  /// Moves the given cards into another deck. The cards keep their content,
+  /// example sentences, and review schedule; only which deck they belong to
+  /// changes. The caller is responsible for the two decks sharing a language
+  /// pair, since a card's languages are its deck's.
+  Future<void> moveFlashcards({
+    required List<String> flashcardIds,
+    required String toDeckId,
+  });
+
+  /// Copies the given cards into another deck as fresh cards - same content
+  /// and example sentences, but a new review schedule (due now), leaving the
+  /// originals in place. Same language-pair expectation as [moveFlashcards].
+  Future<void> copyFlashcards({
+    required List<String> flashcardIds,
+    required String toDeckId,
+  });
+
+  /// Deletes several cards and their example sentences in one go.
+  Future<void> deleteFlashcards(List<String> flashcardIds);
+
   /// Every card due for review right now, across all of the user's decks,
   /// soonest-due first. Each card carries its deck's language pair, so a
   /// session spanning several decks can still speak each word correctly.

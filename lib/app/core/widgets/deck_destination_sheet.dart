@@ -38,25 +38,47 @@ class ExistingDeckDestination extends DeckDestination {
 ///
 /// [decks] is the user's existing decks, shown under the "new deck" option.
 /// When it is empty the sheet is effectively a confirm step for a new deck.
+///
+/// Reused beyond scanning: [title] and [subtitle] override the default
+/// "Add N words to…" wording (moving and copying cards pass their own), and
+/// [allowNewDeck] hides the "new deck" option when only existing decks make
+/// sense as a destination.
 Future<DeckDestination?> showDeckDestinationSheet(
   BuildContext context, {
   required List<Deck> decks,
   required int wordCount,
+  String? title,
+  String? subtitle,
+  bool allowNewDeck = true,
 }) {
   return showAppSheet<DeckDestination>(
     context,
     isScrollControlled: true,
     maxHeightFraction: 0.85,
-    builder: (sheetContext) =>
-        _DeckDestinationSheet(decks: decks, wordCount: wordCount),
+    builder: (sheetContext) => _DeckDestinationSheet(
+      decks: decks,
+      wordCount: wordCount,
+      title: title,
+      subtitle: subtitle,
+      allowNewDeck: allowNewDeck,
+    ),
   );
 }
 
 class _DeckDestinationSheet extends StatefulWidget {
-  const _DeckDestinationSheet({required this.decks, required this.wordCount});
+  const _DeckDestinationSheet({
+    required this.decks,
+    required this.wordCount,
+    this.title,
+    this.subtitle,
+    this.allowNewDeck = true,
+  });
 
   final List<Deck> decks;
   final int wordCount;
+  final String? title;
+  final String? subtitle;
+  final bool allowNewDeck;
 
   @override
   State<_DeckDestinationSheet> createState() => _DeckDestinationSheetState();
@@ -94,7 +116,9 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
     final hasDecks = widget.decks.isNotEmpty;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,33 +136,38 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    LocaleKeys.scanDestinationTitle.trParams({
-                      'count': '${widget.wordCount}',
-                    }),
+                    widget.title ??
+                        LocaleKeys.scanDestinationTitle.trParams({
+                          'count': '${widget.wordCount}',
+                        }),
                     style: AppTextStyles.heading2,
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
-                    LocaleKeys.scanDestinationSubtitle.tr,
+                    widget.subtitle ?? LocaleKeys.scanDestinationSubtitle.tr,
                     style: AppTextStyles.body.copyWith(
                       color: context.colorInkMuted,
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.lg),
-                  _NewDeckOption(
-                    onTap: () =>
-                        Navigator.pop(context, const NewDeckDestination()),
-                  ),
+                  if (widget.allowNewDeck) ...[
+                    const SizedBox(height: AppSpacing.lg),
+                    _NewDeckOption(
+                      onTap: () =>
+                          Navigator.pop(context, const NewDeckDestination()),
+                    ),
+                  ],
                   if (hasDecks) ...[
                     const SizedBox(height: AppSpacing.lg),
-                    Text(
-                      LocaleKeys.scanDestinationExistingHeader.tr,
-                      style: AppTextStyles.caption.copyWith(
-                        color: context.colorInkMuted,
-                        fontWeight: FontWeight.w700,
+                    if (widget.allowNewDeck) ...[
+                      Text(
+                        LocaleKeys.scanDestinationExistingHeader.tr,
+                        style: AppTextStyles.caption.copyWith(
+                          color: context.colorInkMuted,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
                     if (_showSearch) ...[
                       TextField(
                         controller: _searchController,
@@ -303,11 +332,7 @@ class _ExistingDeckOption extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(
-                Icons.add_rounded,
-                color: context.colorInkMuted,
-                size: 20,
-              ),
+              Icon(Icons.add_rounded, color: context.colorInkMuted, size: 20),
             ],
           ),
         ),

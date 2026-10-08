@@ -294,6 +294,31 @@ const Map<String, String> fr = {
   LocaleKeys.cardDeletedSuccess: 'Carte supprimée.',
   LocaleKeys.cardDeleteError:
       'Impossible de supprimer la carte. Veuillez réessayer.',
+  LocaleKeys.cardsSelectedCount: '@count sélectionnées',
+  LocaleKeys.cardsSelectAll: 'Tout sélectionner',
+  LocaleKeys.cardsDeselectAll: 'Tout désélectionner',
+  LocaleKeys.cardsMove: 'Déplacer',
+  LocaleKeys.cardsCopy: 'Copier',
+  LocaleKeys.cardsDelete: 'Supprimer',
+  LocaleKeys.cardsMoveTitle: 'Déplacer @count cartes vers…',
+  LocaleKeys.cardsCopyTitle: 'Copier @count cartes vers…',
+  LocaleKeys.cardsDestinationSubtitle:
+      'Seuls les paquets avec les mêmes langues sont affichés.',
+  LocaleKeys.cardsNoTargetDecks:
+      'Aucun autre paquet avec les mêmes langues pour le moment.',
+  LocaleKeys.cardsMovedSuccess: '@count cartes déplacées vers @name',
+  LocaleKeys.cardsCopiedSuccess: '@count cartes copiées vers @name',
+  LocaleKeys.cardsMoveError:
+      'Impossible de déplacer les cartes. Veuillez réessayer.',
+  LocaleKeys.cardsCopyError:
+      'Impossible de copier les cartes. Veuillez réessayer.',
+  LocaleKeys.cardsDeleteTitle: 'Supprimer @count cartes ?',
+  LocaleKeys.cardsDeleteBody:
+      'Ces cartes seront retirées de ce paquet. Action irréversible.',
+  LocaleKeys.cardsDeleteConfirm: 'Supprimer les cartes',
+  LocaleKeys.cardsDeletedSuccess: '@count cartes supprimées.',
+  LocaleKeys.cardsDeleteError:
+      'Impossible de supprimer les cartes. Veuillez réessayer.',
 
   LocaleKeys.studyProgress: '@current sur @total',
   LocaleKeys.studyTapToReveal: 'Touchez pour révéler',

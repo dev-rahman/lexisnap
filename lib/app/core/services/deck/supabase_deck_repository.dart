@@ -198,6 +198,71 @@ class SupabaseDeckRepository implements DeckRepository {
   }
 
   @override
+  Future<void> moveFlashcards({
+    required List<String> flashcardIds,
+    required String toDeckId,
+  }) async {
+    if (flashcardIds.isEmpty) return;
+    // Example sentences reference the flashcard, not the deck, so they ride
+    // along with the row. The review schedule lives on the row too, so it is
+    // kept as-is - the user already knows these cards.
+    await _client
+        .from('flashcards')
+        .update({'deck_id': toDeckId})
+        .inFilter('id', flashcardIds);
+  }
+
+  @override
+  Future<void> copyFlashcards({
+    required List<String> flashcardIds,
+    required String toDeckId,
+  }) async {
+    if (flashcardIds.isEmpty) return;
+
+    final sourceRows = await _client
+        .from('flashcards')
+        .select('*, example_sentences(*)')
+        .inFilter('id', flashcardIds);
+
+    final sources = sourceRows.cast<Map<String, dynamic>>();
+    if (sources.isEmpty) return;
+
+    // New rows with no schedule fields, so the database applies its defaults
+    // (due now) - a copy is new to its deck even if the original is learned.
+    final inserted = await _client.from('flashcards').insert([
+      for (final row in sources)
+        {
+          'deck_id': toDeckId,
+          'word': row['word'],
+          'level': row['level'],
+          'word_description': row['word_description'],
+          'translation': row['translation'],
+        },
+    ]).select();
+
+    // Insert order is preserved, so the i-th new card matches the i-th
+    // source; carry over every example sentence it had.
+    final sentenceRows = <Map<String, dynamic>>[
+      for (var i = 0; i < sources.length; i++)
+        for (final sentence in (sources[i]['example_sentences'] as List? ?? []))
+          {
+            'flashcard_id': inserted[i]['id'] as String,
+            'sentence': (sentence as Map)['sentence'],
+          },
+    ];
+
+    if (sentenceRows.isNotEmpty) {
+      await _client.from('example_sentences').insert(sentenceRows);
+    }
+  }
+
+  @override
+  Future<void> deleteFlashcards(List<String> flashcardIds) async {
+    if (flashcardIds.isEmpty) return;
+    await _client.from('flashcards').delete().inFilter('id', flashcardIds);
+  }
+
+  @override
   Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade) async {
     final update = calculateNextReview(
       easeFactor: card.easeFactor,
