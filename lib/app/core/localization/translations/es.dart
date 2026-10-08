@@ -313,6 +313,19 @@ const Map<String, String> es = {
   LocaleKeys.cardsDeletedSuccess: '@count tarjetas eliminadas.',
   LocaleKeys.cardsDeleteError:
       'No se pudieron eliminar las tarjetas. Inténtalo de nuevo.',
+  LocaleKeys.cardsNewDeckTitle: 'Nombra el mazo nuevo',
+  LocaleKeys.cardsNewDeckHint: 'Crea un mazo nuevo para estas tarjetas',
+  LocaleKeys.deckMergeMenu: 'Combinar con otro mazo',
+  LocaleKeys.deckMergeTitle: 'Combinar con…',
+  LocaleKeys.deckMergeSubtitle:
+      'Todas las tarjetas pasan al mazo que elijas, y este mazo se elimina.',
+  LocaleKeys.deckMergeConfirmTitle: '¿Combinar con @name?',
+  LocaleKeys.deckMergeConfirmBody:
+      'Las @count tarjetas pasan a @name, y este mazo se elimina. No se puede deshacer.',
+  LocaleKeys.deckMergeConfirm: 'Combinar',
+  LocaleKeys.deckMergedSuccess: 'Combinado con @name',
+  LocaleKeys.deckMergeError:
+      'No se pudieron combinar los mazos. Inténtalo de nuevo.',
 
   LocaleKeys.studyProgress: '@current de @total',
   LocaleKeys.studyTapToReveal: 'Toca para revelar',

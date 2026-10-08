@@ -319,6 +319,19 @@ const Map<String, String> fr = {
   LocaleKeys.cardsDeletedSuccess: '@count cartes supprimées.',
   LocaleKeys.cardsDeleteError:
       'Impossible de supprimer les cartes. Veuillez réessayer.',
+  LocaleKeys.cardsNewDeckTitle: 'Nommer le nouveau paquet',
+  LocaleKeys.cardsNewDeckHint: 'Créer un nouveau paquet pour ces cartes',
+  LocaleKeys.deckMergeMenu: 'Fusionner avec un autre paquet',
+  LocaleKeys.deckMergeTitle: 'Fusionner avec…',
+  LocaleKeys.deckMergeSubtitle:
+      'Toutes les cartes rejoignent le paquet choisi, et ce paquet est supprimé.',
+  LocaleKeys.deckMergeConfirmTitle: 'Fusionner avec @name ?',
+  LocaleKeys.deckMergeConfirmBody:
+      'Les @count cartes rejoignent @name, et ce paquet est supprimé. Action irréversible.',
+  LocaleKeys.deckMergeConfirm: 'Fusionner',
+  LocaleKeys.deckMergedSuccess: 'Fusionné avec @name',
+  LocaleKeys.deckMergeError:
+      'Impossible de fusionner les paquets. Veuillez réessayer.',
 
   LocaleKeys.studyProgress: '@current sur @total',
   LocaleKeys.studyTapToReveal: 'Touchez pour révéler',

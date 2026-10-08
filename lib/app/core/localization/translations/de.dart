@@ -316,6 +316,19 @@ const Map<String, String> de = {
   LocaleKeys.cardsDeletedSuccess: '@count Karten gelöscht.',
   LocaleKeys.cardsDeleteError:
       'Die Karten konnten nicht gelöscht werden. Bitte versuche es erneut.',
+  LocaleKeys.cardsNewDeckTitle: 'Neuen Stapel benennen',
+  LocaleKeys.cardsNewDeckHint: 'Einen neuen Stapel für diese Karten erstellen',
+  LocaleKeys.deckMergeMenu: 'Mit anderem Stapel zusammenführen',
+  LocaleKeys.deckMergeTitle: 'Zusammenführen mit…',
+  LocaleKeys.deckMergeSubtitle:
+      'Alle Karten wandern in den gewählten Stapel, und dieser Stapel wird gelöscht.',
+  LocaleKeys.deckMergeConfirmTitle: 'Mit @name zusammenführen?',
+  LocaleKeys.deckMergeConfirmBody:
+      'Alle @count Karten wandern in @name, und dieser Stapel wird gelöscht. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.deckMergeConfirm: 'Zusammenführen',
+  LocaleKeys.deckMergedSuccess: 'Mit @name zusammengeführt',
+  LocaleKeys.deckMergeError:
+      'Die Stapel konnten nicht zusammengeführt werden. Bitte versuche es erneut.',
 
   LocaleKeys.studyProgress: '@current von @total',
   LocaleKeys.studyTapToReveal: 'Zum Aufdecken tippen',

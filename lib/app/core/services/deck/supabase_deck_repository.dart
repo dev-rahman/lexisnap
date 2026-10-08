@@ -40,6 +40,25 @@ class SupabaseDeckRepository implements DeckRepository {
     await _insertFlashcards(deckId, words);
   }
 
+  @override
+  Future<String> createEmptyDeck({
+    required String name,
+    String? sourceLanguage,
+    required String targetLanguage,
+  }) async {
+    final deck = await _client
+        .from('decks')
+        .insert({
+          'name': name,
+          'source_language': sourceLanguage,
+          'target_language': targetLanguage,
+        })
+        .select()
+        .single();
+
+    return deck['id'] as String;
+  }
+
   /// Inserts [words] as flashcards under [deckId] plus their example
   /// sentences. Shared by [createDeck] (on a freshly inserted deck) and
   /// [addWordsToDeck] (on an existing one), so a scanned batch is saved

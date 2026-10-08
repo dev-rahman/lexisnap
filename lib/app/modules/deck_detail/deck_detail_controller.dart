@@ -164,15 +164,35 @@ class DeckDetailController extends GetxController {
 
   /// Moves the current selection into [target], then leaves selection mode
   /// and refreshes so both decks' counts are current.
-  Future<void> moveSelectedTo(Deck target) async {
+  Future<void> moveSelectedTo(Deck target) =>
+      _moveSelected(() async => target.id, target.name);
+
+  /// Moves the current selection into a new deck named [name], created with
+  /// this deck's language pair so the cards stay valid.
+  Future<void> moveSelectedToNewDeck(String name) =>
+      _moveSelected(() => _createDeckLikeCurrent(name), name);
+
+  /// Copies the current selection into [target], leaving the originals here.
+  Future<void> copySelectedTo(Deck target) =>
+      _copySelected(() async => target.id, target.name);
+
+  /// Copies the current selection into a new deck named [name].
+  Future<void> copySelectedToNewDeck(String name) =>
+      _copySelected(() => _createDeckLikeCurrent(name), name);
+
+  Future<void> _moveSelected(
+    Future<String> Function() resolveTargetId,
+    String targetName,
+  ) async {
     final ids = selectedCardIds.toList();
     final count = ids.length;
     if (ids.isEmpty) return;
 
     try {
+      final targetId = await resolveTargetId();
       await _deckRepository.moveFlashcards(
         flashcardIds: ids,
-        toDeckId: target.id,
+        toDeckId: targetId,
       );
       exitSelection();
       await _load(silent: true);
@@ -180,7 +200,7 @@ class DeckDetailController extends GetxController {
       AppSnackbar.success(
         LocaleKeys.cardsMovedSuccess.trParams({
           'count': '$count',
-          'name': target.name,
+          'name': targetName,
         }),
       );
     } catch (_) {
@@ -188,27 +208,63 @@ class DeckDetailController extends GetxController {
     }
   }
 
-  /// Copies the current selection into [target], leaving the originals here.
-  Future<void> copySelectedTo(Deck target) async {
+  Future<void> _copySelected(
+    Future<String> Function() resolveTargetId,
+    String targetName,
+  ) async {
     final ids = selectedCardIds.toList();
     final count = ids.length;
     if (ids.isEmpty) return;
 
     try {
+      final targetId = await resolveTargetId();
       await _deckRepository.copyFlashcards(
         flashcardIds: ids,
-        toDeckId: target.id,
+        toDeckId: targetId,
       );
       exitSelection();
       await Get.find<DecksController>().refreshDecks();
       AppSnackbar.success(
         LocaleKeys.cardsCopiedSuccess.trParams({
           'count': '$count',
-          'name': target.name,
+          'name': targetName,
         }),
       );
     } catch (_) {
       AppSnackbar.error(LocaleKeys.cardsCopyError.tr);
+    }
+  }
+
+  /// Creates an empty deck carrying this deck's language pair, for a move or
+  /// copy into a brand-new deck.
+  Future<String> _createDeckLikeCurrent(String name) {
+    final current = deck.value!;
+    return _deckRepository.createEmptyDeck(
+      name: name,
+      sourceLanguage: current.sourceLanguage,
+      targetLanguage: current.targetLanguage,
+    );
+  }
+
+  /// Merges this whole deck into [target]: every card moves across, then this
+  /// deck is deleted and we leave its (now gone) detail screen.
+  Future<void> mergeIntoDeck(Deck target) async {
+    final ids = flashcards.map((card) => card.id).toList();
+    try {
+      if (ids.isNotEmpty) {
+        await _deckRepository.moveFlashcards(
+          flashcardIds: ids,
+          toDeckId: target.id,
+        );
+      }
+      await _deckRepository.deleteDeck(_deckId);
+      await Get.find<DecksController>().refreshDecks();
+      Get.back();
+      AppSnackbar.success(
+        LocaleKeys.deckMergedSuccess.trParams({'name': target.name}),
+      );
+    } catch (_) {
+      AppSnackbar.error(LocaleKeys.deckMergeError.tr);
     }
   }
 

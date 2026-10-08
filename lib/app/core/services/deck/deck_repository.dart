@@ -28,6 +28,15 @@ abstract class DeckRepository {
     required List<DeckWord> words,
   });
 
+  /// Creates a deck with no cards and returns its id. Used when moving or
+  /// copying existing cards into a fresh deck, where the cards already carry
+  /// their translations so no scan or word list is involved.
+  Future<String> createEmptyDeck({
+    required String name,
+    String? sourceLanguage,
+    required String targetLanguage,
+  });
+
   /// The signed-in user's decks, most recently created first.
   Future<List<Deck>> listDecks();
 

@@ -24,6 +24,10 @@ import '../listen_session/listen_session_view.dart';
 import '../study_session/study_session_view.dart';
 import 'deck_detail_controller.dart';
 
+/// The overflow-menu actions on a deck: fold it into another deck, or delete
+/// it outright.
+enum _DeckMenuAction { merge, delete }
+
 class DeckDetailView extends GetView<DeckDetailController> {
   const DeckDetailView({super.key});
 
@@ -41,10 +45,25 @@ class DeckDetailView extends GetView<DeckDetailController> {
                     onPressed: Get.back,
                   ),
                   actions: [
-                    IconButton(
-                      icon: const Icon(Icons.delete_outline_rounded),
-                      onPressed: () =>
-                          _showDeleteConfirmation(context, controller),
+                    PopupMenuButton<_DeckMenuAction>(
+                      onSelected: (action) {
+                        switch (action) {
+                          case _DeckMenuAction.merge:
+                            _mergeDeck(context);
+                          case _DeckMenuAction.delete:
+                            _showDeleteConfirmation(context, controller);
+                        }
+                      },
+                      itemBuilder: (_) => [
+                        PopupMenuItem(
+                          value: _DeckMenuAction.merge,
+                          child: Text(LocaleKeys.deckMergeMenu.tr),
+                        ),
+                        PopupMenuItem(
+                          value: _DeckMenuAction.delete,
+                          child: Text(LocaleKeys.deckDeleteConfirm.tr),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -198,37 +217,141 @@ class DeckDetailView extends GetView<DeckDetailController> {
   }
 
   /// Opens the deck picker for a move or a copy. Only decks sharing this
-  /// deck's languages are offered; if there are none, it says so instead of
-  /// showing an empty sheet.
+  /// deck's languages are offered, plus the option of a brand-new deck - so
+  /// cards can be pulled out into their own deck, not just an existing one.
   Future<void> _pickDestination(
     BuildContext context, {
     required bool copy,
   }) async {
     if (controller.selectedCount == 0) return;
 
+    final count = controller.selectedCount;
+    final destination = await showDeckDestinationSheet(
+      context,
+      decks: controller.compatibleDecks,
+      wordCount: count,
+      title: (copy ? LocaleKeys.cardsCopyTitle : LocaleKeys.cardsMoveTitle)
+          .trParams({'count': '$count'}),
+      subtitle: LocaleKeys.cardsDestinationSubtitle.tr,
+      newDeckHint: LocaleKeys.cardsNewDeckHint.tr,
+    );
+
+    switch (destination) {
+      case null:
+        return;
+      case NewDeckDestination():
+        if (!context.mounted) return;
+        final name = await _promptNewDeckName(context);
+        if (name == null || name.isEmpty) return;
+        if (copy) {
+          await controller.copySelectedToNewDeck(name);
+        } else {
+          await controller.moveSelectedToNewDeck(name);
+        }
+      case ExistingDeckDestination(:final deck):
+        if (copy) {
+          await controller.copySelectedTo(deck);
+        } else {
+          await controller.moveSelectedTo(deck);
+        }
+    }
+  }
+
+  /// A small sheet to name a deck being created to receive moved or copied
+  /// cards. Returns the trimmed name, or null if cancelled.
+  Future<String?> _promptNewDeckName(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController();
+
+    return showAppSheet<String>(
+      context,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        return Padding(
+          padding: EdgeInsets.fromLTRB(
+            AppSpacing.lg,
+            0,
+            AppSpacing.lg,
+            MediaQuery.of(sheetContext).viewInsets.bottom +
+                MediaQuery.of(sheetContext).padding.bottom +
+                AppSpacing.lg,
+          ),
+          child: Form(
+            key: formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  LocaleKeys.cardsNewDeckTitle.tr,
+                  style: AppTextStyles.heading2,
+                ),
+                const SizedBox(height: AppSpacing.md),
+                AppTextField(
+                  label: LocaleKeys.deckRenameTitle.tr,
+                  controller: nameController,
+                  textInputAction: TextInputAction.done,
+                  validator: (value) => (value == null || value.trim().isEmpty)
+                      ? LocaleKeys.validatorFieldRequired.tr
+                      : null,
+                ),
+                const SizedBox(height: AppSpacing.lg),
+                AppButton(
+                  label: LocaleKeys.commonSave.tr,
+                  onPressed: () {
+                    if (formKey.currentState!.validate()) {
+                      Navigator.pop(sheetContext, nameController.text.trim());
+                    }
+                  },
+                ),
+                const SizedBox(height: AppSpacing.xs),
+                AppButton(
+                  variant: AppButtonVariant.text,
+                  label: LocaleKeys.commonCancel.tr,
+                  onPressed: () => Navigator.pop(sheetContext),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  /// Merges this whole deck into another: pick a compatible deck, confirm
+  /// that this deck will be emptied and removed, then do it.
+  Future<void> _mergeDeck(BuildContext context) async {
     final targets = controller.compatibleDecks;
     if (targets.isEmpty) {
       AppSnackbar.info(LocaleKeys.cardsNoTargetDecks.tr);
       return;
     }
 
-    final count = controller.selectedCount;
+    final count = controller.flashcards.length;
     final destination = await showDeckDestinationSheet(
       context,
       decks: targets,
       wordCount: count,
       allowNewDeck: false,
-      title: (copy ? LocaleKeys.cardsCopyTitle : LocaleKeys.cardsMoveTitle)
-          .trParams({'count': '$count'}),
-      subtitle: LocaleKeys.cardsDestinationSubtitle.tr,
+      title: LocaleKeys.deckMergeTitle.tr,
+      subtitle: LocaleKeys.deckMergeSubtitle.tr,
     );
-
     if (destination is! ExistingDeckDestination) return;
-    if (copy) {
-      await controller.copySelectedTo(destination.deck);
-    } else {
-      await controller.moveSelectedTo(destination.deck);
-    }
+    if (!context.mounted) return;
+
+    final confirmed = await showConfirmSheet(
+      context,
+      icon: Icons.merge_rounded,
+      title: LocaleKeys.deckMergeConfirmTitle.trParams({
+        'name': destination.deck.name,
+      }),
+      body: LocaleKeys.deckMergeConfirmBody.trParams({
+        'count': '$count',
+        'name': destination.deck.name,
+      }),
+      confirmLabel: LocaleKeys.deckMergeConfirm.tr,
+    );
+    if (confirmed) await controller.mergeIntoDeck(destination.deck);
   }
 
   Future<void> _confirmDeleteSelected(BuildContext context) async {

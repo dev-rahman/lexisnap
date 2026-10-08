@@ -49,6 +49,7 @@ Future<DeckDestination?> showDeckDestinationSheet(
   required int wordCount,
   String? title,
   String? subtitle,
+  String? newDeckHint,
   bool allowNewDeck = true,
 }) {
   return showAppSheet<DeckDestination>(
@@ -60,6 +61,7 @@ Future<DeckDestination?> showDeckDestinationSheet(
       wordCount: wordCount,
       title: title,
       subtitle: subtitle,
+      newDeckHint: newDeckHint,
       allowNewDeck: allowNewDeck,
     ),
   );
@@ -71,6 +73,7 @@ class _DeckDestinationSheet extends StatefulWidget {
     required this.wordCount,
     this.title,
     this.subtitle,
+    this.newDeckHint,
     this.allowNewDeck = true,
   });
 
@@ -78,6 +81,7 @@ class _DeckDestinationSheet extends StatefulWidget {
   final int wordCount;
   final String? title;
   final String? subtitle;
+  final String? newDeckHint;
   final bool allowNewDeck;
 
   @override
@@ -152,6 +156,7 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
                   if (widget.allowNewDeck) ...[
                     const SizedBox(height: AppSpacing.lg),
                     _NewDeckOption(
+                      hint: widget.newDeckHint,
                       onTap: () =>
                           Navigator.pop(context, const NewDeckDestination()),
                     ),
@@ -229,9 +234,13 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
 /// The "start a new deck" choice: filled in the accent, so it reads as the
 /// primary action and stands apart from the quieter list of existing decks.
 class _NewDeckOption extends StatelessWidget {
-  const _NewDeckOption({required this.onTap});
+  const _NewDeckOption({required this.onTap, this.hint});
 
   final VoidCallback onTap;
+
+  /// Overrides the default "pick a language" hint; move/copy pass their own
+  /// since a new deck there inherits the source deck's languages.
+  final String? hint;
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +269,7 @@ class _NewDeckOption extends StatelessWidget {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      LocaleKeys.scanDestinationNewDeckHint.tr,
+                      hint ?? LocaleKeys.scanDestinationNewDeckHint.tr,
                       style: AppTextStyles.caption.copyWith(
                         color: Colors.white.withValues(alpha: 0.85),
                       ),

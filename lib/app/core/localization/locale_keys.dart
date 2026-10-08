@@ -314,6 +314,18 @@ class LocaleKeys {
   static const cardsDeleteConfirm = 'cards_delete_confirm';
   static const cardsDeletedSuccess = 'cards_deleted_success';
   static const cardsDeleteError = 'cards_delete_error';
+  static const cardsNewDeckTitle = 'cards_new_deck_title';
+  static const cardsNewDeckHint = 'cards_new_deck_hint';
+
+  // Deck merge
+  static const deckMergeMenu = 'deck_merge_menu';
+  static const deckMergeTitle = 'deck_merge_title';
+  static const deckMergeSubtitle = 'deck_merge_subtitle';
+  static const deckMergeConfirmTitle = 'deck_merge_confirm_title';
+  static const deckMergeConfirmBody = 'deck_merge_confirm_body';
+  static const deckMergeConfirm = 'deck_merge_confirm';
+  static const deckMergedSuccess = 'deck_merged_success';
+  static const deckMergeError = 'deck_merge_error';
 
   // Study session
   static const studyProgress = 'study_progress';
