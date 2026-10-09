@@ -32,9 +32,7 @@ class MixedReviewTile extends StatelessWidget {
     final hasDue = dueCount > 0;
 
     return Material(
-      color: hasDue
-          ? AppColors.accentHue.tint(context)
-          : context.colorSurface,
+      color: hasDue ? AppColors.accentHue.tint(context) : context.colorSurface,
       borderRadius: BorderRadius.circular(AppRadius.lg),
       child: InkWell(
         borderRadius: BorderRadius.circular(AppRadius.lg),

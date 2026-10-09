@@ -15,5 +15,4 @@ class MainController extends GetxController {
       isNavBarMinimized.value = minimized;
     }
   }
-
 }

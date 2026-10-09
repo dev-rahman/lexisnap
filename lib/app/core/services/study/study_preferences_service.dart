@@ -18,9 +18,8 @@ class StudyPreferencesService extends GetxService {
     final prefs = await SharedPreferences.getInstance();
     final stored = prefs.getString(_modeKey);
 
-    mode.value = StudyMode.values.firstWhereOrNull(
-          (value) => value.name == stored,
-        ) ??
+    mode.value =
+        StudyMode.values.firstWhereOrNull((value) => value.name == stored) ??
         StudyMode.smart;
     return this;
   }

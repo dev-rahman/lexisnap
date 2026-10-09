@@ -86,8 +86,7 @@ const Map<String, String> es = {
   LocaleKeys.homeAllCaughtUp: 'Todo al día - vuelve mañana',
   LocaleKeys.homeCaughtUpToday: 'Todo al día por hoy',
   LocaleKeys.homePracticeCta: 'Practicar @count más',
-  LocaleKeys.homePracticeNote:
-      'Práctica extra: tu calendario no cambia',
+  LocaleKeys.homePracticeNote: 'Práctica extra: tu calendario no cambia',
   LocaleKeys.homeStreakStartHint: 'Estudia hoy para empezar tu racha',
   LocaleKeys.homeYourDecks: 'Tus mazos',
   LocaleKeys.homeNoDecksTitle: 'Aún no tienes mazos',
@@ -130,9 +129,12 @@ const Map<String, String> es = {
   LocaleKeys.photoRemove: 'Quitar foto',
   LocaleKeys.photoUpdated: 'Tu foto de perfil se ha actualizado.',
   LocaleKeys.photoRemoved: 'Tu foto de perfil se ha quitado.',
-  LocaleKeys.photoTooLarge: 'Esa foto es demasiado grande, incluso reducida. Prueba con otra.',
-  LocaleKeys.photoUnsupported: 'Ese tipo de archivo no es compatible. Elige una foto JPEG, PNG o WebP.',
-  LocaleKeys.photoCameraPrimerBody: 'LexiSnap necesita tu cámara para hacer tu foto de perfil.',
+  LocaleKeys.photoTooLarge:
+      'Esa foto es demasiado grande, incluso reducida. Prueba con otra.',
+  LocaleKeys.photoUnsupported:
+      'Ese tipo de archivo no es compatible. Elige una foto JPEG, PNG o WebP.',
+  LocaleKeys.photoCameraPrimerBody:
+      'LexiSnap necesita tu cámara para hacer tu foto de perfil.',
   LocaleKeys.photoCameraDeniedBody: 'El acceso a la cámara está desactivado para LexiSnap. Actívalo en Ajustes para hacer una foto de perfil.',
   LocaleKeys.passwordChangeTitle: 'Cambiar contraseña',
   LocaleKeys.passwordSetTitle: 'Crear una contraseña',
@@ -150,10 +152,13 @@ const Map<String, String> es = {
   LocaleKeys.emailChangeCodeCurrentBody: 'Por seguridad, también enviamos un código a tu dirección actual, @email. Escríbelo para terminar el cambio.',
   LocaleKeys.emailChangeUpdated: 'Tu correo ahora es @email.',
   LocaleKeys.deleteTitle: '¿Eliminar tu cuenta?',
-  LocaleKeys.deleteIntro: 'Al eliminar tu cuenta se borra para siempre todo lo que contiene:',
+  LocaleKeys.deleteIntro:
+      'Al eliminar tu cuenta se borra para siempre todo lo que contiene:',
   LocaleKeys.deleteItemDecks: 'Todos tus mazos y tarjetas',
-  LocaleKeys.deleteItemProgress: 'Tus rachas, tu historial de estudio y tu progreso',
-  LocaleKeys.deleteItemProfile: 'Tu perfil, tu foto y tus datos de inicio de sesión',
+  LocaleKeys.deleteItemProgress:
+      'Tus rachas, tu historial de estudio y tu progreso',
+  LocaleKeys.deleteItemProfile:
+      'Tu perfil, tu foto y tus datos de inicio de sesión',
   LocaleKeys.deletePermanentNote: 'Esto no se puede deshacer. Una vez eliminada tu cuenta, tus datos no se podrán recuperar de ninguna manera, ni por ti ni por nosotros.',
   LocaleKeys.deleteKeepAccount: 'Conservar mi cuenta',
   LocaleKeys.deleteContinue: 'Continuar con la eliminación',
@@ -226,15 +231,13 @@ const Map<String, String> es = {
   LocaleKeys.scanDestinationSubtitle:
       'Crea un mazo nuevo o añádelas a uno que ya tengas.',
   LocaleKeys.scanDestinationNewDeck: 'Mazo nuevo',
-  LocaleKeys.scanDestinationNewDeckHint:
-      'Elige un idioma y crea un mazo nuevo',
+  LocaleKeys.scanDestinationNewDeckHint: 'Elige un idioma y crea un mazo nuevo',
   LocaleKeys.scanDestinationExistingHeader: 'Añadir a un mazo existente',
   LocaleKeys.scanSelectMoreSubtitle:
       'Elige el siguiente grupo para otro mazo, o cierra cuando termines.',
   LocaleKeys.scanFiledProgress: '@count palabras guardadas hasta ahora',
   LocaleKeys.scanWordsAddedSuccess: '@count palabras añadidas a @name',
-  LocaleKeys.scanWordsSavedSummary:
-      '@count palabras guardadas en @decks mazos',
+  LocaleKeys.scanWordsSavedSummary: '@count palabras guardadas en @decks mazos',
 
   LocaleKeys.permissionCameraTitle: 'Permitir acceso a la cámara',
   LocaleKeys.permissionCameraBody: 'LexiSnap necesita tu cámara para escanear texto de libros, menús, letreros y más.',
@@ -298,8 +301,7 @@ const Map<String, String> es = {
   LocaleKeys.cardsCopyTitle: 'Copiar @count tarjetas a…',
   LocaleKeys.cardsDestinationSubtitle:
       'Solo se muestran mazos con los mismos idiomas.',
-  LocaleKeys.cardsNoTargetDecks:
-      'Aún no hay otro mazo con los mismos idiomas.',
+  LocaleKeys.cardsNoTargetDecks: 'Aún no hay otro mazo con los mismos idiomas.',
   LocaleKeys.cardsMovedSuccess: '@count tarjetas movidas a @name',
   LocaleKeys.cardsCopiedSuccess: '@count tarjetas copiadas a @name',
   LocaleKeys.cardsMoveError:
@@ -315,15 +317,20 @@ const Map<String, String> es = {
       'No se pudieron eliminar las tarjetas. Inténtalo de nuevo.',
   LocaleKeys.cardsNewDeckTitle: 'Nombra el mazo nuevo',
   LocaleKeys.cardsNewDeckHint: 'Crea un mazo nuevo para estas tarjetas',
+  LocaleKeys.cardsMovedSkipped: '@count movidas a @name · @skipped ya estaban',
+  LocaleKeys.cardsCopiedSkipped:
+      '@count copiadas a @name · @skipped ya estaban',
+  LocaleKeys.cardsAllPresent: 'Esas palabras ya están todas en @name',
   LocaleKeys.deckMergeMenu: 'Combinar con otro mazo',
   LocaleKeys.deckMergeTitle: 'Combinar con…',
   LocaleKeys.deckMergeSubtitle:
       'Todas las tarjetas pasan al mazo que elijas, y este mazo se elimina.',
   LocaleKeys.deckMergeConfirmTitle: '¿Combinar con @name?',
-  LocaleKeys.deckMergeConfirmBody:
-      'Las @count tarjetas pasan a @name, y este mazo se elimina. No se puede deshacer.',
+  LocaleKeys.deckMergeConfirmBody: 'Las @count tarjetas pasan a @name, y este mazo se elimina. No se puede deshacer.',
   LocaleKeys.deckMergeConfirm: 'Combinar',
   LocaleKeys.deckMergedSuccess: 'Combinado con @name',
+  LocaleKeys.deckMergedSkipped:
+      'Combinado con @name · @skipped duplicados descartados',
   LocaleKeys.deckMergeError:
       'No se pudieron combinar los mazos. Inténtalo de nuevo.',
 
@@ -334,11 +341,12 @@ const Map<String, String> es = {
   LocaleKeys.studyGradeGood: 'Bien',
   LocaleKeys.studyGradeEasy: 'Fácil',
   LocaleKeys.studyNothingDueTitle: 'Nada pendiente por ahora',
-  LocaleKeys.studyNothingDueBody:
-      'No hay nada pendiente, así que esto es práctica extra: tu calendario no cambiará.',
+  LocaleKeys.studyNothingDueBody: 'No hay nada pendiente, así que esto es práctica extra: tu calendario no cambiará.',
   LocaleKeys.studyLeaveTitle: '¿Salir de la sesión?',
-  LocaleKeys.studyLeaveBody: 'Te quedan @count tarjetas. Las que ya has respondido siguen contando.',
-  LocaleKeys.studyLeaveBodyOne: 'Te queda 1 tarjeta. Las que ya has respondido siguen contando.',
+  LocaleKeys.studyLeaveBody:
+      'Te quedan @count tarjetas. Las que ya has respondido siguen contando.',
+  LocaleKeys.studyLeaveBodyOne:
+      'Te queda 1 tarjeta. Las que ya has respondido siguen contando.',
   LocaleKeys.studyLeaveKeepGoing: 'Seguir estudiando',
   LocaleKeys.studyLeaveConfirm: 'Salir de la sesión',
   LocaleKeys.studyCompleteTitle: '¡Sesión completa!',
@@ -364,8 +372,7 @@ const Map<String, String> es = {
   LocaleKeys.streakInfoFreezesFull:
       'Protectores al máximo: cubres @count días perdidos',
   LocaleKeys.streakRuleDailyTitle: 'Estudia una vez al día',
-  LocaleKeys.streakRuleDailyBody:
-      'Completa al menos una tarjeta; no hace falta llegar a tu meta diaria. Las rondas de práctica cuentan; escuchar no.',
+  LocaleKeys.streakRuleDailyBody: 'Completa al menos una tarjeta; no hace falta llegar a tu meta diaria. Las rondas de práctica cuentan; escuchar no.',
   LocaleKeys.streakRuleDayEndsTitle: 'Tu día termina a las @time',
   LocaleKeys.streakRuleDayEndsBody:
       'Una sesión de madrugada cuenta para el día en que empezó.',
@@ -373,11 +380,9 @@ const Map<String, String> es = {
   LocaleKeys.streakRuleEarnBody:
       'Cada @days días de racha ganas uno. Puedes tener hasta @max.',
   LocaleKeys.streakRuleCoverTitle: 'Los protectores cubren días perdidos',
-  LocaleKeys.streakRuleCoverBody:
-      'Se usa uno automáticamente por cada día que faltes. Los días protegidos mantienen tu racha, pero no la aumentan.',
+  LocaleKeys.streakRuleCoverBody: 'Se usa uno automáticamente por cada día que faltes. Los días protegidos mantienen tu racha, pero no la aumentan.',
   LocaleKeys.streakRuleResetTitle: 'Si faltas demasiado, se reinicia',
-  LocaleKeys.streakRuleResetBody:
-      'Si faltas más días que protectores tienes, tu racha vuelve a empezar. Conservas tus protectores.',
+  LocaleKeys.streakRuleResetBody: 'Si faltas más días que protectores tienes, tu racha vuelve a empezar. Conservas tus protectores.',
   LocaleKeys.studyGoalProgress: '@done de @goal hoy',
   LocaleKeys.studyGoalMet: 'Meta diaria alcanzada',
   LocaleKeys.studyContinue: 'Repasar @count más',
@@ -396,9 +401,7 @@ const Map<String, String> es = {
   LocaleKeys.reminderSettingsTitle: 'Recordatorio diario',
   LocaleKeys.reminderEveryDayAt: 'Todos los días a las @time',
   LocaleKeys.reminderOff: 'Desactivado',
-  LocaleKeys.reminderPermissionDenied:
-      'Las notificaciones están desactivadas para LexiSnap. Actívalas en Ajustes para recibir recordatorios.',
-
+  LocaleKeys.reminderPermissionDenied: 'Las notificaciones están desactivadas para LexiSnap. Actívalas en Ajustes para recibir recordatorios.',
 
   LocaleKeys.studyModeSmart: 'Inteligente',
   LocaleKeys.studyModeSmartHint: 'Mezcla aleatoria de test y girar',

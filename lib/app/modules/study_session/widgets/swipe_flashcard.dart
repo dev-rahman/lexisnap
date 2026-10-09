@@ -22,11 +22,7 @@ import '../../../data/models/flashcard.dart';
 /// SM-2 grade from how long the flip took. The two buttons underneath do
 /// the same thing, because a gesture nobody discovers is not an interface.
 class SwipeFlashcard extends StatefulWidget {
-  const SwipeFlashcard({
-    super.key,
-    required this.card,
-    required this.onAnswer,
-  });
+  const SwipeFlashcard({super.key, required this.card, required this.onAnswer});
 
   final Flashcard card;
 
@@ -134,8 +130,8 @@ class _SwipeFlashcardState extends State<SwipeFlashcard>
     _settle.forward(from: 0).whenComplete(() => then?.call());
   }
 
-  void _speak(String text, String? languageCode) => Get.find<TextToSpeechService>()
-      .speak(text, languageCode: languageCode);
+  void _speak(String text, String? languageCode) =>
+      Get.find<TextToSpeechService>().speak(text, languageCode: languageCode);
 
   @override
   Widget build(BuildContext context) {

@@ -87,8 +87,7 @@ const Map<String, String> en = {
   LocaleKeys.homeAllCaughtUp: 'All caught up - come back tomorrow',
   LocaleKeys.homeCaughtUpToday: 'All caught up for today',
   LocaleKeys.homePracticeCta: 'Practice @count more',
-  LocaleKeys.homePracticeNote:
-      'Extra practice - your schedule stays as it is',
+  LocaleKeys.homePracticeNote: 'Extra practice - your schedule stays as it is',
   LocaleKeys.homeStreakStartHint: 'Study today to start your streak',
   LocaleKeys.homeYourDecks: 'Your decks',
   LocaleKeys.homeNoDecksTitle: 'No decks yet',
@@ -131,9 +130,12 @@ const Map<String, String> en = {
   LocaleKeys.photoRemove: 'Remove photo',
   LocaleKeys.photoUpdated: 'Your profile photo has been updated.',
   LocaleKeys.photoRemoved: 'Your profile photo has been removed.',
-  LocaleKeys.photoTooLarge: 'That photo is too large, even after shrinking it. Try a different one.',
-  LocaleKeys.photoUnsupported: "That file type isn't supported. Choose a JPEG, PNG or WebP photo.",
-  LocaleKeys.photoCameraPrimerBody: 'LexiSnap needs your camera to take your profile photo.',
+  LocaleKeys.photoTooLarge:
+      'That photo is too large, even after shrinking it. Try a different one.',
+  LocaleKeys.photoUnsupported:
+      "That file type isn't supported. Choose a JPEG, PNG or WebP photo.",
+  LocaleKeys.photoCameraPrimerBody:
+      'LexiSnap needs your camera to take your profile photo.',
   LocaleKeys.photoCameraDeniedBody: 'Camera access is off for LexiSnap. Enable it in Settings to take a profile photo.',
   LocaleKeys.passwordChangeTitle: 'Change password',
   LocaleKeys.passwordSetTitle: 'Set a password',
@@ -146,12 +148,14 @@ const Map<String, String> en = {
   LocaleKeys.emailChangeNewLabel: 'New email',
   LocaleKeys.emailChangeSameEmail: "That's already your email address.",
   LocaleKeys.emailChangeCodeNewTitle: 'Check your new inbox',
-  LocaleKeys.emailChangeCodeNewBody: 'We sent a code to @email. Enter it below to confirm your new address.',
+  LocaleKeys.emailChangeCodeNewBody:
+      'We sent a code to @email. Enter it below to confirm your new address.',
   LocaleKeys.emailChangeCodeCurrentTitle: 'One more code',
   LocaleKeys.emailChangeCodeCurrentBody: 'For your security, we also sent a code to your current address, @email. Enter it to finish the change.',
   LocaleKeys.emailChangeUpdated: 'Your email is now @email.',
   LocaleKeys.deleteTitle: 'Delete your account?',
-  LocaleKeys.deleteIntro: 'Deleting your account permanently erases everything in it:',
+  LocaleKeys.deleteIntro:
+      'Deleting your account permanently erases everything in it:',
   LocaleKeys.deleteItemDecks: 'All of your decks and flashcards',
   LocaleKeys.deleteItemProgress: 'Your streaks, study history and progress',
   LocaleKeys.deleteItemProfile: 'Your profile, photo and sign-in details',
@@ -224,7 +228,8 @@ const Map<String, String> en = {
   LocaleKeys.scanDestinationSubtitle:
       'Start a new deck, or add them to one you already have.',
   LocaleKeys.scanDestinationNewDeck: 'New deck',
-  LocaleKeys.scanDestinationNewDeckHint: 'Pick a language and create a fresh deck',
+  LocaleKeys.scanDestinationNewDeckHint:
+      'Pick a language and create a fresh deck',
   LocaleKeys.scanDestinationExistingHeader: 'Add to an existing deck',
   LocaleKeys.scanSelectMoreSubtitle:
       'Pick the next batch for another deck, or close when you\'re done.',
@@ -274,7 +279,8 @@ const Map<String, String> en = {
   LocaleKeys.cardEditSavedSuccess: 'Card updated.',
   LocaleKeys.cardEditSaveError: "Couldn't save the card. Please try again.",
   LocaleKeys.cardDeleteTitle: 'Delete this card?',
-  LocaleKeys.cardDeleteBody: "@word will be removed from this deck. This can't be undone.",
+  LocaleKeys.cardDeleteBody:
+      "@word will be removed from this deck. This can't be undone.",
   LocaleKeys.cardDeleteConfirm: 'Delete card',
   LocaleKeys.cardDeletedSuccess: 'Card deleted.',
   LocaleKeys.cardDeleteError: "Couldn't delete the card. Please try again.",
@@ -286,26 +292,36 @@ const Map<String, String> en = {
   LocaleKeys.cardsDelete: 'Delete',
   LocaleKeys.cardsMoveTitle: 'Move @count cards to…',
   LocaleKeys.cardsCopyTitle: 'Copy @count cards to…',
-  LocaleKeys.cardsDestinationSubtitle: 'Only decks with the same languages are shown.',
+  LocaleKeys.cardsDestinationSubtitle:
+      'Only decks with the same languages are shown.',
   LocaleKeys.cardsNoTargetDecks: 'No other deck uses the same languages yet.',
   LocaleKeys.cardsMovedSuccess: 'Moved @count cards to @name',
   LocaleKeys.cardsCopiedSuccess: 'Copied @count cards to @name',
   LocaleKeys.cardsMoveError: "Couldn't move the cards. Please try again.",
   LocaleKeys.cardsCopyError: "Couldn't copy the cards. Please try again.",
   LocaleKeys.cardsDeleteTitle: 'Delete @count cards?',
-  LocaleKeys.cardsDeleteBody: "These cards will be removed from this deck. This can't be undone.",
+  LocaleKeys.cardsDeleteBody:
+      "These cards will be removed from this deck. This can't be undone.",
   LocaleKeys.cardsDeleteConfirm: 'Delete cards',
   LocaleKeys.cardsDeletedSuccess: '@count cards deleted.',
   LocaleKeys.cardsDeleteError: "Couldn't delete the cards. Please try again.",
   LocaleKeys.cardsNewDeckTitle: 'Name the new deck',
   LocaleKeys.cardsNewDeckHint: 'Create a fresh deck for these cards',
+  LocaleKeys.cardsMovedSkipped:
+      'Moved @count to @name · @skipped already there',
+  LocaleKeys.cardsCopiedSkipped:
+      'Copied @count to @name · @skipped already there',
+  LocaleKeys.cardsAllPresent: 'Those words are all already in @name',
   LocaleKeys.deckMergeMenu: 'Merge into another deck',
   LocaleKeys.deckMergeTitle: 'Merge into…',
-  LocaleKeys.deckMergeSubtitle: 'All cards move into the deck you pick, and this deck is deleted.',
+  LocaleKeys.deckMergeSubtitle:
+      'All cards move into the deck you pick, and this deck is deleted.',
   LocaleKeys.deckMergeConfirmTitle: 'Merge into @name?',
   LocaleKeys.deckMergeConfirmBody: "All @count cards move into @name, and this deck is deleted. This can't be undone.",
   LocaleKeys.deckMergeConfirm: 'Merge',
   LocaleKeys.deckMergedSuccess: 'Merged into @name',
+  LocaleKeys.deckMergedSkipped:
+      'Merged into @name · @skipped duplicates dropped',
   LocaleKeys.deckMergeError: "Couldn't merge the decks. Please try again.",
 
   LocaleKeys.studyProgress: '@current of @total',
@@ -315,11 +331,11 @@ const Map<String, String> en = {
   LocaleKeys.studyGradeGood: 'Good',
   LocaleKeys.studyGradeEasy: 'Easy',
   LocaleKeys.studyNothingDueTitle: 'Nothing due right now',
-  LocaleKeys.studyNothingDueBody:
-      "Nothing is due, so these are extra practice - your schedule won't change.",
+  LocaleKeys.studyNothingDueBody: "Nothing is due, so these are extra practice - your schedule won't change.",
   LocaleKeys.studyLeaveTitle: 'Leave this session?',
   LocaleKeys.studyLeaveBody: "You have @count cards left. The ones you've already answered still count.",
-  LocaleKeys.studyLeaveBodyOne: "You have 1 card left. The ones you've already answered still count.",
+  LocaleKeys.studyLeaveBodyOne:
+      "You have 1 card left. The ones you've already answered still count.",
   LocaleKeys.studyLeaveKeepGoing: 'Keep studying',
   LocaleKeys.studyLeaveConfirm: 'Leave session',
   LocaleKeys.studyCompleteTitle: 'Session complete!',
@@ -344,8 +360,7 @@ const Map<String, String> en = {
   LocaleKeys.streakInfoFreezesFull:
       "Freezes full — you're covered for @count missed days",
   LocaleKeys.streakRuleDailyTitle: 'Study once a day',
-  LocaleKeys.streakRuleDailyBody:
-      "Complete at least one card — you don't need to hit your daily goal. Practice rounds count; listening doesn't.",
+  LocaleKeys.streakRuleDailyBody: "Complete at least one card — you don't need to hit your daily goal. Practice rounds count; listening doesn't.",
   LocaleKeys.streakRuleDayEndsTitle: 'Your day ends at @time',
   LocaleKeys.streakRuleDayEndsBody:
       'A late-night session still counts for the day it started.',
@@ -353,11 +368,9 @@ const Map<String, String> en = {
   LocaleKeys.streakRuleEarnBody:
       'Every @days days of streak earns one. You can hold up to @max.',
   LocaleKeys.streakRuleCoverTitle: 'Freezes cover missed days',
-  LocaleKeys.streakRuleCoverBody:
-      "One is used automatically for each day you miss. Frozen days keep your streak alive but don't add to it.",
+  LocaleKeys.streakRuleCoverBody: "One is used automatically for each day you miss. Frozen days keep your streak alive but don't add to it.",
   LocaleKeys.streakRuleResetTitle: 'Miss too many and it restarts',
-  LocaleKeys.streakRuleResetBody:
-      'If you miss more days than you have freezes, your streak starts over. Your freezes are kept.',
+  LocaleKeys.streakRuleResetBody: 'If you miss more days than you have freezes, your streak starts over. Your freezes are kept.',
   LocaleKeys.studyGoalProgress: '@done of @goal today',
   LocaleKeys.studyGoalMet: 'Daily goal reached',
   LocaleKeys.studyContinue: 'Review @count more',
@@ -376,9 +389,7 @@ const Map<String, String> en = {
   LocaleKeys.reminderSettingsTitle: 'Daily reminder',
   LocaleKeys.reminderEveryDayAt: 'Every day at @time',
   LocaleKeys.reminderOff: 'Off',
-  LocaleKeys.reminderPermissionDenied:
-      'Notifications are off for LexiSnap. Enable them in Settings to get reminders.',
-
+  LocaleKeys.reminderPermissionDenied: 'Notifications are off for LexiSnap. Enable them in Settings to get reminders.',
 
   LocaleKeys.studyModeSmart: 'Smart',
   LocaleKeys.studyModeSmartHint: 'A random mix of quiz and flip',

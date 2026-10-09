@@ -169,6 +169,5 @@ extension AppColorsContext on BuildContext {
 
   /// Background for the one focal panel on a screen. Always dark, so the
   /// text on it is white in both themes rather than theme-aware.
-  Color get colorPanel =>
-      isDarkMode ? AppColors.panelDark : AppColors.panel;
+  Color get colorPanel => isDarkMode ? AppColors.panelDark : AppColors.panel;
 }

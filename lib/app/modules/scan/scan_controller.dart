@@ -243,6 +243,22 @@ class ScanController extends GetxController {
     savingLabel.value = LocaleKeys.scanSavingWords.tr;
     stage.value = ScanStage.savingDeck;
     try {
+      // Drop words the deck already has, so scanning the same page twice into
+      // one deck can't duplicate cards. Done before translating, so there is
+      // no wasted translation for words that won't be added.
+      final existing = await _deckRepository.wordsInDeck(deck.id);
+      final fresh = selected
+          .where((word) => !existing.contains(word.word.toLowerCase()))
+          .toList();
+
+      if (fresh.isEmpty) {
+        AppSnackbar.info(
+          LocaleKeys.cardsAllPresent.trParams({'name': deck.name}),
+        );
+        stage.value = ScanStage.wordSelection;
+        return;
+      }
+
       // The deck stores a language code; translation is prompted with the
       // readable name. byCode is null for legacy free-text values, in which
       // case the stored text is passed through as-is.
@@ -251,17 +267,14 @@ class ScanController extends GetxController {
           deck.targetLanguage;
 
       final deckWords = await _translateSelection(
-        selected,
+        fresh,
         targetLanguageName: targetName,
       );
 
-      await _deckRepository.addWordsToDeck(
-        deckId: deck.id,
-        words: deckWords,
-      );
+      await _deckRepository.addWordsToDeck(deckId: deck.id, words: deckWords);
 
       await _onBatchFiled(
-        selected,
+        fresh,
         name: deck.name,
         count: deckWords.length,
         isNew: false,

@@ -49,7 +49,8 @@ const Map<String, String> ko = {
   LocaleKeys.forgotPasswordSubtitle: '이메일을 입력하시면 비밀번호 재설정 코드를 보내드려요.',
   LocaleKeys.forgotPasswordButton: '코드 보내기',
   LocaleKeys.forgotPasswordCheckEmailTitle: '이메일을 확인해주세요',
-  LocaleKeys.forgotPasswordCheckEmailBody: '@email 주소로 코드를 보냈어요. 아래에 입력하고 비밀번호를 재설정하세요.',
+  LocaleKeys.forgotPasswordCheckEmailBody:
+      '@email 주소로 코드를 보냈어요. 아래에 입력하고 비밀번호를 재설정하세요.',
   LocaleKeys.forgotPasswordVerifyButton: '코드 확인',
   LocaleKeys.forgotPasswordResend: '코드 다시 보내기',
   LocaleKeys.forgotPasswordResendIn: '@seconds초 후 다시 보낼 수 있어요',
@@ -86,8 +87,7 @@ const Map<String, String> ko = {
   LocaleKeys.homeAllCaughtUp: '모두 완료 - 내일 다시 만나요',
   LocaleKeys.homeCaughtUpToday: '오늘 할 복습은 모두 끝냈어요',
   LocaleKeys.homePracticeCta: '@count개 더 연습하기',
-  LocaleKeys.homePracticeNote:
-      '추가 연습이라 복습 일정은 그대로예요',
+  LocaleKeys.homePracticeNote: '추가 연습이라 복습 일정은 그대로예요',
   LocaleKeys.homeStreakStartHint: '오늘 학습하고 연속 기록을 시작하세요',
   LocaleKeys.homeYourDecks: '내 덱',
   LocaleKeys.homeNoDecksTitle: '아직 덱이 없어요',
@@ -131,34 +131,42 @@ const Map<String, String> ko = {
   LocaleKeys.photoUpdated: '프로필 사진이 변경되었어요.',
   LocaleKeys.photoRemoved: '프로필 사진이 삭제되었어요.',
   LocaleKeys.photoTooLarge: '사진을 줄여도 너무 커요. 다른 사진을 선택해 주세요.',
-  LocaleKeys.photoUnsupported: '지원하지 않는 파일 형식이에요. JPEG, PNG 또는 WebP 사진을 선택해 주세요.',
+  LocaleKeys.photoUnsupported:
+      '지원하지 않는 파일 형식이에요. JPEG, PNG 또는 WebP 사진을 선택해 주세요.',
   LocaleKeys.photoCameraPrimerBody: '프로필 사진을 찍으려면 카메라 접근 권한이 필요해요.',
-  LocaleKeys.photoCameraDeniedBody: 'LexiSnap의 카메라 접근이 꺼져 있어요. 프로필 사진을 찍으려면 설정에서 켜 주세요.',
+  LocaleKeys.photoCameraDeniedBody:
+      'LexiSnap의 카메라 접근이 꺼져 있어요. 프로필 사진을 찍으려면 설정에서 켜 주세요.',
   LocaleKeys.passwordChangeTitle: '비밀번호 변경',
   LocaleKeys.passwordSetTitle: '비밀번호 설정',
-  LocaleKeys.passwordSetBody: 'Google 또는 Apple로 로그인했어요. 비밀번호를 추가하면 이메일로도 로그인할 수 있어요.',
+  LocaleKeys.passwordSetBody:
+      'Google 또는 Apple로 로그인했어요. 비밀번호를 추가하면 이메일로도 로그인할 수 있어요.',
   LocaleKeys.passwordCurrent: '현재 비밀번호',
   LocaleKeys.passwordWrongCurrent: '현재 비밀번호가 올바르지 않아요.',
   LocaleKeys.emailChangeTitle: '이메일 변경',
-  LocaleKeys.emailChangeSubtitle: '사용할 이메일 주소를 입력하세요. 본인 주소인지 확인할 수 있도록 코드를 보내드려요.',
+  LocaleKeys.emailChangeSubtitle:
+      '사용할 이메일 주소를 입력하세요. 본인 주소인지 확인할 수 있도록 코드를 보내드려요.',
   LocaleKeys.emailChangeCurrent: '현재 이메일: @email',
   LocaleKeys.emailChangeNewLabel: '새 이메일',
   LocaleKeys.emailChangeSameEmail: '이미 사용 중인 이메일 주소예요.',
   LocaleKeys.emailChangeCodeNewTitle: '새 이메일함을 확인해 주세요',
-  LocaleKeys.emailChangeCodeNewBody: '@email 주소로 코드를 보냈어요. 아래에 입력해서 새 주소를 확인해 주세요.',
+  LocaleKeys.emailChangeCodeNewBody:
+      '@email 주소로 코드를 보냈어요. 아래에 입력해서 새 주소를 확인해 주세요.',
   LocaleKeys.emailChangeCodeCurrentTitle: '코드가 하나 더 있어요',
-  LocaleKeys.emailChangeCodeCurrentBody: '보안을 위해 현재 주소인 @email 에도 코드를 보냈어요. 입력하면 변경이 완료돼요.',
+  LocaleKeys.emailChangeCodeCurrentBody:
+      '보안을 위해 현재 주소인 @email 에도 코드를 보냈어요. 입력하면 변경이 완료돼요.',
   LocaleKeys.emailChangeUpdated: '이메일이 @email 주소로 변경되었어요.',
   LocaleKeys.deleteTitle: '계정을 삭제할까요?',
   LocaleKeys.deleteIntro: '계정을 삭제하면 다음 항목이 모두 영구적으로 삭제돼요:',
   LocaleKeys.deleteItemDecks: '모든 덱과 플래시카드',
   LocaleKeys.deleteItemProgress: '연속 기록, 학습 기록과 진행 상황',
   LocaleKeys.deleteItemProfile: '프로필, 사진과 로그인 정보',
-  LocaleKeys.deletePermanentNote: '이 작업은 되돌릴 수 없어요. 계정이 삭제되면 어떤 방법으로도 데이터를 복구할 수 없어요. 본인도, 저희도 복구할 수 없어요.',
+  LocaleKeys.deletePermanentNote:
+      '이 작업은 되돌릴 수 없어요. 계정이 삭제되면 어떤 방법으로도 데이터를 복구할 수 없어요. 본인도, 저희도 복구할 수 없어요.',
   LocaleKeys.deleteKeepAccount: '계정 유지하기',
   LocaleKeys.deleteContinue: '계속 삭제하기',
   LocaleKeys.deleteConfirmTitle: '정말 계정을 삭제할까요?',
-  LocaleKeys.deleteConfirmUnderstand: '내 계정과 모든 데이터가 영구적으로 삭제되며 절대 복구할 수 없다는 것을 이해했어요.',
+  LocaleKeys.deleteConfirmUnderstand:
+      '내 계정과 모든 데이터가 영구적으로 삭제되며 절대 복구할 수 없다는 것을 이해했어요.',
   LocaleKeys.deleteConfirmTypeLabel: '확인하려면 @word 를 입력하세요',
   LocaleKeys.deleteConfirmButton: '내 계정 삭제',
   LocaleKeys.deleteFinalTitle: '마지막 확인',
@@ -298,13 +306,18 @@ const Map<String, String> ko = {
   LocaleKeys.cardsDeleteError: '카드를 삭제하지 못했어요. 다시 시도해주세요.',
   LocaleKeys.cardsNewDeckTitle: '새 덱 이름 짓기',
   LocaleKeys.cardsNewDeckHint: '이 카드들을 위한 새 덱 만들기',
+  LocaleKeys.cardsMovedSkipped: '@count개를 @name에 이동 · @skipped개는 이미 있음',
+  LocaleKeys.cardsCopiedSkipped: '@count개를 @name에 복사 · @skipped개는 이미 있음',
+  LocaleKeys.cardsAllPresent: '그 단어들은 모두 이미 @name에 있어요',
   LocaleKeys.deckMergeMenu: '다른 덱과 합치기',
   LocaleKeys.deckMergeTitle: '합칠 덱…',
   LocaleKeys.deckMergeSubtitle: '모든 카드가 선택한 덱으로 옮겨지고, 이 덱은 삭제돼요.',
   LocaleKeys.deckMergeConfirmTitle: '@name와(과) 합칠까요?',
-  LocaleKeys.deckMergeConfirmBody: '카드 @count개가 모두 @name(으)로 옮겨지고, 이 덱은 삭제돼요. 되돌릴 수 없어요.',
+  LocaleKeys.deckMergeConfirmBody:
+      '카드 @count개가 모두 @name(으)로 옮겨지고, 이 덱은 삭제돼요. 되돌릴 수 없어요.',
   LocaleKeys.deckMergeConfirm: '합치기',
   LocaleKeys.deckMergedSuccess: '@name와(과) 합쳤어요',
+  LocaleKeys.deckMergedSkipped: '@name와(과) 합침 · 중복 @skipped개 제외',
   LocaleKeys.deckMergeError: '덱을 합치지 못했어요. 다시 시도해주세요.',
 
   LocaleKeys.studyProgress: '@total개 중 @current번째',
@@ -314,8 +327,7 @@ const Map<String, String> ko = {
   LocaleKeys.studyGradeGood: '좋음',
   LocaleKeys.studyGradeEasy: '쉬움',
   LocaleKeys.studyNothingDueTitle: '지금은 복습할 카드가 없어요',
-  LocaleKeys.studyNothingDueBody:
-      '복습할 카드가 없어서 추가 연습이에요. 복습 일정은 바뀌지 않아요.',
+  LocaleKeys.studyNothingDueBody: '복습할 카드가 없어서 추가 연습이에요. 복습 일정은 바뀌지 않아요.',
   LocaleKeys.studyLeaveTitle: '학습을 그만할까요?',
   LocaleKeys.studyLeaveBody: '@count장의 카드가 남았어요. 이미 답한 카드는 그대로 기록돼요.',
   LocaleKeys.studyLeaveBodyOne: '1장의 카드가 남았어요. 이미 답한 카드는 그대로 기록돼요.',
@@ -342,8 +354,7 @@ const Map<String, String> ko = {
   LocaleKeys.streakInfoFreezes: '보유한 보호권',
   LocaleKeys.streakInfoFreezesFull: '보호권이 가득 찼어요 · 놓친 날 @count일까지 지켜줘요',
   LocaleKeys.streakRuleDailyTitle: '하루에 한 번 학습하기',
-  LocaleKeys.streakRuleDailyBody:
-      '카드를 하나 이상 완료하면 연속 기록이 이어져요. 일일 목표는 달성하지 않아도 돼요. 연습 라운드는 포함되고, 듣기는 포함되지 않아요.',
+  LocaleKeys.streakRuleDailyBody: '카드를 하나 이상 완료하면 연속 기록이 이어져요. 일일 목표는 달성하지 않아도 돼요. 연습 라운드는 포함되고, 듣기는 포함되지 않아요.',
   LocaleKeys.streakRuleDayEndsTitle: '하루는 @time에 끝나요',
   LocaleKeys.streakRuleDayEndsBody: '늦은 밤 학습도 시작한 날의 기록으로 인정돼요.',
   LocaleKeys.streakRuleEarnTitle: '연속 기록 보호권 받기',
@@ -369,8 +380,8 @@ const Map<String, String> ko = {
   LocaleKeys.reminderSettingsTitle: '매일 알림',
   LocaleKeys.reminderEveryDayAt: '매일 @time',
   LocaleKeys.reminderOff: '끄기',
-  LocaleKeys.reminderPermissionDenied: 'LexiSnap의 알림이 꺼져 있어요. 설정에서 켜면 알림을 받을 수 있어요.',
-
+  LocaleKeys.reminderPermissionDenied:
+      'LexiSnap의 알림이 꺼져 있어요. 설정에서 켜면 알림을 받을 수 있어요.',
 
   LocaleKeys.studyModeSmart: '스마트',
   LocaleKeys.studyModeSmartHint: '퀴즈와 뒤집기를 무작위로 섞어요',

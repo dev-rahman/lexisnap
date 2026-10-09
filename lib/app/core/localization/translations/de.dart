@@ -52,7 +52,8 @@ const Map<String, String> de = {
   LocaleKeys.forgotPasswordResend: 'Code erneut senden',
   LocaleKeys.forgotPasswordResendIn: 'Code erneut senden in @seconds s',
   LocaleKeys.forgotPasswordChangeEmail: 'Andere E-Mail-Adresse verwenden',
-  LocaleKeys.forgotPasswordCodeResent: 'Wir haben dir einen neuen Code gesendet.',
+  LocaleKeys.forgotPasswordCodeResent:
+      'Wir haben dir einen neuen Code gesendet.',
   LocaleKeys.forgotPasswordNewTitle: 'Neues Passwort festlegen',
   LocaleKeys.forgotPasswordNewSubtitle: 'Verwende mindestens 8 Zeichen.',
   LocaleKeys.forgotPasswordNewPassword: 'Neues Passwort',
@@ -70,7 +71,8 @@ const Map<String, String> de = {
   LocaleKeys.validatorFieldRequired: 'Dieses Feld ist erforderlich',
   LocaleKeys.validatorNameRequired: 'Gib einen Namen ein',
   LocaleKeys.validatorCodeRequired: 'Gib den Code aus der E-Mail ein',
-  LocaleKeys.validatorCodeInvalid: 'Gib den vollständigen Code aus der E-Mail ein',
+  LocaleKeys.validatorCodeInvalid:
+      'Gib den vollständigen Code aus der E-Mail ein',
 
   LocaleKeys.homeGreeting: 'Hallo, @name',
   LocaleKeys.homeGreetingGeneric: 'Hallo!',
@@ -131,9 +133,11 @@ const Map<String, String> de = {
   LocaleKeys.photoRemove: 'Foto entfernen',
   LocaleKeys.photoUpdated: 'Dein Profilbild wurde aktualisiert.',
   LocaleKeys.photoRemoved: 'Dein Profilbild wurde entfernt.',
-  LocaleKeys.photoTooLarge: 'Dieses Foto ist selbst verkleinert noch zu groß. Versuch ein anderes.',
+  LocaleKeys.photoTooLarge:
+      'Dieses Foto ist selbst verkleinert noch zu groß. Versuch ein anderes.',
   LocaleKeys.photoUnsupported: 'Dieses Dateiformat wird nicht unterstützt. Wähle ein JPEG-, PNG- oder WebP-Foto.',
-  LocaleKeys.photoCameraPrimerBody: 'LexiSnap braucht deine Kamera, um dein Profilbild aufzunehmen.',
+  LocaleKeys.photoCameraPrimerBody:
+      'LexiSnap braucht deine Kamera, um dein Profilbild aufzunehmen.',
   LocaleKeys.photoCameraDeniedBody: 'Der Kamerazugriff für LexiSnap ist deaktiviert. Aktiviere ihn in den Einstellungen, um ein Profilbild aufzunehmen.',
   LocaleKeys.passwordChangeTitle: 'Passwort ändern',
   LocaleKeys.passwordSetTitle: 'Passwort festlegen',
@@ -151,9 +155,11 @@ const Map<String, String> de = {
   LocaleKeys.emailChangeCodeCurrentBody: 'Zu deiner Sicherheit haben wir auch einen Code an deine aktuelle Adresse @email gesendet. Gib ihn ein, um die Änderung abzuschließen.',
   LocaleKeys.emailChangeUpdated: 'Deine E-Mail-Adresse lautet jetzt @email.',
   LocaleKeys.deleteTitle: 'Konto löschen?',
-  LocaleKeys.deleteIntro: 'Wenn du dein Konto löschst, wird alles darin endgültig gelöscht:',
+  LocaleKeys.deleteIntro:
+      'Wenn du dein Konto löschst, wird alles darin endgültig gelöscht:',
   LocaleKeys.deleteItemDecks: 'Alle deine Stapel und Karteikarten',
-  LocaleKeys.deleteItemProgress: 'Deine Serien, dein Lernverlauf und dein Fortschritt',
+  LocaleKeys.deleteItemProgress:
+      'Deine Serien, dein Lernverlauf und dein Fortschritt',
   LocaleKeys.deleteItemProfile: 'Dein Profil, dein Foto und deine Anmeldedaten',
   LocaleKeys.deletePermanentNote: 'Das kann nicht rückgängig gemacht werden. Sobald dein Konto gelöscht ist, lassen sich deine Daten auf keine Weise wiederherstellen - weder von dir noch von uns.',
   LocaleKeys.deleteKeepAccount: 'Konto behalten',
@@ -231,8 +237,7 @@ const Map<String, String> de = {
   LocaleKeys.scanDestinationNewDeckHint:
       'Sprache wählen und einen neuen Stapel anlegen',
   LocaleKeys.scanDestinationExistingHeader: 'Zu vorhandenem Stapel hinzufügen',
-  LocaleKeys.scanSelectMoreSubtitle:
-      'Wähle die nächste Gruppe für einen anderen Stapel oder schließe, wenn du fertig bist.',
+  LocaleKeys.scanSelectMoreSubtitle: 'Wähle die nächste Gruppe für einen anderen Stapel oder schließe, wenn du fertig bist.',
   LocaleKeys.scanFiledProgress: '@count Wörter bisher gespeichert',
   LocaleKeys.scanWordsAddedSuccess: '@count Wörter zu @name hinzugefügt',
   LocaleKeys.scanWordsSavedSummary:
@@ -285,8 +290,7 @@ const Map<String, String> de = {
   LocaleKeys.cardEditSaveError:
       'Die Karte konnte nicht gespeichert werden. Bitte versuche es erneut.',
   LocaleKeys.cardDeleteTitle: 'Diese Karte löschen?',
-  LocaleKeys.cardDeleteBody:
-      '@word wird aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.cardDeleteBody: '@word wird aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
   LocaleKeys.cardDeleteConfirm: 'Karte löschen',
   LocaleKeys.cardDeletedSuccess: 'Karte gelöscht.',
   LocaleKeys.cardDeleteError:
@@ -310,25 +314,28 @@ const Map<String, String> de = {
   LocaleKeys.cardsCopyError:
       'Die Karten konnten nicht kopiert werden. Bitte versuche es erneut.',
   LocaleKeys.cardsDeleteTitle: '@count Karten löschen?',
-  LocaleKeys.cardsDeleteBody:
-      'Diese Karten werden aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.cardsDeleteBody: 'Diese Karten werden aus diesem Stapel entfernt. Das kann nicht rückgängig gemacht werden.',
   LocaleKeys.cardsDeleteConfirm: 'Karten löschen',
   LocaleKeys.cardsDeletedSuccess: '@count Karten gelöscht.',
   LocaleKeys.cardsDeleteError:
       'Die Karten konnten nicht gelöscht werden. Bitte versuche es erneut.',
   LocaleKeys.cardsNewDeckTitle: 'Neuen Stapel benennen',
   LocaleKeys.cardsNewDeckHint: 'Einen neuen Stapel für diese Karten erstellen',
+  LocaleKeys.cardsMovedSkipped:
+      '@count nach @name verschoben · @skipped schon vorhanden',
+  LocaleKeys.cardsCopiedSkipped:
+      '@count nach @name kopiert · @skipped schon vorhanden',
+  LocaleKeys.cardsAllPresent: 'Diese Wörter sind alle schon in @name',
   LocaleKeys.deckMergeMenu: 'Mit anderem Stapel zusammenführen',
   LocaleKeys.deckMergeTitle: 'Zusammenführen mit…',
-  LocaleKeys.deckMergeSubtitle:
-      'Alle Karten wandern in den gewählten Stapel, und dieser Stapel wird gelöscht.',
+  LocaleKeys.deckMergeSubtitle: 'Alle Karten wandern in den gewählten Stapel, und dieser Stapel wird gelöscht.',
   LocaleKeys.deckMergeConfirmTitle: 'Mit @name zusammenführen?',
-  LocaleKeys.deckMergeConfirmBody:
-      'Alle @count Karten wandern in @name, und dieser Stapel wird gelöscht. Das kann nicht rückgängig gemacht werden.',
+  LocaleKeys.deckMergeConfirmBody: 'Alle @count Karten wandern in @name, und dieser Stapel wird gelöscht. Das kann nicht rückgängig gemacht werden.',
   LocaleKeys.deckMergeConfirm: 'Zusammenführen',
   LocaleKeys.deckMergedSuccess: 'Mit @name zusammengeführt',
-  LocaleKeys.deckMergeError:
-      'Die Stapel konnten nicht zusammengeführt werden. Bitte versuche es erneut.',
+  LocaleKeys.deckMergedSkipped:
+      'Mit @name zusammengeführt · @skipped Duplikate verworfen',
+  LocaleKeys.deckMergeError: 'Die Stapel konnten nicht zusammengeführt werden. Bitte versuche es erneut.',
 
   LocaleKeys.studyProgress: '@current von @total',
   LocaleKeys.studyTapToReveal: 'Zum Aufdecken tippen',
@@ -337,8 +344,7 @@ const Map<String, String> de = {
   LocaleKeys.studyGradeGood: 'Gut',
   LocaleKeys.studyGradeEasy: 'Leicht',
   LocaleKeys.studyNothingDueTitle: 'Gerade nichts fällig',
-  LocaleKeys.studyNothingDueBody:
-      'Es ist nichts fällig, das hier ist also zusätzliches Üben - dein Plan ändert sich nicht.',
+  LocaleKeys.studyNothingDueBody: 'Es ist nichts fällig, das hier ist also zusätzliches Üben - dein Plan ändert sich nicht.',
   LocaleKeys.studyLeaveTitle: 'Sitzung verlassen?',
   LocaleKeys.studyLeaveBody: 'Du hast noch @count Karten vor dir. Was du schon beantwortet hast, zählt trotzdem.',
   LocaleKeys.studyLeaveBodyOne: 'Du hast noch 1 Karte vor dir. Was du schon beantwortet hast, zählt trotzdem.',
@@ -368,20 +374,15 @@ const Map<String, String> de = {
   LocaleKeys.streakInfoFreezesFull:
       'Serienschutz voll – du bist für @count verpasste Tage abgesichert',
   LocaleKeys.streakRuleDailyTitle: 'Lerne einmal am Tag',
-  LocaleKeys.streakRuleDailyBody:
-      'Schließe mindestens eine Karte ab – dein Tagesziel musst du dafür nicht erreichen. Übungsrunden zählen, Zuhören nicht.',
+  LocaleKeys.streakRuleDailyBody: 'Schließe mindestens eine Karte ab – dein Tagesziel musst du dafür nicht erreichen. Übungsrunden zählen, Zuhören nicht.',
   LocaleKeys.streakRuleDayEndsTitle: 'Dein Tag endet um @time',
-  LocaleKeys.streakRuleDayEndsBody:
-      'Eine Sitzung spät in der Nacht zählt noch für den Tag, an dem sie begann.',
+  LocaleKeys.streakRuleDayEndsBody: 'Eine Sitzung spät in der Nacht zählt noch für den Tag, an dem sie begann.',
   LocaleKeys.streakRuleEarnTitle: 'Verdiene Serienschutz',
-  LocaleKeys.streakRuleEarnBody:
-      'Alle @days Tage Serie bekommst du einen. Du kannst bis zu @max ansammeln.',
+  LocaleKeys.streakRuleEarnBody: 'Alle @days Tage Serie bekommst du einen. Du kannst bis zu @max ansammeln.',
   LocaleKeys.streakRuleCoverTitle: 'Serienschutz deckt verpasste Tage ab',
-  LocaleKeys.streakRuleCoverBody:
-      'Für jeden verpassten Tag wird automatisch einer verwendet. Geschützte Tage halten deine Serie am Leben, verlängern sie aber nicht.',
+  LocaleKeys.streakRuleCoverBody: 'Für jeden verpassten Tag wird automatisch einer verwendet. Geschützte Tage halten deine Serie am Leben, verlängern sie aber nicht.',
   LocaleKeys.streakRuleResetTitle: 'Zu viele verpasst? Dann beginnt sie neu',
-  LocaleKeys.streakRuleResetBody:
-      'Verpasst du mehr Tage, als du Serienschutz hast, startet deine Serie neu. Deinen Serienschutz behältst du.',
+  LocaleKeys.streakRuleResetBody: 'Verpasst du mehr Tage, als du Serienschutz hast, startet deine Serie neu. Deinen Serienschutz behältst du.',
   LocaleKeys.studyGoalProgress: '@done von @goal heute',
   LocaleKeys.studyGoalMet: 'Tagesziel erreicht',
   LocaleKeys.studyContinue: '@count weitere wiederholen',
@@ -400,9 +401,7 @@ const Map<String, String> de = {
   LocaleKeys.reminderSettingsTitle: 'Tägliche Erinnerung',
   LocaleKeys.reminderEveryDayAt: 'Täglich um @time',
   LocaleKeys.reminderOff: 'Aus',
-  LocaleKeys.reminderPermissionDenied:
-      'Mitteilungen sind für LexiSnap deaktiviert. Aktiviere sie in den Einstellungen, um Erinnerungen zu erhalten.',
-
+  LocaleKeys.reminderPermissionDenied: 'Mitteilungen sind für LexiSnap deaktiviert. Aktiviere sie in den Einstellungen, um Erinnerungen zu erhalten.',
 
   LocaleKeys.studyModeSmart: 'Smart',
   LocaleKeys.studyModeSmartHint: 'Zufälliger Mix aus Quiz und Umdrehen',

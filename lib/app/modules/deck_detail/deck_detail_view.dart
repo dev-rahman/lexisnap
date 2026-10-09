@@ -249,6 +249,8 @@ class DeckDetailView extends GetView<DeckDetailController> {
           await controller.moveSelectedToNewDeck(name);
         }
       case ExistingDeckDestination(:final deck):
+        // Words already in the target are skipped and reported by the
+        // controller, so no up-front duplicate warning is needed here.
         if (copy) {
           await controller.copySelectedTo(deck);
         } else {
@@ -339,6 +341,8 @@ class DeckDetailView extends GetView<DeckDetailController> {
     if (destination is! ExistingDeckDestination) return;
     if (!context.mounted) return;
 
+    // Any words the target already has are dropped as duplicates during the
+    // merge and reported afterwards, so the confirmation stays simple.
     final confirmed = await showConfirmSheet(
       context,
       icon: Icons.merge_rounded,

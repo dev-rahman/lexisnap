@@ -52,7 +52,8 @@ const Map<String, String> fr = {
   LocaleKeys.forgotPasswordResend: 'Renvoyer le code',
   LocaleKeys.forgotPasswordResendIn: 'Renvoyer le code dans @seconds s',
   LocaleKeys.forgotPasswordChangeEmail: 'Utiliser une autre adresse e-mail',
-  LocaleKeys.forgotPasswordCodeResent: 'Nous vous avons envoyé un nouveau code.',
+  LocaleKeys.forgotPasswordCodeResent:
+      'Nous vous avons envoyé un nouveau code.',
   LocaleKeys.forgotPasswordNewTitle: 'Choisissez un nouveau mot de passe',
   LocaleKeys.forgotPasswordNewSubtitle: 'Utilisez au moins 8 caractères.',
   LocaleKeys.forgotPasswordNewPassword: 'Nouveau mot de passe',
@@ -90,7 +91,8 @@ const Map<String, String> fr = {
   LocaleKeys.homePracticeCta: 'Réviser @count de plus',
   LocaleKeys.homePracticeNote:
       'Entraînement libre : votre planning ne change pas',
-  LocaleKeys.homeStreakStartHint: 'Révisez aujourd\'hui pour lancer votre série',
+  LocaleKeys.homeStreakStartHint:
+      'Révisez aujourd\'hui pour lancer votre série',
   LocaleKeys.homeYourDecks: 'Vos paquets',
   LocaleKeys.homeNoDecksTitle: 'Aucun paquet pour le moment',
   LocaleKeys.homeNoDecksBody:
@@ -133,7 +135,8 @@ const Map<String, String> fr = {
   LocaleKeys.photoRemove: 'Supprimer la photo',
   LocaleKeys.photoUpdated: 'Votre photo de profil a été mise à jour.',
   LocaleKeys.photoRemoved: 'Votre photo de profil a été supprimée.',
-  LocaleKeys.photoTooLarge: 'Cette photo est trop lourde, même réduite. Essayez-en une autre.',
+  LocaleKeys.photoTooLarge:
+      'Cette photo est trop lourde, même réduite. Essayez-en une autre.',
   LocaleKeys.photoUnsupported: "Ce type de fichier n'est pas pris en charge. Choisissez une photo JPEG, PNG ou WebP.",
   LocaleKeys.photoCameraPrimerBody: 'LexiSnap a besoin de votre appareil photo pour prendre votre photo de profil.',
   LocaleKeys.photoCameraDeniedBody: "L'accès à l'appareil photo est désactivé pour LexiSnap. Activez-le dans les Réglages pour prendre une photo de profil.",
@@ -147,20 +150,25 @@ const Map<String, String> fr = {
   LocaleKeys.emailChangeCurrent: 'E-mail actuel : @email',
   LocaleKeys.emailChangeNewLabel: 'Nouvel e-mail',
   LocaleKeys.emailChangeSameEmail: "C'est déjà votre adresse e-mail.",
-  LocaleKeys.emailChangeCodeNewTitle: 'Consultez votre nouvelle boîte de réception',
+  LocaleKeys.emailChangeCodeNewTitle:
+      'Consultez votre nouvelle boîte de réception',
   LocaleKeys.emailChangeCodeNewBody: 'Nous avons envoyé un code à @email. Saisissez-le ci-dessous pour confirmer votre nouvelle adresse.',
   LocaleKeys.emailChangeCodeCurrentTitle: 'Encore un code',
   LocaleKeys.emailChangeCodeCurrentBody: 'Par sécurité, nous avons aussi envoyé un code à votre adresse actuelle, @email. Saisissez-le pour terminer le changement.',
   LocaleKeys.emailChangeUpdated: 'Votre adresse e-mail est désormais @email.',
   LocaleKeys.deleteTitle: 'Supprimer votre compte ?',
-  LocaleKeys.deleteIntro: "Supprimer votre compte efface définitivement tout ce qu'il contient :",
+  LocaleKeys.deleteIntro:
+      "Supprimer votre compte efface définitivement tout ce qu'il contient :",
   LocaleKeys.deleteItemDecks: 'Tous vos paquets et vos cartes',
-  LocaleKeys.deleteItemProgress: 'Vos séries, votre historique et votre progression',
-  LocaleKeys.deleteItemProfile: 'Votre profil, votre photo et vos identifiants de connexion',
+  LocaleKeys.deleteItemProgress:
+      'Vos séries, votre historique et votre progression',
+  LocaleKeys.deleteItemProfile:
+      'Votre profil, votre photo et vos identifiants de connexion',
   LocaleKeys.deletePermanentNote: "Cette action est irréversible. Une fois votre compte supprimé, vos données ne pourront être récupérées d'aucune façon - ni par vous, ni par nous.",
   LocaleKeys.deleteKeepAccount: 'Garder mon compte',
   LocaleKeys.deleteContinue: 'Continuer la suppression',
-  LocaleKeys.deleteConfirmTitle: 'Voulez-vous vraiment supprimer votre compte ?',
+  LocaleKeys.deleteConfirmTitle:
+      'Voulez-vous vraiment supprimer votre compte ?',
   LocaleKeys.deleteConfirmUnderstand: 'Je comprends que mon compte et toutes ses données seront définitivement supprimés et ne pourront jamais être récupérés.',
   LocaleKeys.deleteConfirmTypeLabel: 'Saisissez @word pour confirmer',
   LocaleKeys.deleteConfirmButton: 'Supprimer mon compte',
@@ -234,8 +242,7 @@ const Map<String, String> fr = {
   LocaleKeys.scanDestinationNewDeckHint:
       'Choisissez une langue et créez un nouveau paquet',
   LocaleKeys.scanDestinationExistingHeader: 'Ajouter à un paquet existant',
-  LocaleKeys.scanSelectMoreSubtitle:
-      'Choisissez le lot suivant pour un autre paquet, ou fermez quand vous avez terminé.',
+  LocaleKeys.scanSelectMoreSubtitle: 'Choisissez le lot suivant pour un autre paquet, ou fermez quand vous avez terminé.',
   LocaleKeys.scanFiledProgress: '@count mots enregistrés jusqu\'ici',
   LocaleKeys.scanWordsAddedSuccess: '@count mots ajoutés à @name',
   LocaleKeys.scanWordsSavedSummary:
@@ -321,15 +328,20 @@ const Map<String, String> fr = {
       'Impossible de supprimer les cartes. Veuillez réessayer.',
   LocaleKeys.cardsNewDeckTitle: 'Nommer le nouveau paquet',
   LocaleKeys.cardsNewDeckHint: 'Créer un nouveau paquet pour ces cartes',
+  LocaleKeys.cardsMovedSkipped:
+      '@count déplacées vers @name · @skipped déjà présentes',
+  LocaleKeys.cardsCopiedSkipped:
+      '@count copiées vers @name · @skipped déjà présentes',
+  LocaleKeys.cardsAllPresent: 'Ces mots sont tous déjà dans @name',
   LocaleKeys.deckMergeMenu: 'Fusionner avec un autre paquet',
   LocaleKeys.deckMergeTitle: 'Fusionner avec…',
-  LocaleKeys.deckMergeSubtitle:
-      'Toutes les cartes rejoignent le paquet choisi, et ce paquet est supprimé.',
+  LocaleKeys.deckMergeSubtitle: 'Toutes les cartes rejoignent le paquet choisi, et ce paquet est supprimé.',
   LocaleKeys.deckMergeConfirmTitle: 'Fusionner avec @name ?',
-  LocaleKeys.deckMergeConfirmBody:
-      'Les @count cartes rejoignent @name, et ce paquet est supprimé. Action irréversible.',
+  LocaleKeys.deckMergeConfirmBody: 'Les @count cartes rejoignent @name, et ce paquet est supprimé. Action irréversible.',
   LocaleKeys.deckMergeConfirm: 'Fusionner',
   LocaleKeys.deckMergedSuccess: 'Fusionné avec @name',
+  LocaleKeys.deckMergedSkipped:
+      'Fusionné avec @name · @skipped doublons écartés',
   LocaleKeys.deckMergeError:
       'Impossible de fusionner les paquets. Veuillez réessayer.',
 
@@ -340,8 +352,7 @@ const Map<String, String> fr = {
   LocaleKeys.studyGradeGood: 'Bien',
   LocaleKeys.studyGradeEasy: 'Facile',
   LocaleKeys.studyNothingDueTitle: 'Rien à revoir pour le moment',
-  LocaleKeys.studyNothingDueBody:
-      "Rien n'est à revoir : ceci est un entraînement libre, votre planning ne changera pas.",
+  LocaleKeys.studyNothingDueBody: "Rien n'est à revoir : ceci est un entraînement libre, votre planning ne changera pas.",
   LocaleKeys.studyLeaveTitle: 'Quitter la session ?',
   LocaleKeys.studyLeaveBody: 'Il vous reste @count cartes. Celles auxquelles vous avez déjà répondu comptent quand même.',
   LocaleKeys.studyLeaveBodyOne: 'Il vous reste 1 carte. Celles auxquelles vous avez déjà répondu comptent quand même.',
@@ -369,21 +380,17 @@ const Map<String, String> fr = {
   LocaleKeys.streakInfoFreezesFull:
       'Gels au maximum : vous êtes couvert pour @count jours manqués',
   LocaleKeys.streakRuleDailyTitle: 'Révisez une fois par jour',
-  LocaleKeys.streakRuleDailyBody:
-      "Terminez au moins une carte ; inutile d'atteindre votre objectif quotidien. Les séances d'entraînement comptent, l'écoute non.",
+  LocaleKeys.streakRuleDailyBody: "Terminez au moins une carte ; inutile d'atteindre votre objectif quotidien. Les séances d'entraînement comptent, l'écoute non.",
   LocaleKeys.streakRuleDayEndsTitle: 'Votre journée se termine à @time',
   LocaleKeys.streakRuleDayEndsBody:
       'Une séance tard le soir compte pour la journée où elle a commencé.',
   LocaleKeys.streakRuleEarnTitle: 'Gagnez des gels de série',
-  LocaleKeys.streakRuleEarnBody:
-      "Chaque série de @days jours en rapporte un. Vous pouvez en garder jusqu'à @max.",
+  LocaleKeys.streakRuleEarnBody: "Chaque série de @days jours en rapporte un. Vous pouvez en garder jusqu'à @max.",
   LocaleKeys.streakRuleCoverTitle: 'Les gels couvrent les jours manqués',
-  LocaleKeys.streakRuleCoverBody:
-      "Un gel est utilisé automatiquement pour chaque jour manqué. Les jours gelés maintiennent votre série sans l'allonger.",
+  LocaleKeys.streakRuleCoverBody: "Un gel est utilisé automatiquement pour chaque jour manqué. Les jours gelés maintiennent votre série sans l'allonger.",
   LocaleKeys.streakRuleResetTitle:
       'Trop de jours manqués et elle repart à zéro',
-  LocaleKeys.streakRuleResetBody:
-      "Si vous manquez plus de jours que vous n'avez de gels, votre série recommence. Vous gardez vos gels.",
+  LocaleKeys.streakRuleResetBody: "Si vous manquez plus de jours que vous n'avez de gels, votre série recommence. Vous gardez vos gels.",
   LocaleKeys.studyGoalProgress: '@done sur @goal aujourd\'hui',
   LocaleKeys.studyGoalMet: 'Objectif du jour atteint',
   LocaleKeys.studyContinue: 'Réviser @count de plus',
@@ -402,12 +409,11 @@ const Map<String, String> fr = {
   LocaleKeys.reminderSettingsTitle: 'Rappel quotidien',
   LocaleKeys.reminderEveryDayAt: 'Tous les jours à @time',
   LocaleKeys.reminderOff: 'Désactivé',
-  LocaleKeys.reminderPermissionDenied:
-      'Les notifications sont désactivées pour LexiSnap. Activez-les dans les Réglages pour recevoir des rappels.',
-
+  LocaleKeys.reminderPermissionDenied: 'Les notifications sont désactivées pour LexiSnap. Activez-les dans les Réglages pour recevoir des rappels.',
 
   LocaleKeys.studyModeSmart: 'Auto',
-  LocaleKeys.studyModeSmartHint: 'Mélange aléatoire de quiz et de cartes à retourner',
+  LocaleKeys.studyModeSmartHint:
+      'Mélange aléatoire de quiz et de cartes à retourner',
   LocaleKeys.studyModeQuiz: 'Quiz',
   LocaleKeys.studyModeQuizHint: 'Choisir parmi quatre options',
   LocaleKeys.studyModeFlip: 'Retourner',

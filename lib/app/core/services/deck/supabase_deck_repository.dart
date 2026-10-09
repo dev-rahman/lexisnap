@@ -282,6 +282,16 @@ class SupabaseDeckRepository implements DeckRepository {
   }
 
   @override
+  Future<Set<String>> wordsInDeck(String deckId) async {
+    final rows = await _client
+        .from('flashcards')
+        .select('word')
+        .eq('deck_id', deckId);
+
+    return {for (final row in rows) (row['word'] as String).toLowerCase()};
+  }
+
+  @override
   Future<Flashcard> submitReview(Flashcard card, ReviewGrade grade) async {
     final update = calculateNextReview(
       easeFactor: card.easeFactor,

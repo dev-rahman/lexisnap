@@ -211,9 +211,7 @@ class _OptionTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     label,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: foreground,
-                    ),
+                    style: AppTextStyles.bodyMedium.copyWith(color: foreground),
                   ),
                 ),
                 if (state == _OptionState.correct)

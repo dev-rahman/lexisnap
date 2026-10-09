@@ -52,7 +52,9 @@ class ScanView extends GetView<ScanController> {
               ),
               ScanStage.wordSelection => const _WordSelection(),
               ScanStage.savingDeck => _ProcessingOverlay(
-                label: controller.savingLabel.value ?? LocaleKeys.scanSavingDeck.tr,
+                label:
+                    controller.savingLabel.value ??
+                    LocaleKeys.scanSavingDeck.tr,
               ),
               ScanStage.empty => const _NoTextFound(),
             },
@@ -324,11 +326,7 @@ class _FiledProgress extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(
-          Icons.check_circle_rounded,
-          size: 16,
-          color: AppColors.accent,
-        ),
+        Icon(Icons.check_circle_rounded, size: 16, color: AppColors.accent),
         const SizedBox(width: AppSpacing.xs),
         Text(
           LocaleKeys.scanFiledProgress.trParams({'count': '$count'}),

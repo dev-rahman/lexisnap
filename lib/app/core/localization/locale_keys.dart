@@ -236,7 +236,8 @@ class LocaleKeys {
   static const scanDestinationSubtitle = 'scan_destination_subtitle';
   static const scanDestinationNewDeck = 'scan_destination_new_deck';
   static const scanDestinationNewDeckHint = 'scan_destination_new_deck_hint';
-  static const scanDestinationExistingHeader = 'scan_destination_existing_header';
+  static const scanDestinationExistingHeader =
+      'scan_destination_existing_header';
   static const scanSelectMoreSubtitle = 'scan_select_more_subtitle';
   static const scanFiledProgress = 'scan_filed_progress';
   static const scanWordsAddedSuccess = 'scan_words_added_success';
@@ -316,6 +317,9 @@ class LocaleKeys {
   static const cardsDeleteError = 'cards_delete_error';
   static const cardsNewDeckTitle = 'cards_new_deck_title';
   static const cardsNewDeckHint = 'cards_new_deck_hint';
+  static const cardsMovedSkipped = 'cards_moved_skipped';
+  static const cardsCopiedSkipped = 'cards_copied_skipped';
+  static const cardsAllPresent = 'cards_all_present';
 
   // Deck merge
   static const deckMergeMenu = 'deck_merge_menu';
@@ -325,6 +329,7 @@ class LocaleKeys {
   static const deckMergeConfirmBody = 'deck_merge_confirm_body';
   static const deckMergeConfirm = 'deck_merge_confirm';
   static const deckMergedSuccess = 'deck_merged_success';
+  static const deckMergedSkipped = 'deck_merged_skipped';
   static const deckMergeError = 'deck_merge_error';
 
   // Study session

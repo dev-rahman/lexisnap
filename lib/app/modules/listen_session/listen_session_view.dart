@@ -125,10 +125,7 @@ class _ListenSessionViewState extends State<ListenSessionView> {
           icon: const Icon(Icons.close_rounded),
           onPressed: Get.back,
         ),
-        title: Text(
-          LocaleKeys.listenTitle.tr,
-          style: AppTextStyles.bodyMedium,
-        ),
+        title: Text(LocaleKeys.listenTitle.tr, style: AppTextStyles.bodyMedium),
       ),
       body: SafeArea(
         child: Padding(

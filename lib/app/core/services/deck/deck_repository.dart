@@ -83,6 +83,11 @@ abstract class DeckRepository {
   /// Deletes several cards and their example sentences in one go.
   Future<void> deleteFlashcards(List<String> flashcardIds);
 
+  /// The words already in [deckId], lowercased, for spotting which incoming
+  /// cards would become duplicates before a move, copy, or merge. Only the
+  /// word column is read, so this stays cheap.
+  Future<Set<String>> wordsInDeck(String deckId);
+
   /// Every card due for review right now, across all of the user's decks,
   /// soonest-due first. Each card carries its deck's language pair, so a
   /// session spanning several decks can still speak each word correctly.
