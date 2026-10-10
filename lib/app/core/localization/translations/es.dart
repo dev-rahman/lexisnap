@@ -9,6 +9,7 @@ const Map<String, String> es = {
   LocaleKeys.commonCancel: 'Cancelar',
   LocaleKeys.commonComingSoon: 'Próximamente',
   LocaleKeys.commonSomethingWentWrong: 'Algo salió mal',
+  LocaleKeys.commonHeadsUp: 'Atención',
   LocaleKeys.commonSuccess: 'Listo',
 
   LocaleKeys.onboardingSkip: 'Omitir',

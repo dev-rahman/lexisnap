@@ -97,6 +97,14 @@ class DeckDetailController extends GetxController {
     return (freshIds: freshIds, skipped: skipped);
   }
 
+  /// How many of the currently selected words already exist in [target]. Lets
+  /// the destination picker flag a deck whose words are all already there
+  /// before it closes, instead of closing and reporting nothing happened.
+  Future<int> duplicatesIn(Deck target) async {
+    final part = await _dedupeAgainst(target.id, _selectedCards());
+    return part.skipped;
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -218,10 +226,10 @@ class DeckDetailController extends GetxController {
       final targetId = await resolveTargetId();
       final part = await _dedupeAgainst(targetId, selected);
 
-      // Everything picked is already in the target: nothing to move. Stay in
-      // selection so the user can aim at a different deck instead.
+      // Safety net: the picker already warns before closing on an all-present
+      // deck, so this is only reached on a race. Stay in selection.
       if (part.freshIds.isEmpty) {
-        AppSnackbar.info(
+        AppSnackbar.warning(
           LocaleKeys.cardsAllPresent.trParams({'name': targetName}),
         );
         return;
@@ -257,7 +265,7 @@ class DeckDetailController extends GetxController {
       final part = await _dedupeAgainst(targetId, selected);
 
       if (part.freshIds.isEmpty) {
-        AppSnackbar.info(
+        AppSnackbar.warning(
           LocaleKeys.cardsAllPresent.trParams({'name': targetName}),
         );
         return;
@@ -296,7 +304,8 @@ class DeckDetailController extends GetxController {
             .trParams({'count': '$added', 'name': name}),
       );
     } else {
-      AppSnackbar.success(
+      // Some were skipped as duplicates: a caution, not a clean success.
+      AppSnackbar.warning(
         (movedNotCopied
                 ? LocaleKeys.cardsMovedSkipped
                 : LocaleKeys.cardsCopiedSkipped)
@@ -333,14 +342,18 @@ class DeckDetailController extends GetxController {
       await _deckRepository.deleteDeck(_deckId);
       await Get.find<DecksController>().refreshDecks();
       Get.back();
-      AppSnackbar.success(
-        part.skipped == 0
-            ? LocaleKeys.deckMergedSuccess.trParams({'name': target.name})
-            : LocaleKeys.deckMergedSkipped.trParams({
-                'name': target.name,
-                'skipped': '${part.skipped}',
-              }),
-      );
+      if (part.skipped == 0) {
+        AppSnackbar.success(
+          LocaleKeys.deckMergedSuccess.trParams({'name': target.name}),
+        );
+      } else {
+        AppSnackbar.warning(
+          LocaleKeys.deckMergedSkipped.trParams({
+            'name': target.name,
+            'skipped': '${part.skipped}',
+          }),
+        );
+      }
     } catch (_) {
       AppSnackbar.error(LocaleKeys.deckMergeError.tr);
     }

@@ -75,6 +75,14 @@ class AppColors {
   static const Color alert = Color(0xFFA33B2A);
   static const Color confirm = Color(0xFF3D7A57);
 
+  // [caution]: a deep amber for warning toasts - something happened that the
+  // user should notice but that isn't a failure (e.g. duplicate cards
+  // skipped). [notice]: a muted blue for neutral/info toasts. Both sit in the
+  // same darkened register as [alert]/[confirm] so the four toast tones read
+  // as one family, each dark enough to carry white text.
+  static const Color caution = Color(0xFFA8701A);
+  static const Color notice = Color(0xFF2F6AA6);
+
   // ---------------------------------------------------------------------
   // Hues: the additive palette.
   //

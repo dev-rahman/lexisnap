@@ -14,6 +14,7 @@ class LocaleKeys {
   static const commonComingSoon = 'common_coming_soon';
   static const commonSomethingWentWrong = 'common_something_went_wrong';
   static const commonSuccess = 'common_success';
+  static const commonHeadsUp = 'common_heads_up';
 
   // Onboarding
   static const onboardingSkip = 'onboarding_skip';

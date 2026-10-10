@@ -9,6 +9,7 @@ const Map<String, String> ko = {
   LocaleKeys.commonCancel: '취소',
   LocaleKeys.commonComingSoon: '곧 출시 예정',
   LocaleKeys.commonSomethingWentWrong: '문제가 발생했어요',
+  LocaleKeys.commonHeadsUp: '알림',
   LocaleKeys.commonSuccess: '완료',
 
   LocaleKeys.onboardingSkip: '건너뛰기',

@@ -234,6 +234,15 @@ class DeckDetailView extends GetView<DeckDetailController> {
           .trParams({'count': '$count'}),
       subtitle: LocaleKeys.cardsDestinationSubtitle.tr,
       newDeckHint: LocaleKeys.cardsNewDeckHint.tr,
+      // When every picked word is already in the tapped deck there's nothing
+      // to add, so warn inline and keep the picker open instead of closing on
+      // a no-op. A partial overlap still proceeds and is reported afterwards.
+      existingDeckWarning: (deck) async {
+        final duplicates = await controller.duplicatesIn(deck);
+        return duplicates >= count
+            ? LocaleKeys.cardsAllPresent.trParams({'name': deck.name})
+            : null;
+      },
     );
 
     switch (destination) {

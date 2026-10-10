@@ -252,7 +252,7 @@ class ScanController extends GetxController {
           .toList();
 
       if (fresh.isEmpty) {
-        AppSnackbar.info(
+        AppSnackbar.warning(
           LocaleKeys.cardsAllPresent.trParams({'name': deck.name}),
         );
         stage.value = ScanStage.wordSelection;

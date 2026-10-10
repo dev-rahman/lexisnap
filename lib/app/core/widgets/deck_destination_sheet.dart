@@ -51,6 +51,7 @@ Future<DeckDestination?> showDeckDestinationSheet(
   String? subtitle,
   String? newDeckHint,
   bool allowNewDeck = true,
+  Future<String?> Function(Deck deck)? existingDeckWarning,
 }) {
   return showAppSheet<DeckDestination>(
     context,
@@ -63,6 +64,7 @@ Future<DeckDestination?> showDeckDestinationSheet(
       subtitle: subtitle,
       newDeckHint: newDeckHint,
       allowNewDeck: allowNewDeck,
+      existingDeckWarning: existingDeckWarning,
     ),
   );
 }
@@ -75,6 +77,7 @@ class _DeckDestinationSheet extends StatefulWidget {
     this.subtitle,
     this.newDeckHint,
     this.allowNewDeck = true,
+    this.existingDeckWarning,
   });
 
   final List<Deck> decks;
@@ -83,6 +86,12 @@ class _DeckDestinationSheet extends StatefulWidget {
   final String? subtitle;
   final String? newDeckHint;
   final bool allowNewDeck;
+
+  /// Optional check run when an existing deck is tapped, before the sheet
+  /// closes. A non-null return is shown as an inline warning and the sheet
+  /// stays open (e.g. every picked word is already in that deck); null lets
+  /// the pick go through. Without it, a tap closes the sheet immediately.
+  final Future<String?> Function(Deck deck)? existingDeckWarning;
 
   @override
   State<_DeckDestinationSheet> createState() => _DeckDestinationSheetState();
@@ -95,6 +104,15 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
 
   final _searchController = TextEditingController();
   late List<Deck> _results = widget.decks;
+
+  /// The inline warning for the last tapped deck (e.g. its words are all
+  /// already there), or null. Keeps the sheet open instead of closing on a
+  /// pick that would do nothing.
+  String? _warning;
+
+  /// The deck currently being checked, so its row can show a spinner and
+  /// repeat taps are ignored while the check is in flight.
+  String? _checkingDeckId;
 
   bool get _showSearch => widget.decks.length > _searchThreshold;
 
@@ -113,6 +131,31 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
                 .where((deck) => deck.name.toLowerCase().contains(normalized))
                 .toList();
     });
+  }
+
+  Future<void> _pickExisting(Deck deck) async {
+    final check = widget.existingDeckWarning;
+    if (check == null) {
+      Navigator.pop(context, ExistingDeckDestination(deck));
+      return;
+    }
+    if (_checkingDeckId != null) return;
+
+    setState(() {
+      _checkingDeckId = deck.id;
+      _warning = null;
+    });
+    final warning = await check(deck);
+    if (!mounted) return;
+
+    if (warning != null) {
+      setState(() {
+        _checkingDeckId = null;
+        _warning = warning;
+      });
+    } else {
+      Navigator.pop(context, ExistingDeckDestination(deck));
+    }
   }
 
   @override
@@ -187,6 +230,16 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
                 ],
               ),
             ),
+            if (_warning != null)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(
+                  AppSpacing.lg,
+                  0,
+                  AppSpacing.lg,
+                  AppSpacing.sm,
+                ),
+                child: _WarningBanner(message: _warning!),
+              ),
             if (hasDecks)
               Flexible(
                 child: _results.isEmpty
@@ -214,10 +267,8 @@ class _DeckDestinationSheetState extends State<_DeckDestinationSheet> {
                           final deck = _results[index];
                           return _ExistingDeckOption(
                             deck: deck,
-                            onTap: () => Navigator.pop(
-                              context,
-                              ExistingDeckDestination(deck),
-                            ),
+                            loading: _checkingDeckId == deck.id,
+                            onTap: () => _pickExisting(deck),
                           );
                         },
                       ),
@@ -292,10 +343,18 @@ class _NewDeckOption extends StatelessWidget {
 /// One existing deck the batch can be added to, with its language pair and
 /// current size so the user can tell similar decks apart.
 class _ExistingDeckOption extends StatelessWidget {
-  const _ExistingDeckOption({required this.deck, required this.onTap});
+  const _ExistingDeckOption({
+    required this.deck,
+    required this.onTap,
+    this.loading = false,
+  });
 
   final Deck deck;
   final VoidCallback onTap;
+
+  /// Shows a spinner in place of the add icon while this deck is being
+  /// checked for duplicates before the sheet acts on it.
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -341,10 +400,59 @@ class _ExistingDeckOption extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.add_rounded, color: context.colorInkMuted, size: 20),
+              if (loading)
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: context.colorInkMuted,
+                  ),
+                )
+              else
+                Icon(Icons.add_rounded, color: context.colorInkMuted, size: 20),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Inline caution shown in the picker when a tapped deck already has all the
+/// chosen words, so the sheet can stay open with an explanation instead of
+/// closing on a pick that would add nothing.
+class _WarningBanner extends StatelessWidget {
+  const _WarningBanner({required this.message});
+
+  final String message;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.md),
+      decoration: BoxDecoration(
+        color: AppColors.caution.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(AppRadius.md),
+        border: Border.all(color: AppColors.caution.withValues(alpha: 0.4)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.warning_amber_rounded,
+            color: AppColors.caution,
+            size: 20,
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          Expanded(
+            child: Text(
+              message,
+              style: AppTextStyles.caption.copyWith(color: AppColors.caution),
+            ),
+          ),
+        ],
       ),
     );
   }
