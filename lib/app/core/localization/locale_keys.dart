@@ -208,6 +208,8 @@ class LocaleKeys {
   static const helpEmptyMessageError = 'help_empty_message_error';
   static const helpNoEmailAppError = 'help_no_email_app_error';
   static const helpMailSubject = 'help_mail_subject';
+  static const helpMessageSentSuccess = 'help_message_sent_success';
+  static const helpSendError = 'help_send_error';
 
   // Scan
   static const scanSourceTitle = 'scan_source_title';

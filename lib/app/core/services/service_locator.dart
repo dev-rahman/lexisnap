@@ -5,6 +5,8 @@ import 'auth/supabase_auth_service.dart';
 import 'auth/user_service.dart';
 import 'captcha/captcha_service.dart';
 import 'captcha/turnstile_captcha_service.dart';
+import 'support/emailjs_support_service.dart';
+import 'support/support_service.dart';
 import 'deck/deck_repository.dart';
 import 'deck/supabase_deck_repository.dart';
 import 'locale/locale_service.dart';
@@ -37,6 +39,7 @@ class ServiceLocator {
   static Future<void> init() async {
     Get.put<AuthService>(SupabaseAuthService(), permanent: true);
     Get.put<CaptchaService>(TurnstileCaptchaService(), permanent: true);
+    Get.put<SupportService>(EmailJsSupportService(), permanent: true);
     Get.put<UserService>(UserService(), permanent: true);
     Get.put<ProfilePhotoService>(
       SupabaseProfilePhotoService(),

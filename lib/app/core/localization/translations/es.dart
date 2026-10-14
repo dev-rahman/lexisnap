@@ -199,6 +199,9 @@ const Map<String, String> es = {
   LocaleKeys.helpNoEmailAppError:
       'Este dispositivo no tiene ninguna app de correo configurada.',
   LocaleKeys.helpMailSubject: 'Solicitud de soporte de LexiSnap',
+  LocaleKeys.helpMessageSentSuccess:
+      'Mensaje enviado. Te enviamos una copia por correo.',
+  LocaleKeys.helpSendError: 'No se pudo enviar tu mensaje. Inténtalo de nuevo.',
 
   LocaleKeys.scanSourceTitle: 'Escanear texto',
   LocaleKeys.scanSourceSubtitle:

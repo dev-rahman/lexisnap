@@ -199,6 +199,8 @@ const Map<String, String> ko = {
   LocaleKeys.helpEmptyMessageError: '먼저 무엇을 도와드릴지 알려주세요.',
   LocaleKeys.helpNoEmailAppError: '이 기기에 설정된 이메일 앱이 없어요.',
   LocaleKeys.helpMailSubject: 'LexiSnap 지원 요청',
+  LocaleKeys.helpMessageSentSuccess: '메시지를 보냈어요. 사본을 이메일로 보내드렸어요.',
+  LocaleKeys.helpSendError: '메시지를 보내지 못했어요. 다시 시도해주세요.',
 
   LocaleKeys.scanSourceTitle: '텍스트 스캔',
   LocaleKeys.scanSourceSubtitle: '사진을 찍거나 갤러리에서 선택해서 새로운 단어를 찾아보세요.',

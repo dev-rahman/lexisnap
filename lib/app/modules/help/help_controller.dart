@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../core/config/env.dart';
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/auth/auth_service.dart';
+import '../../core/services/support/support_service.dart';
 import '../../core/utils/app_snackbar.dart';
 
 class FaqEntry {
@@ -45,26 +46,52 @@ class HelpController extends GetxController {
       return;
     }
 
+    final user = Get.find<AuthService>().currentUser;
+    final userEmail = user?.email ?? '';
+    final support = Get.find<SupportService>();
+
     isSendingMessage.value = true;
     try {
-      final userEmail = Get.find<AuthService>().currentUser?.email ?? 'unknown';
-      final uri = Uri(
-        scheme: 'mailto',
-        path: Env.supportEmail,
-        query: _encodeQueryParameters({
-          'subject': LocaleKeys.helpMailSubject.tr,
-          'body': 'From: $userEmail\n\n$message',
-        }),
-      );
-
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
+      // EmailJS configured: send the request to support and a copy to the
+      // user, all in-app. Falls back to the mail app otherwise.
+      if (support.isConfigured && userEmail.isNotEmpty) {
+        await support.sendSupportMessage(
+          message: message,
+          userEmail: userEmail,
+          userName: user?.fullName,
+        );
         messageController.clear();
+        AppSnackbar.success(LocaleKeys.helpMessageSentSuccess.tr);
       } else {
-        AppSnackbar.error(LocaleKeys.helpNoEmailAppError.tr);
+        await _openMailApp(message, userEmail);
       }
+    } on SupportException catch (e) {
+      // Temporary: show the real EmailJS reason while diagnosing setup.
+      // Revert to LocaleKeys.helpSendError.tr once sending works.
+      AppSnackbar.error(e.message);
     } finally {
       isSendingMessage.value = false;
+    }
+  }
+
+  /// Fallback used before EmailJS is configured: hand the message to the
+  /// user's own mail app, pre-addressed to support.
+  Future<void> _openMailApp(String message, String userEmail) async {
+    final uri = Uri(
+      scheme: 'mailto',
+      path: Env.supportEmail,
+      query: _encodeQueryParameters({
+        'subject': LocaleKeys.helpMailSubject.tr,
+        'body':
+            'From: ${userEmail.isEmpty ? 'unknown' : userEmail}\n\n$message',
+      }),
+    );
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+      messageController.clear();
+    } else {
+      AppSnackbar.error(LocaleKeys.helpNoEmailAppError.tr);
     }
   }
 

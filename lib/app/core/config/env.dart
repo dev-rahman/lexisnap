@@ -38,6 +38,31 @@ class Env {
   /// key lives only in Supabase, never here.
   static String get turnstileSiteKey => dotenv.env['TURNSTILE_SITE_KEY'] ?? '';
 
+  // --- EmailJS (support form) ---------------------------------------------
+  // When these are set, the help form sends two emails through EmailJS: the
+  // support request to [supportEmail] and a copy to the user. When they're
+  // empty the form falls back to opening the user's mail app. See
+  // docs/emailjs/SETUP.md.
+
+  static String get emailjsServiceId => dotenv.env['EMAILJS_SERVICE_ID'] ?? '';
+
+  /// Public key (Account > General). Safe in the app.
+  static String get emailjsPublicKey => dotenv.env['EMAILJS_PUBLIC_KEY'] ?? '';
+
+  /// Private key (Account > Security). Required by EmailJS to allow sends
+  /// from a non-browser app. It can be extracted from the app binary, so
+  /// EmailJS's own rate limits are the real guard - keep those tight.
+  static String get emailjsPrivateKey =>
+      dotenv.env['EMAILJS_PRIVATE_KEY'] ?? '';
+
+  /// Template that emails the support request to the LexiSnap inbox.
+  static String get emailjsTemplateSupport =>
+      dotenv.env['EMAILJS_TEMPLATE_SUPPORT'] ?? '';
+
+  /// Template that emails the user their copy/receipt.
+  static String get emailjsTemplateReceipt =>
+      dotenv.env['EMAILJS_TEMPLATE_RECEIPT'] ?? '';
+
   static String _require(String key) {
     final value = dotenv.env[key];
     if (value == null || value.isEmpty) {

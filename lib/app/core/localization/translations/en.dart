@@ -199,6 +199,8 @@ const Map<String, String> en = {
   LocaleKeys.helpEmptyMessageError: 'Tell us what you need help with first.',
   LocaleKeys.helpNoEmailAppError: 'No email app is set up on this device.',
   LocaleKeys.helpMailSubject: 'LexiSnap support request',
+  LocaleKeys.helpMessageSentSuccess: 'Message sent. We\'ve emailed you a copy.',
+  LocaleKeys.helpSendError: 'Couldn\'t send your message. Please try again.',
 
   LocaleKeys.scanSourceTitle: 'Scan text',
   LocaleKeys.scanSourceSubtitle: 'Capture a photo or choose one from your gallery to pull out new vocabulary.',

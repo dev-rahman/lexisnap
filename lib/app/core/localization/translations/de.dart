@@ -204,6 +204,10 @@ const Map<String, String> de = {
   LocaleKeys.helpNoEmailAppError:
       'Auf diesem Gerät ist keine E-Mail-App eingerichtet.',
   LocaleKeys.helpMailSubject: 'LexiSnap-Supportanfrage',
+  LocaleKeys.helpMessageSentSuccess:
+      'Nachricht gesendet. Eine Kopie ist per E-Mail unterwegs.',
+  LocaleKeys.helpSendError:
+      'Deine Nachricht konnte nicht gesendet werden. Bitte versuche es erneut.',
 
   LocaleKeys.scanSourceTitle: 'Text scannen',
   LocaleKeys.scanSourceSubtitle: 'Mach ein Foto oder wähle eins aus deiner Galerie, um neue Vokabeln herauszuholen.',

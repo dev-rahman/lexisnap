@@ -1,0 +1,51 @@
+<!--
+  EmailJS template: USER RECEIPT (the copy sent to the user).
+  Paste the HTML below into the template's "Content" (code view).
+
+  In the template's settings, set:
+    To Email   : {{to_email}}      (the app passes the user's email)
+    From Name  : LexiSnap
+    Reply To   : {{reply_to}}      (the app passes your support inbox)
+    Subject    : We got your message
+
+  Variables used: user_name, user_email, message, submitted_at
+-->
+<div style="margin:0;padding:0;background:#F7F4EE;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F4EE;padding:24px 0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #DFD9CD;">
+          <tr>
+            <td style="background:#1C2541;padding:24px 28px;text-align:center;">
+              <div style="color:#ffffff;font-size:20px;font-weight:700;">LexiSnap</div>
+              <div style="color:#E7623C;font-size:14px;font-weight:600;margin-top:4px;">We got your message</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:28px;">
+              <p style="margin:0 0 12px;font-size:16px;color:#1C2541;">Hi {{user_name}},</p>
+              <p style="margin:0 0 16px;font-size:15px;line-height:1.6;color:#1C2541;">
+                Thanks for reaching out. Our team has your message and will get back to you
+                at <strong>{{user_email}}</strong> as soon as we can. Here's a copy for your records.
+              </p>
+
+              <div style="padding:16px 18px;background:#EDE9DF;border-radius:10px;border:1px solid #DFD9CD;">
+                <div style="font-size:12px;font-weight:700;color:#5C6178;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Your message</div>
+                <div style="font-size:15px;line-height:1.5;color:#1C2541;white-space:pre-wrap;">{{message}}</div>
+              </div>
+
+              <p style="margin:20px 0 0;font-size:13px;color:#5C6178;">
+                You don't need to do anything else. If you want to add more, just reply to this email.
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:16px 28px;border-top:1px solid #DFD9CD;text-align:center;">
+              <div style="font-size:12px;color:#5C6178;">LexiSnap - AI flashcards from anything you scan</div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>

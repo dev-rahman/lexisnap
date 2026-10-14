@@ -1,0 +1,60 @@
+<!--
+  EmailJS template: SUPPORT TICKET (sent to the LexiSnap inbox).
+  Paste the HTML below into the template's "Content" (code view).
+
+  In the template's settings, set:
+    To Email   : {{to_email}}      (the app passes your support inbox)
+    From Name  : LexiSnap support
+    Reply To   : {{reply_to}}      (the app passes the user's email, so
+                                    hitting Reply answers the user directly)
+    Subject    : New support message from {{user_name}}
+
+  Variables used: user_name, user_email, message, platform, submitted_at
+-->
+<div style="margin:0;padding:0;background:#F7F4EE;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F7F4EE;padding:24px 0;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:14px;overflow:hidden;border:1px solid #DFD9CD;">
+          <tr>
+            <td style="background:#1C2541;padding:20px 28px;">
+              <div style="color:#ffffff;font-size:18px;font-weight:700;">LexiSnap</div>
+              <div style="color:#E7623C;font-size:13px;font-weight:600;margin-top:2px;">New support message</div>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:24px 28px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:14px;color:#1C2541;">
+                <tr>
+                  <td style="padding:4px 0;color:#5C6178;width:110px;">From</td>
+                  <td style="padding:4px 0;font-weight:600;">{{user_name}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;color:#5C6178;">Email</td>
+                  <td style="padding:4px 0;"><a href="mailto:{{user_email}}" style="color:#E7623C;text-decoration:none;">{{user_email}}</a></td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;color:#5C6178;">Platform</td>
+                  <td style="padding:4px 0;">{{platform}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;color:#5C6178;">Received</td>
+                  <td style="padding:4px 0;">{{submitted_at}}</td>
+                </tr>
+              </table>
+
+              <div style="margin-top:20px;padding:16px 18px;background:#EDE9DF;border-radius:10px;border:1px solid #DFD9CD;">
+                <div style="font-size:12px;font-weight:700;color:#5C6178;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Message</div>
+                <div style="font-size:15px;line-height:1.5;color:#1C2541;white-space:pre-wrap;">{{message}}</div>
+              </div>
+
+              <p style="margin:20px 0 0;font-size:12px;color:#5C6178;">
+                Reply to this email to answer {{user_name}} directly.
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
