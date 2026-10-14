@@ -10,6 +10,9 @@ const Map<String, String> ko = {
   LocaleKeys.commonComingSoon: '곧 출시 예정',
   LocaleKeys.commonSomethingWentWrong: '문제가 발생했어요',
   LocaleKeys.commonHeadsUp: '알림',
+  LocaleKeys.captchaTitle: '간단한 보안 확인',
+  LocaleKeys.captchaSubtitle: '계속하기 전에 사람인지 확인할게요.',
+  LocaleKeys.captchaError: '확인에 실패했어요. 다시 시도해주세요.',
   LocaleKeys.commonSuccess: '완료',
 
   LocaleKeys.onboardingSkip: '건너뛰기',
@@ -34,7 +37,6 @@ const Map<String, String> ko = {
   LocaleKeys.loginForgotPassword: '비밀번호를 잊으셨나요?',
   LocaleKeys.loginButton: '로그인',
   LocaleKeys.loginContinueGoogle: 'Google로 계속하기',
-  LocaleKeys.loginContinueApple: 'Apple로 계속하기',
   LocaleKeys.loginNoAccount: '계정이 없으신가요?',
   LocaleKeys.loginSignUp: '회원가입',
 
@@ -139,8 +141,7 @@ const Map<String, String> ko = {
       'LexiSnap의 카메라 접근이 꺼져 있어요. 프로필 사진을 찍으려면 설정에서 켜 주세요.',
   LocaleKeys.passwordChangeTitle: '비밀번호 변경',
   LocaleKeys.passwordSetTitle: '비밀번호 설정',
-  LocaleKeys.passwordSetBody:
-      'Google 또는 Apple로 로그인했어요. 비밀번호를 추가하면 이메일로도 로그인할 수 있어요.',
+  LocaleKeys.passwordSetBody: 'Google로 로그인했어요. 비밀번호를 추가하면 이메일로도 로그인할 수 있어요.',
   LocaleKeys.passwordCurrent: '현재 비밀번호',
   LocaleKeys.passwordWrongCurrent: '현재 비밀번호가 올바르지 않아요.',
   LocaleKeys.emailChangeTitle: '이메일 변경',
@@ -181,8 +182,7 @@ const Map<String, String> ko = {
   LocaleKeys.helpTitle: '도움말 및 지원',
   LocaleKeys.helpFaqTitle: '자주 묻는 질문',
   LocaleKeys.helpFaq1Q: '로그인은 어떻게 하나요?',
-  LocaleKeys.helpFaq1A:
-      '이메일과 비밀번호를 사용하거나, Android와 iOS에서는 Google로, iOS에서는 Apple로 로그인할 수 있어요.',
+  LocaleKeys.helpFaq1A: '이메일과 비밀번호를 사용하거나, Google로 로그인할 수 있어요.',
   LocaleKeys.helpFaq2Q: '비밀번호를 잊어버렸어요. 어떻게 하나요?',
   LocaleKeys.helpFaq2A: "로그인 화면에서 '비밀번호를 잊으셨나요?'를 눌러주세요. 재설정 링크를 이메일로 보내드려요.",
   LocaleKeys.helpFaq3Q: '내 데이터는 안전한가요?',

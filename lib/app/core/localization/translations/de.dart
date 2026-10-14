@@ -10,6 +10,10 @@ const Map<String, String> de = {
   LocaleKeys.commonComingSoon: 'Demnächst verfügbar',
   LocaleKeys.commonSomethingWentWrong: 'Etwas ist schiefgelaufen',
   LocaleKeys.commonHeadsUp: 'Hinweis',
+  LocaleKeys.captchaTitle: 'Kurze Sicherheitsprüfung',
+  LocaleKeys.captchaSubtitle: 'Wir bestätigen kurz, dass du ein Mensch bist.',
+  LocaleKeys.captchaError:
+      'Überprüfung fehlgeschlagen. Bitte versuche es erneut.',
   LocaleKeys.commonSuccess: 'Erfolgreich',
 
   LocaleKeys.onboardingSkip: 'Überspringen',
@@ -31,7 +35,6 @@ const Map<String, String> de = {
   LocaleKeys.loginForgotPassword: 'Passwort vergessen?',
   LocaleKeys.loginButton: 'Anmelden',
   LocaleKeys.loginContinueGoogle: 'Mit Google fortfahren',
-  LocaleKeys.loginContinueApple: 'Mit Apple fortfahren',
   LocaleKeys.loginNoAccount: 'Noch kein Konto?',
   LocaleKeys.loginSignUp: 'Registrieren',
 
@@ -142,7 +145,7 @@ const Map<String, String> de = {
   LocaleKeys.photoCameraDeniedBody: 'Der Kamerazugriff für LexiSnap ist deaktiviert. Aktiviere ihn in den Einstellungen, um ein Profilbild aufzunehmen.',
   LocaleKeys.passwordChangeTitle: 'Passwort ändern',
   LocaleKeys.passwordSetTitle: 'Passwort festlegen',
-  LocaleKeys.passwordSetBody: 'Du hast dich mit Google oder Apple angemeldet. Mit einem Passwort kannst du dich auch mit deiner E-Mail-Adresse anmelden.',
+  LocaleKeys.passwordSetBody: 'Du hast dich mit Google angemeldet. Mit einem Passwort kannst du dich auch mit deiner E-Mail-Adresse anmelden.',
   LocaleKeys.passwordCurrent: 'Aktuelles Passwort',
   LocaleKeys.passwordWrongCurrent: 'Dein aktuelles Passwort ist falsch.',
   LocaleKeys.emailChangeTitle: 'E-Mail-Adresse ändern',
@@ -180,7 +183,7 @@ const Map<String, String> de = {
   LocaleKeys.helpTitle: 'Hilfe & Support',
   LocaleKeys.helpFaqTitle: 'Häufig gestellte Fragen',
   LocaleKeys.helpFaq1Q: 'Wie melde ich mich an?',
-  LocaleKeys.helpFaq1A: 'Verwende deine E-Mail-Adresse und dein Passwort, oder melde dich mit Google (Android und iOS) oder Apple (nur iOS) an.',
+  LocaleKeys.helpFaq1A: 'Verwende deine E-Mail-Adresse und dein Passwort, oder melde dich mit Google an.',
   LocaleKeys.helpFaq2Q: 'Ich habe mein Passwort vergessen. Was nun?',
   LocaleKeys.helpFaq2A: 'Tippe auf dem Anmeldebildschirm auf „Passwort vergessen?“ - wir senden dir dann einen Link zum Zurücksetzen per E-Mail.',
   LocaleKeys.helpFaq3Q: 'Sind meine Daten sicher?',

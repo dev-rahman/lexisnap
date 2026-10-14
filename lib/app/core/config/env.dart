@@ -31,6 +31,13 @@ class Env {
   static String get supportEmail =>
       dotenv.env['SUPPORT_EMAIL'] ?? 'support@lexisnap.app';
 
+  /// Cloudflare Turnstile site key (public). When empty, the app skips the
+  /// captcha entirely, which is correct while CAPTCHA is turned off in the
+  /// Supabase dashboard. Set it, and enable CAPTCHA in Supabase, to switch
+  /// bot protection on - the two must be done together. The matching secret
+  /// key lives only in Supabase, never here.
+  static String get turnstileSiteKey => dotenv.env['TURNSTILE_SITE_KEY'] ?? '';
+
   static String _require(String key) {
     final value = dotenv.env[key];
     if (value == null || value.isEmpty) {

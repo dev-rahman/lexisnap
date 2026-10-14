@@ -94,21 +94,10 @@ class LoginView extends GetView<LoginController> {
                   const SizedBox(height: AppSpacing.lg),
                   Obx(
                     () => SocialSignInButton(
-                      provider: SocialProvider.google,
                       isLoading: controller.isGoogleLoading.value,
                       onPressed: controller.continueWithGoogle,
                     ),
                   ),
-                  if (GetPlatform.isIOS) ...[
-                    const SizedBox(height: AppSpacing.sm),
-                    Obx(
-                      () => SocialSignInButton(
-                        provider: SocialProvider.apple,
-                        isLoading: controller.isAppleLoading.value,
-                        onPressed: controller.continueWithApple,
-                      ),
-                    ),
-                  ],
                   const SizedBox(height: AppSpacing.lg),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

@@ -10,6 +10,10 @@ const Map<String, String> fr = {
   LocaleKeys.commonComingSoon: 'Bientôt disponible',
   LocaleKeys.commonSomethingWentWrong: "Une erreur s'est produite",
   LocaleKeys.commonHeadsUp: 'À noter',
+  LocaleKeys.captchaTitle: 'Vérification de sécurité',
+  LocaleKeys.captchaSubtitle:
+      'On confirme que vous êtes humain avant de continuer.',
+  LocaleKeys.captchaError: 'Échec de la vérification. Veuillez réessayer.',
   LocaleKeys.commonSuccess: 'Succès',
 
   LocaleKeys.onboardingSkip: 'Passer',
@@ -32,7 +36,6 @@ const Map<String, String> fr = {
   LocaleKeys.loginForgotPassword: 'Mot de passe oublié ?',
   LocaleKeys.loginButton: 'Se connecter',
   LocaleKeys.loginContinueGoogle: 'Continuer avec Google',
-  LocaleKeys.loginContinueApple: 'Continuer avec Apple',
   LocaleKeys.loginNoAccount: "Vous n'avez pas de compte ?",
   LocaleKeys.loginSignUp: "S'inscrire",
 
@@ -143,7 +146,7 @@ const Map<String, String> fr = {
   LocaleKeys.photoCameraDeniedBody: "L'accès à l'appareil photo est désactivé pour LexiSnap. Activez-le dans les Réglages pour prendre une photo de profil.",
   LocaleKeys.passwordChangeTitle: 'Changer le mot de passe',
   LocaleKeys.passwordSetTitle: 'Définir un mot de passe',
-  LocaleKeys.passwordSetBody: 'Votre compte utilise Google ou Apple pour la connexion. Ajoutez un mot de passe pour pouvoir aussi vous connecter avec votre e-mail.',
+  LocaleKeys.passwordSetBody: 'Votre compte utilise Google pour la connexion. Ajoutez un mot de passe pour pouvoir aussi vous connecter avec votre e-mail.',
   LocaleKeys.passwordCurrent: 'Mot de passe actuel',
   LocaleKeys.passwordWrongCurrent: 'Votre mot de passe actuel est incorrect.',
   LocaleKeys.emailChangeTitle: "Changer d'adresse e-mail",
@@ -184,7 +187,7 @@ const Map<String, String> fr = {
   LocaleKeys.helpTitle: 'Aide et assistance',
   LocaleKeys.helpFaqTitle: 'Questions fréquentes',
   LocaleKeys.helpFaq1Q: 'Comment me connecter ?',
-  LocaleKeys.helpFaq1A: 'Utilisez votre e-mail et votre mot de passe, ou connectez-vous avec Google (Android et iOS) ou Apple (iOS uniquement).',
+  LocaleKeys.helpFaq1A: 'Utilisez votre e-mail et votre mot de passe, ou connectez-vous avec Google.',
   LocaleKeys.helpFaq2Q: "J'ai oublié mon mot de passe. Que faire ?",
   LocaleKeys.helpFaq2A: "Sur l'écran de connexion, appuyez sur « Mot de passe oublié ? » et nous vous enverrons un lien de réinitialisation par e-mail.",
   LocaleKeys.helpFaq3Q: 'Mes données sont-elles sécurisées ?',

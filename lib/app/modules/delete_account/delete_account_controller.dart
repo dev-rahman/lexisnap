@@ -34,7 +34,7 @@ class DeleteAccountController extends GetxController {
 
   AuthService get _authService => Get.find<AuthService>();
 
-  /// Google/Apple accounts have no password to ask for.
+  /// Google accounts have no password to ask for.
   bool get hasPassword =>
       Get.find<UserService>().user.value?.hasPassword ?? false;
 

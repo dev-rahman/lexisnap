@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../core/errors/auth_exception.dart';
 import '../../../core/localization/locale_keys.dart';
 import '../../../core/services/auth/auth_service.dart';
+import '../../../core/services/captcha/captcha_service.dart';
 import '../../../core/utils/app_snackbar.dart';
 import '../../../routes/app_routes.dart';
 
@@ -34,6 +35,7 @@ class ForgotPasswordController extends GetxController {
   Timer? _resendTimer;
 
   AuthService get _authService => Get.find<AuthService>();
+  CaptchaService get _captcha => Get.find<CaptchaService>();
 
   @override
   void onClose() {
@@ -50,7 +52,15 @@ class ForgotPasswordController extends GetxController {
 
     isLoading.value = true;
     try {
-      await _authService.sendPasswordResetEmail(email: emailController.text);
+      String? captchaToken;
+      if (_captcha.isEnabled) {
+        captchaToken = await _captcha.getToken();
+        if (captchaToken == null) return;
+      }
+      await _authService.sendPasswordResetEmail(
+        email: emailController.text,
+        captchaToken: captchaToken,
+      );
       codeController.clear();
       step.value = ForgotPasswordStep.code;
       _startResendCooldown();
@@ -64,7 +74,15 @@ class ForgotPasswordController extends GetxController {
   Future<void> resendCode() async {
     isResending.value = true;
     try {
-      await _authService.sendPasswordResetEmail(email: emailController.text);
+      String? captchaToken;
+      if (_captcha.isEnabled) {
+        captchaToken = await _captcha.getToken();
+        if (captchaToken == null) return;
+      }
+      await _authService.sendPasswordResetEmail(
+        email: emailController.text,
+        captchaToken: captchaToken,
+      );
       codeController.clear();
       _startResendCooldown();
       AppSnackbar.success(LocaleKeys.forgotPasswordCodeResent.tr);

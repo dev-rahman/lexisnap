@@ -1,10 +1,5 @@
-import 'dart:convert';
-import 'dart:math';
-
-import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as sb;
 
 import '../../../data/models/app_user.dart';
@@ -14,9 +9,9 @@ import 'auth_service.dart';
 
 /// Supabase-backed implementation of [AuthService].
 ///
-/// This is the only file in the app that imports `supabase_flutter`,
-/// `google_sign_in`, or `sign_in_with_apple` directly. Every other class
-/// depends on the [AuthService] interface instead.
+/// This is the only file in the app that imports `supabase_flutter` or
+/// `google_sign_in` directly. Every other class depends on the
+/// [AuthService] interface instead.
 class SupabaseAuthService implements AuthService {
   Future<void>? _googleInitFuture;
 
@@ -59,9 +54,14 @@ class SupabaseAuthService implements AuthService {
   Future<void> signInWithEmail({
     required String email,
     required String password,
+    String? captchaToken,
   }) async {
     try {
-      await _auth.signInWithPassword(email: email.trim(), password: password);
+      await _auth.signInWithPassword(
+        email: email.trim(),
+        password: password,
+        captchaToken: captchaToken,
+      );
     } on sb.AuthException catch (e) {
       throw AppAuthException(e.message);
     }
@@ -72,6 +72,7 @@ class SupabaseAuthService implements AuthService {
     required String email,
     required String password,
     String? fullName,
+    String? captchaToken,
   }) async {
     try {
       await _auth.signUp(
@@ -80,6 +81,7 @@ class SupabaseAuthService implements AuthService {
         data: fullName != null && fullName.isNotEmpty
             ? {'full_name': fullName}
             : null,
+        captchaToken: captchaToken,
       );
     } on sb.AuthException catch (e) {
       throw AppAuthException(e.message);
@@ -87,9 +89,15 @@ class SupabaseAuthService implements AuthService {
   }
 
   @override
-  Future<void> sendPasswordResetEmail({required String email}) async {
+  Future<void> sendPasswordResetEmail({
+    required String email,
+    String? captchaToken,
+  }) async {
     try {
-      await _auth.resetPasswordForEmail(email.trim());
+      await _auth.resetPasswordForEmail(
+        email.trim(),
+        captchaToken: captchaToken,
+      );
     } on sb.AuthException catch (e) {
       throw AppAuthException(e.message);
     }
@@ -252,53 +260,6 @@ class SupabaseAuthService implements AuthService {
   }
 
   @override
-  Future<void> signInWithApple() async {
-    try {
-      final rawNonce = _generateRawNonce();
-      final hashedNonce = sha256.convert(utf8.encode(rawNonce)).toString();
-
-      final credential = await SignInWithApple.getAppleIDCredential(
-        scopes: [
-          AppleIDAuthorizationScopes.email,
-          AppleIDAuthorizationScopes.fullName,
-        ],
-        nonce: hashedNonce,
-      );
-
-      final idToken = credential.identityToken;
-      if (idToken == null) {
-        throw const AppAuthException(
-          'Apple sign-in failed: no identity token returned.',
-        );
-      }
-
-      await _auth.signInWithIdToken(
-        provider: sb.OAuthProvider.apple,
-        idToken: idToken,
-        nonce: rawNonce,
-      );
-
-      // Apple only sends the name on the very first authorization. Persist
-      // it on the Supabase user the first time we see it.
-      final fullName = [
-        credential.givenName,
-        credential.familyName,
-      ].whereType<String>().where((s) => s.isNotEmpty).join(' ');
-
-      if (fullName.isNotEmpty) {
-        await _auth.updateUser(
-          sb.UserAttributes(data: {'full_name': fullName}),
-        );
-      }
-    } on SignInWithAppleAuthorizationException catch (e) {
-      if (e.code == AuthorizationErrorCode.canceled) return;
-      throw AppAuthException('Apple sign-in failed: ${e.message}');
-    } on sb.AuthException catch (e) {
-      throw AppAuthException(e.message);
-    }
-  }
-
-  @override
   Future<void> signOut() async {
     try {
       await GoogleSignIn.instance.signOut();
@@ -310,15 +271,5 @@ class SupabaseAuthService implements AuthService {
     } on sb.AuthException catch (e) {
       throw AppAuthException(e.message);
     }
-  }
-
-  String _generateRawNonce([int length = 32]) {
-    const charset =
-        '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-    final random = Random.secure();
-    return List.generate(
-      length,
-      (_) => charset[random.nextInt(charset.length)],
-    ).join();
   }
 }

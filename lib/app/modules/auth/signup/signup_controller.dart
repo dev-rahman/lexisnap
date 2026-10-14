@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../core/errors/auth_exception.dart';
 import '../../../core/localization/locale_keys.dart';
 import '../../../core/services/auth/auth_service.dart';
+import '../../../core/services/captcha/captcha_service.dart';
 import '../../../core/utils/app_snackbar.dart';
 import '../../../routes/app_routes.dart';
 
@@ -17,6 +18,7 @@ class SignupController extends GetxController {
   final isLoading = false.obs;
 
   AuthService get _authService => Get.find<AuthService>();
+  CaptchaService get _captcha => Get.find<CaptchaService>();
 
   @override
   void onClose() {
@@ -32,10 +34,16 @@ class SignupController extends GetxController {
 
     isLoading.value = true;
     try {
+      String? captchaToken;
+      if (_captcha.isEnabled) {
+        captchaToken = await _captcha.getToken();
+        if (captchaToken == null) return;
+      }
       await _authService.signUpWithEmail(
         email: emailController.text,
         password: passwordController.text,
         fullName: fullNameController.text.trim(),
+        captchaToken: captchaToken,
       );
 
       if (_authService.currentUser != null) {

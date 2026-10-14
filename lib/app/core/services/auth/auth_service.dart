@@ -14,20 +14,28 @@ abstract class AuthService {
   /// The currently signed-in user, if any, read synchronously.
   AppUser? get currentUser;
 
+  /// [captchaToken] is a Cloudflare Turnstile token when captcha protection
+  /// is on, or null when it's off. The same applies to [signUpWithEmail] and
+  /// [sendPasswordResetEmail].
   Future<void> signInWithEmail({
     required String email,
     required String password,
+    String? captchaToken,
   });
 
   Future<void> signUpWithEmail({
     required String email,
     required String password,
     String? fullName,
+    String? captchaToken,
   });
 
   /// Emails a one-time code the user types into the app to reset their
   /// password - no link to open. Check it with [verifyPasswordResetCode].
-  Future<void> sendPasswordResetEmail({required String email});
+  Future<void> sendPasswordResetEmail({
+    required String email,
+    String? captchaToken,
+  });
 
   /// Checks the code sent by [sendPasswordResetEmail]. On success the user
   /// is signed in, so [updatePassword] can set their new password.
@@ -63,7 +71,7 @@ abstract class AuthService {
   Future<void> updateProfile({String? fullName});
 
   /// Points the user's profile at an uploaded photo, or with null goes
-  /// back to their Google/Apple picture or initials.
+  /// back to their Google picture or initials.
   Future<void> updateProfilePhoto(String? url);
 
   /// Permanently deletes the account and every piece of data in it, then
@@ -72,10 +80,6 @@ abstract class AuthService {
 
   /// Available on both Android and iOS.
   Future<void> signInWithGoogle();
-
-  /// Available on iOS only. Callers should not show an Apple sign-in
-  /// option on other platforms.
-  Future<void> signInWithApple();
 
   Future<void> signOut();
 }

@@ -112,7 +112,7 @@ class EditProfileController extends GetxController {
     }
   }
 
-  /// [currentPassword] is null for a Google/Apple account setting its
+  /// [currentPassword] is null for a Google account setting its
   /// first password - there's nothing to confirm yet. Returns whether the
   /// password was saved, so the sheet knows to close.
   Future<bool> changePassword({

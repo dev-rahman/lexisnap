@@ -70,7 +70,7 @@ class AppAvatar extends StatelessWidget {
                 Image.network(
                   user!.avatarUrl!,
                   fit: BoxFit.cover,
-                  // Uploads are 256px already; this caps Google/Apple
+                  // Uploads are 256px already; this caps Google
                   // pictures, which can be far larger, to the same.
                   cacheWidth: 256,
                   gaplessPlayback: true,

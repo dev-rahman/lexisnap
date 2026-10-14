@@ -340,7 +340,7 @@ void _showPasswordSheet(
   BuildContext context,
   EditProfileController controller,
 ) {
-  // Google/Apple accounts have no password yet, so there's nothing to
+  // Google accounts have no password yet, so there's nothing to
   // confirm - they're setting one, not changing it.
   final hasPassword = controller.user?.hasPassword ?? false;
   final formKey = GlobalKey<FormState>();

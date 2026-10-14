@@ -16,7 +16,7 @@ class AppUser {
   final String? email;
   final String? fullName;
 
-  /// The photo to show: one the user uploaded, else their Google or Apple
+  /// The photo to show: one the user uploaded, else their Google
   /// picture, else null (initials).
   final String? avatarUrl;
 
@@ -25,7 +25,7 @@ class AppUser {
   final bool hasOwnPhoto;
 
   /// Whether the account has an email + password sign-in. Accounts made
-  /// through Google or Apple don't, so there's no current password to ask
+  /// through Google don't, so there's no current password to ask
   /// for before setting one.
   final bool hasPassword;
 

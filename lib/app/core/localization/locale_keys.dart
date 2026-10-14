@@ -15,6 +15,9 @@ class LocaleKeys {
   static const commonSomethingWentWrong = 'common_something_went_wrong';
   static const commonSuccess = 'common_success';
   static const commonHeadsUp = 'common_heads_up';
+  static const captchaTitle = 'captcha_title';
+  static const captchaSubtitle = 'captcha_subtitle';
+  static const captchaError = 'captcha_error';
 
   // Onboarding
   static const onboardingSkip = 'onboarding_skip';
@@ -38,7 +41,6 @@ class LocaleKeys {
   static const loginForgotPassword = 'login_forgot_password';
   static const loginButton = 'login_button';
   static const loginContinueGoogle = 'login_continue_google';
-  static const loginContinueApple = 'login_continue_apple';
   static const loginNoAccount = 'login_no_account';
   static const loginSignUp = 'login_sign_up';
 
