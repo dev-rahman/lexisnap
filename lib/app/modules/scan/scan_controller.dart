@@ -86,6 +86,70 @@ class ScanController extends GetxController {
       candidateWords.isNotEmpty &&
       selectedWords.length == candidateWords.length;
 
+  /// Candidate words grouped by their own language: the scan's dominant
+  /// language first, then the rest by name, with the unknown-language group
+  /// (regex fallback) last. Drives the categorized list when a scan mixes
+  /// languages.
+  List<({String? code, String? name, List<VocabularyWord> words})>
+  get languageGroups {
+    final byCode = <String?, List<VocabularyWord>>{};
+    for (final word in candidateWords) {
+      byCode.putIfAbsent(word.languageCode, () => []).add(word);
+    }
+
+    final dominant = sourceLanguageCode.value;
+    final codes = byCode.keys.toList()
+      ..sort((a, b) {
+        if (a == b) return 0;
+        if (a == dominant) return -1;
+        if (b == dominant) return 1;
+        if (a == null) return 1;
+        if (b == null) return -1;
+        final an = VocabularyLanguages.byCode(a)?.name ?? a;
+        final bn = VocabularyLanguages.byCode(b)?.name ?? b;
+        return an.compareTo(bn);
+      });
+
+    return [
+      for (final code in codes)
+        (
+          code: code,
+          name: code == null
+              ? null
+              : VocabularyLanguages.byCode(code)?.name ?? code,
+          words: byCode[code]!,
+        ),
+    ];
+  }
+
+  /// True when the scan found words in more than one language.
+  bool get hasMultipleLanguages =>
+      candidateWords.map((word) => word.languageCode).toSet().length > 1;
+
+  /// True when the current selection mixes languages, which a single deck
+  /// can't hold - the caller warns and blocks on this.
+  bool get selectionSpansLanguages =>
+      selectedWords.map((word) => word.languageCode).toSet().length > 1;
+
+  /// The one language code shared by the whole selection (null when empty,
+  /// mixed, or the unknown-language group).
+  String? get selectedSourceCode {
+    final codes = selectedWords.map((word) => word.languageCode).toSet();
+    return codes.length == 1 ? codes.first : null;
+  }
+
+  /// Selects or clears every candidate word in one language group.
+  void toggleSelectAllInLanguage(String? code) {
+    final group = candidateWords
+        .where((word) => word.languageCode == code)
+        .toList();
+    if (group.every(selectedWords.contains)) {
+      selectedWords.removeWhere((word) => word.languageCode == code);
+    } else {
+      selectedWords.addAll(group);
+    }
+  }
+
   /// Where the photo comes from, chosen before this route was pushed (see
   /// `startScanFlow`) and kept so Retake can reopen the same picker.
   ScanSource? _source;
@@ -200,18 +264,26 @@ class ScanController extends GetxController {
     savingLabel.value = LocaleKeys.scanSavingDeck.tr;
     stage.value = ScanStage.savingDeck;
     try {
+      // The deck's source is the selection's own language, not the scan's
+      // dominant one, so a French batch pulled from a mostly-German scan
+      // becomes a correct French deck.
+      final sourceCode = selected.first.languageCode;
+      final sourceName =
+          VocabularyLanguages.byCode(sourceCode)?.name ??
+          sourceLanguageName.value ??
+          'Scan';
+
       final deckWords = await _translateSelection(
         selected,
         targetLanguageName: targetLanguage.name,
       );
 
       final deckName =
-          suggestedDeckName.value ??
-          '${sourceLanguageName.value ?? 'Scan'} → ${targetLanguage.name}';
+          suggestedDeckName.value ?? '$sourceName → ${targetLanguage.name}';
 
       await _deckRepository.createDeck(
         name: deckName,
-        sourceLanguage: sourceLanguageCode.value,
+        sourceLanguage: sourceCode,
         targetLanguage: targetLanguage.code,
         words: deckWords,
       );
@@ -292,9 +364,13 @@ class ScanController extends GetxController {
     List<VocabularyWord> selected, {
     required String targetLanguageName,
   }) async {
+    // The batch is one language (the destination step blocks a mixed
+    // selection), so take the source from the words themselves rather than
+    // the scan's dominant language.
+    final sourceCode = selected.isEmpty ? null : selected.first.languageCode;
     final translations = await _translationAiService.translateWords(
       words: selected.map((word) => word.word).toList(),
-      sourceLanguage: sourceLanguageCode.value,
+      sourceLanguage: sourceCode,
       targetLanguage: targetLanguageName,
     );
 

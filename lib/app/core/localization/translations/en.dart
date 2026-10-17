@@ -221,6 +221,10 @@ const Map<String, String> en = {
   LocaleKeys.scanTryAgain: 'Try again',
   LocaleKeys.scanProcessingError: "Couldn't read that photo. Please try again.",
   LocaleKeys.scanDetectedLanguage: 'Detected: @language',
+  LocaleKeys.scanMultipleLanguagesCaption:
+      'Grouped by language — each language makes its own deck.',
+  LocaleKeys.scanMixedLanguagesWarning:
+      'Pick words from one language at a time. A deck holds a single language.',
   LocaleKeys.scanTargetLanguageTitle: 'Translate into',
   LocaleKeys.scanTargetLanguageBody:
       'What language would you like these words translated into?',

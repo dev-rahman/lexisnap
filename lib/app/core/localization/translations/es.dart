@@ -224,6 +224,10 @@ const Map<String, String> es = {
   LocaleKeys.scanProcessingError:
       'No se pudo leer esa foto. Inténtalo de nuevo.',
   LocaleKeys.scanDetectedLanguage: 'Detectado: @language',
+  LocaleKeys.scanMultipleLanguagesCaption:
+      'Agrupadas por idioma: cada idioma crea su propio mazo.',
+  LocaleKeys.scanMixedLanguagesWarning:
+      'Elige palabras de un solo idioma a la vez. Un mazo tiene un idioma.',
   LocaleKeys.scanTargetLanguageTitle: 'Traducir a',
   LocaleKeys.scanTargetLanguageBody:
       '¿A qué idioma te gustaría traducir estas palabras?',

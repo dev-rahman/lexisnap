@@ -9,6 +9,7 @@ class VocabularyWord {
     this.level,
     this.wordDescription,
     this.exampleSentence,
+    this.languageCode,
   });
 
   final String word;
@@ -19,11 +20,17 @@ class VocabularyWord {
   final String? wordDescription;
   final String? exampleSentence;
 
+  /// This word's own ISO 639-1 language code. A single scan can mix
+  /// languages, so each word carries its own rather than sharing the scan's
+  /// dominant one. Null for the local regex fallback, which can't detect it.
+  final String? languageCode;
+
   factory VocabularyWord.fromJson(Map<String, dynamic> json) => VocabularyWord(
     word: json['word'] as String,
     level: json['level'] as String?,
     wordDescription: json['word_description'] as String?,
     exampleSentence: json['example_sentence'] as String?,
+    languageCode: json['language_code'] as String?,
   );
 
   // Equality/hashCode by lowercased word, so this can be used in a Set for

@@ -41,16 +41,18 @@ const SYSTEM_PROMPT =
   "language as the word itself), and write exactly one natural example " +
   "sentence that uses the word and is written at that same CEFR level - " +
   "a B1 word gets a B1-appropriate sentence, not simplified or " +
-  "overcomplicated. Deduplicate case-insensitively. Also detect the " +
-  "source language of the scanned text (as an ISO 639-1 code and its " +
-  "English display name), and suggest a short, thematic name for a " +
-  'flashcard deck made from this text (e.g. "Restaurant menu ' +
-  'vocabulary", not just "French words"). Respond with ONLY a JSON ' +
-  "object of this exact shape, no other text: " +
+  "overcomplicated. Deduplicate case-insensitively. Tag EACH word with " +
+  "its own ISO 639-1 language code, because a scan can mix languages " +
+  "(for example a foreign word written next to its native-language " +
+  "translation). Also detect the overall/dominant source language of the " +
+  "scanned text (as an ISO 639-1 code and its English display name), and " +
+  "suggest a short, thematic name for a flashcard deck made from this " +
+  'text (e.g. "Restaurant menu vocabulary", not just "French words"). ' +
+  "Respond with ONLY a JSON object of this exact shape, no other text: " +
   '{"language_code": string, "language_name": string, ' +
   '"suggested_deck_name": string, "words": [{"word": string, ' +
   '"level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "word_description": string, ' +
-  '"example_sentence": string}, ...]}';
+  '"example_sentence": string, "language_code": string}, ...]}';
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
@@ -163,15 +165,25 @@ function validateWords(parsed: unknown): Array<{
   level: string;
   word_description: string;
   example_sentence: string;
+  language_code: string | null;
 }> {
   const rawWords = (parsed as { words?: unknown })?.words;
   if (!Array.isArray(rawWords)) return [];
+
+  // The scan's dominant language, used when a word doesn't carry its own -
+  // so a word is never dropped just for a missing per-word language.
+  const overall = (parsed as { language_code?: unknown })?.language_code;
+  const fallbackLanguage =
+    typeof overall === "string" && overall.trim().length > 0
+      ? overall.trim()
+      : null;
 
   const result: Array<{
     word: string;
     level: string;
     word_description: string;
     example_sentence: string;
+    language_code: string | null;
   }> = [];
 
   for (const item of rawWords) {
@@ -181,6 +193,7 @@ function validateWords(parsed: unknown): Array<{
       ?.word_description;
     const exampleSentence = (item as { example_sentence?: unknown })
       ?.example_sentence;
+    const wordLanguage = (item as { language_code?: unknown })?.language_code;
 
     if (
       typeof word === "string" &&
@@ -197,6 +210,10 @@ function validateWords(parsed: unknown): Array<{
         level,
         word_description: wordDescription,
         example_sentence: exampleSentence,
+        language_code:
+          typeof wordLanguage === "string" && wordLanguage.trim().length > 0
+            ? wordLanguage.trim().toLowerCase()
+            : fallbackLanguage,
       });
     }
   }

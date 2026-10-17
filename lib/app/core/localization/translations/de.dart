@@ -229,6 +229,9 @@ const Map<String, String> de = {
   LocaleKeys.scanProcessingError:
       'Das Foto konnte nicht gelesen werden. Bitte versuche es erneut.',
   LocaleKeys.scanDetectedLanguage: 'Erkannt: @language',
+  LocaleKeys.scanMultipleLanguagesCaption:
+      'Nach Sprache gruppiert — jede Sprache ergibt einen eigenen Stapel.',
+  LocaleKeys.scanMixedLanguagesWarning: 'Wähle Wörter einer Sprache nach der anderen. Ein Stapel hält eine Sprache.',
   LocaleKeys.scanTargetLanguageTitle: 'Übersetzen in',
   LocaleKeys.scanTargetLanguageBody:
       'In welche Sprache möchtest du diese Wörter übersetzen lassen?',

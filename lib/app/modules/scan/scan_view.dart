@@ -10,10 +10,12 @@ import '../../core/theme/app_radius.dart';
 import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
+import '../../core/utils/app_snackbar.dart';
 import '../../core/widgets/app_button.dart';
 import '../../core/widgets/deck_destination_sheet.dart';
 import '../../core/widgets/language_select_sheet.dart';
 import '../../data/models/vocabulary_word.dart';
+import '../../data/vocabulary_languages.dart';
 import 'scan_controller.dart';
 
 /// The scan flow: pick a source (camera/gallery) -> review the photo -> run
@@ -232,7 +234,15 @@ class _WordSelection extends GetView<ScanController> {
                 const SizedBox(height: AppSpacing.sm),
                 _FiledProgress(count: controller.filedWordCount.value),
               ],
-              if (controller.sourceLanguageName.value != null) ...[
+              if (controller.hasMultipleLanguages) ...[
+                const SizedBox(height: AppSpacing.xs),
+                Text(
+                  LocaleKeys.scanMultipleLanguagesCaption.tr,
+                  style: AppTextStyles.caption.copyWith(
+                    color: context.colorInkMuted,
+                  ),
+                ),
+              ] else if (controller.sourceLanguageName.value != null) ...[
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   LocaleKeys.scanDetectedLanguage.trParams({
@@ -256,14 +266,17 @@ class _WordSelection extends GetView<ScanController> {
                         color: context.colorInkMuted,
                       ),
                     ),
-                    TextButton(
-                      onPressed: controller.toggleSelectAll,
-                      child: Text(
-                        controller.allSelected
-                            ? LocaleKeys.scanDeselectAll.tr
-                            : LocaleKeys.scanSelectAll.tr,
+                    // A multi-language scan uses the per-section select-all
+                    // in each language header instead of one global toggle.
+                    if (!controller.hasMultipleLanguages)
+                      TextButton(
+                        onPressed: controller.toggleSelectAll,
+                        child: Text(
+                          controller.allSelected
+                              ? LocaleKeys.scanDeselectAll.tr
+                              : LocaleKeys.scanSelectAll.tr,
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),
@@ -278,20 +291,40 @@ class _WordSelection extends GetView<ScanController> {
               AppSpacing.lg,
               AppSpacing.lg,
             ),
-            child: Obx(
-              () => Column(
+            child: Obx(() {
+              if (!controller.hasMultipleLanguages) {
+                return Column(
+                  children: [
+                    for (final word in controller.candidateWords) ...[
+                      _WordCard(
+                        word: word,
+                        isSelected: controller.selectedWords.contains(word),
+                        onTap: () => controller.toggleWord(word),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                  ],
+                );
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  for (final word in controller.candidateWords) ...[
-                    _WordCard(
-                      word: word,
-                      isSelected: controller.selectedWords.contains(word),
-                      onTap: () => controller.toggleWord(word),
-                    ),
+                  for (final group in controller.languageGroups) ...[
+                    _LanguageSectionHeader(code: group.code, name: group.name),
                     const SizedBox(height: AppSpacing.sm),
+                    for (final word in group.words) ...[
+                      _WordCard(
+                        word: word,
+                        isSelected: controller.selectedWords.contains(word),
+                        onTap: () => controller.toggleWord(word),
+                      ),
+                      const SizedBox(height: AppSpacing.sm),
+                    ],
+                    const SizedBox(height: AppSpacing.md),
                   ],
                 ],
-              ),
-            ),
+              );
+            }),
           ),
         ),
         Padding(
@@ -344,9 +377,22 @@ Future<void> _chooseDestination(
   BuildContext context,
   ScanController controller,
 ) async {
+  // A deck holds one language, so a mixed selection can't be filed.
+  if (controller.selectionSpansLanguages) {
+    AppSnackbar.warning(LocaleKeys.scanMixedLanguagesWarning.tr);
+    return;
+  }
+
+  // Only existing decks in the selection's language, to keep every deck
+  // single-language.
+  final code = controller.selectedSourceCode;
+  final matchingDecks = controller.existingDecks
+      .where((deck) => deck.sourceLanguage == code)
+      .toList();
+
   final destination = await showDeckDestinationSheet(
     context,
-    decks: controller.existingDecks,
+    decks: matchingDecks,
     wordCount: controller.selectedWords.length,
   );
   if (destination == null) return;
@@ -364,6 +410,60 @@ Future<void> _chooseDestination(
       }
     case ExistingDeckDestination(:final deck):
       await controller.fileToExistingDeck(deck);
+  }
+}
+
+/// Header above each language group in a mixed-language scan: the language's
+/// flag and name, with a select-all for just that group. Filing a group sends
+/// its words to their own single-language deck.
+class _LanguageSectionHeader extends GetView<ScanController> {
+  const _LanguageSectionHeader({required this.code, required this.name});
+
+  final String? code;
+  final String? name;
+
+  @override
+  Widget build(BuildContext context) {
+    final flag = VocabularyLanguages.byCode(code)?.flag;
+
+    return Obx(() {
+      final group = controller.candidateWords
+          .where((word) => word.languageCode == code)
+          .toList();
+      final allSelected =
+          group.isNotEmpty && group.every(controller.selectedWords.contains);
+
+      return Row(
+        children: [
+          if (flag != null) ...[
+            Text(flag, style: const TextStyle(fontSize: 18)),
+            const SizedBox(width: AppSpacing.xs),
+          ],
+          Expanded(
+            child: Text(
+              name ?? '—',
+              style: AppTextStyles.bodyMedium.copyWith(
+                fontWeight: FontWeight.w700,
+                color: context.colorInk,
+              ),
+            ),
+          ),
+          TextButton(
+            onPressed: () => controller.toggleSelectAllInLanguage(code),
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
+              minimumSize: const Size(0, 32),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              allSelected
+                  ? LocaleKeys.scanDeselectAll.tr
+                  : LocaleKeys.scanSelectAll.tr,
+            ),
+          ),
+        ],
+      );
+    });
   }
 }
 

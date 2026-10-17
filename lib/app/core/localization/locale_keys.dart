@@ -230,6 +230,8 @@ class LocaleKeys {
   static const scanTryAgain = 'scan_try_again';
   static const scanProcessingError = 'scan_processing_error';
   static const scanDetectedLanguage = 'scan_detected_language';
+  static const scanMultipleLanguagesCaption = 'scan_multiple_languages_caption';
+  static const scanMixedLanguagesWarning = 'scan_mixed_languages_warning';
   static const scanTargetLanguageTitle = 'scan_target_language_title';
   static const scanTargetLanguageBody = 'scan_target_language_body';
   static const scanSavingDeck = 'scan_saving_deck';

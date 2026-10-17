@@ -221,6 +221,8 @@ const Map<String, String> ko = {
   LocaleKeys.scanTryAgain: '다시 시도',
   LocaleKeys.scanProcessingError: '사진을 읽지 못했어요. 다시 시도해주세요.',
   LocaleKeys.scanDetectedLanguage: '감지된 언어: @language',
+  LocaleKeys.scanMultipleLanguagesCaption: '언어별로 묶었어요 — 언어마다 별도의 덱이 돼요.',
+  LocaleKeys.scanMixedLanguagesWarning: '한 번에 한 언어의 단어만 선택하세요. 덱은 하나의 언어만 담아요.',
   LocaleKeys.scanTargetLanguageTitle: '번역할 언어',
   LocaleKeys.scanTargetLanguageBody: '이 단어들을 어떤 언어로 번역하고 싶으세요?',
   LocaleKeys.scanSavingDeck: '덱을 저장하는 중…',
