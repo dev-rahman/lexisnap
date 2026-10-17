@@ -25,6 +25,7 @@ class StudyReminderService extends GetxService {
   static const _hourKey = 'study_reminder_hour';
   static const _minuteKey = 'study_reminder_minute';
   static const _notificationId = 1001;
+  static const _testNotificationId = 1002;
   static const _channelId = 'study_reminders';
 
   final _plugin = FlutterLocalNotificationsPlugin();
@@ -46,18 +47,11 @@ class StudyReminderService extends GetxService {
 
     if (!_isSupported) return this;
 
-    tz_data.initializeTimeZones();
-    try {
-      final localZone = await FlutterTimezone.getLocalTimezone();
-      tz.setLocalLocation(tz.getLocation(localZone.identifier));
-    } catch (_) {
-      // Unknown/unavailable zone: timezone defaults to UTC, which would
-      // fire the reminder at the wrong local hour. Better to leave the
-      // reminder unscheduled than to nag at 3am.
-      isEnabled.value = false;
-      return this;
-    }
-
+    // Initialize the plugin FIRST, before the timezone step, so a
+    // notification can always be posted even if the timezone (needed only
+    // for scheduling) can't be resolved. Previously a timezone failure
+    // returned early and left the plugin uninitialized, which silently broke
+    // notifications entirely.
     await _plugin.initialize(
       settings: const InitializationSettings(
         android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -70,6 +64,18 @@ class StudyReminderService extends GetxService {
         ),
       ),
     );
+
+    tz_data.initializeTimeZones();
+    try {
+      final localZone = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(localZone.identifier));
+    } catch (_) {
+      // Unknown/unavailable zone: scheduling would fire at the wrong local
+      // hour, so keep the reminder off. The plugin is up, so the test
+      // notification still works and can show that.
+      isEnabled.value = false;
+      return this;
+    }
 
     // Re-arm on launch: an OS update or reboot can drop pending alarms.
     if (isEnabled.value) await _schedule(time.value);
@@ -134,21 +140,66 @@ class StudyReminderService extends GetxService {
       title: LocaleKeys.reminderNotificationTitle.tr,
       body: LocaleKeys.reminderNotificationBody.tr,
       scheduledDate: _nextOccurrenceOf(at),
-      notificationDetails: NotificationDetails(
-        android: AndroidNotificationDetails(
-          _channelId,
-          LocaleKeys.reminderChannelName.tr,
-          channelDescription: LocaleKeys.reminderChannelDescription.tr,
-          importance: Importance.defaultImportance,
-          priority: Priority.defaultPriority,
-        ),
-        iOS: const DarwinNotificationDetails(),
-      ),
-      // Inexact delivery avoids needing the SCHEDULE_EXACT_ALARM
-      // permission; a study nudge a few minutes late is no worse.
-      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      notificationDetails: _details(),
+      // alarmClock mode uses AlarmManager.setAlarmClock, the highest-priority
+      // alarm: it fires at the exact minute, wakes the device from Doze, and
+      // aggressive OEM battery managers (ColorOS, MIUI) honour it instead of
+      // batching it like ordinary exact alarms. The trade-off is a small
+      // "alarm set" indicator in the status bar, which is worth it for a
+      // reminder that actually arrives on time.
+      androidScheduleMode: AndroidScheduleMode.alarmClock,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+  }
+
+  NotificationDetails _details() => NotificationDetails(
+    android: AndroidNotificationDetails(
+      _channelId,
+      LocaleKeys.reminderChannelName.tr,
+      channelDescription: LocaleKeys.reminderChannelDescription.tr,
+      importance: Importance.defaultImportance,
+      priority: Priority.defaultPriority,
+    ),
+    iOS: const DarwinNotificationDetails(),
+  );
+
+  /// Diagnostic for "my reminder never fired". Posts a notification right now
+  /// through the exact same channel the reminder uses, and reports whether
+  /// the system allows notifications and whether a reminder is actually
+  /// scheduled. If the notification appears, the pipeline works and the
+  /// problem is delivery of the scheduled alarm (usually the OEM killing the
+  /// app); if it doesn't, notifications are blocked or permission is off.
+  Future<String> sendTestNotification() async {
+    if (!_isSupported) return 'Not supported on this platform.';
+
+    try {
+      final granted = await _requestPermission();
+
+      bool? systemAllowed;
+      if (Platform.isAndroid) {
+        final android = _plugin
+            .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin
+            >();
+        systemAllowed = await android?.areNotificationsEnabled();
+      }
+
+      await _plugin.show(
+        id: _testNotificationId,
+        title: LocaleKeys.reminderNotificationTitle.tr,
+        body: LocaleKeys.reminderTestBody.tr,
+        notificationDetails: _details(),
+      );
+
+      final pending = await _plugin.pendingNotificationRequests();
+      final reminderScheduled = pending.any((p) => p.id == _notificationId);
+
+      return 'permission granted=$granted, system allowed=$systemAllowed, '
+          'reminder scheduled=$reminderScheduled, pending=${pending.length}';
+    } catch (e) {
+      // Surface the failure instead of the button doing nothing.
+      return 'error: $e';
+    }
   }
 
   /// When the reminder should next fire: the next [at] that is still ahead

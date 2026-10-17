@@ -385,6 +385,8 @@ const Map<String, String> ko = {
   LocaleKeys.reminderOff: '끄기',
   LocaleKeys.reminderPermissionDenied:
       'LexiSnap의 알림이 꺼져 있어요. 설정에서 켜면 알림을 받을 수 있어요.',
+  LocaleKeys.reminderTestBody: '이게 보이면 알림이 정상 작동해요.',
+  LocaleKeys.reminderTestButton: '테스트 알림 보내기',
 
   LocaleKeys.studyModeSmart: '스마트',
   LocaleKeys.studyModeSmartHint: '퀴즈와 뒤집기를 무작위로 섞어요',

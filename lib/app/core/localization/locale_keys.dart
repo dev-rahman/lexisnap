@@ -399,6 +399,8 @@ class LocaleKeys {
   static const reminderEveryDayAt = 'reminder_every_day_at';
   static const reminderOff = 'reminder_off';
   static const reminderPermissionDenied = 'reminder_permission_denied';
+  static const reminderTestBody = 'reminder_test_body';
+  static const reminderTestButton = 'reminder_test_button';
 
   // Study mode picker
   static const studyModeSmart = 'study_mode_smart';

@@ -357,6 +357,17 @@ void _showReminderSheet(BuildContext context) {
                     },
                   ),
                 ],
+                // Always available, even when the reminder is off, so it can
+                // diagnose a device that blocks notifications outright.
+                const SizedBox(height: AppSpacing.xs),
+                AppButton(
+                  variant: AppButtonVariant.text,
+                  label: LocaleKeys.reminderTestButton.tr,
+                  onPressed: () async {
+                    final result = await reminder.sendTestNotification();
+                    AppSnackbar.info(result, title: 'Notification test');
+                  },
+                ),
               ],
             ),
           ),

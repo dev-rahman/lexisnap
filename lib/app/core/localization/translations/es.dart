@@ -408,6 +408,8 @@ const Map<String, String> es = {
   LocaleKeys.reminderEveryDayAt: 'Todos los días a las @time',
   LocaleKeys.reminderOff: 'Desactivado',
   LocaleKeys.reminderPermissionDenied: 'Las notificaciones están desactivadas para LexiSnap. Actívalas en Ajustes para recibir recordatorios.',
+  LocaleKeys.reminderTestBody: 'Si ves esto, las notificaciones funcionan.',
+  LocaleKeys.reminderTestButton: 'Enviar una notificación de prueba',
 
   LocaleKeys.studyModeSmart: 'Inteligente',
   LocaleKeys.studyModeSmartHint: 'Mezcla aleatoria de test y girar',

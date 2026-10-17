@@ -7,9 +7,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32"/>
     <!-- Daily study reminder. RECEIVE_BOOT_COMPLETED lets the scheduled
          reminder survive a reboot; without it the alarm is dropped and the
-         user silently stops being reminded. -->
+         user silently stops being reminded. The exact-alarm permissions let
+         the reminder fire at the chosen minute instead of being batched and
+         delayed by the system. USE_EXACT_ALARM (API 33+) is auto-granted to
+         reminder apps; SCHEDULE_EXACT_ALARM covers API 31-32. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" android:maxSdkVersion="32"/>
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
     <application
         android:label="lexisnap"
         android:name="${applicationName}"
@@ -41,6 +46,28 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+        <!-- flutter_local_notifications receivers. Without these a scheduled
+             alarm fires but nothing turns it into a notification, so reminders
+             never appear. ScheduledNotificationReceiver posts the reminder;
+             ScheduledNotificationBootReceiver re-arms it after a reboot or app
+             update. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"
+            android:exported="false" />
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and
