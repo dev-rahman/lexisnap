@@ -296,6 +296,9 @@ const Map<String, String> fr = {
   LocaleKeys.cardDetailNextReviewToday: "Prochaine révision : aujourd'hui",
   LocaleKeys.cardDetailNextReviewInDays:
       'Prochaine révision : dans @count jours',
+  LocaleKeys.cardDetailEdit: 'Modifier la carte',
+  LocaleKeys.cardDetailMeaning: 'Signification',
+  LocaleKeys.cardDetailListen: 'Écouter',
   LocaleKeys.cardEditTitle: 'Modifier la carte',
   LocaleKeys.cardEditWord: 'Mot',
   LocaleKeys.cardEditTranslation: 'Traduction',

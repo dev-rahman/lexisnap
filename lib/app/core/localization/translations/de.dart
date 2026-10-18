@@ -292,6 +292,9 @@ const Map<String, String> de = {
   LocaleKeys.cardDetailNextReviewToday: 'Nächste Wiederholung: heute',
   LocaleKeys.cardDetailNextReviewInDays:
       'Nächste Wiederholung: in @count Tagen',
+  LocaleKeys.cardDetailEdit: 'Karte bearbeiten',
+  LocaleKeys.cardDetailMeaning: 'Bedeutung',
+  LocaleKeys.cardDetailListen: 'Anhören',
   LocaleKeys.cardEditTitle: 'Karte bearbeiten',
   LocaleKeys.cardEditWord: 'Wort',
   LocaleKeys.cardEditTranslation: 'Übersetzung',

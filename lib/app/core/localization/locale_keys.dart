@@ -286,6 +286,9 @@ class LocaleKeys {
   static const cardDetailNotReviewedYet = 'card_detail_not_reviewed_yet';
   static const cardDetailNextReviewToday = 'card_detail_next_review_today';
   static const cardDetailNextReviewInDays = 'card_detail_next_review_in_days';
+  static const cardDetailEdit = 'card_detail_edit';
+  static const cardDetailMeaning = 'card_detail_meaning';
+  static const cardDetailListen = 'card_detail_listen';
 
   // Card edit / delete
   static const cardEditTitle = 'card_edit_title';
