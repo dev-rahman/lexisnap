@@ -11,7 +11,9 @@ import '../../core/theme/app_spacing.dart';
 import '../../core/theme/app_system_ui.dart';
 import '../../core/theme/app_text_styles.dart';
 import '../../core/utils/app_snackbar.dart';
+import '../../core/widgets/app_bottom_sheet.dart';
 import '../../core/widgets/app_button.dart';
+import '../../core/widgets/app_text_field.dart';
 import '../../core/widgets/deck_destination_sheet.dart';
 import '../../core/widgets/language_select_sheet.dart';
 import '../../data/models/vocabulary_word.dart';
@@ -50,7 +52,9 @@ class ScanView extends GetView<ScanController> {
               ScanStage.pickingImage => const _ProcessingOverlay(),
               ScanStage.reviewing => const _ImageReview(),
               ScanStage.processing => _ProcessingOverlay(
-                label: LocaleKeys.scanReadingText.tr,
+                label:
+                    controller.processingLabel.value ??
+                    LocaleKeys.scanReadingText.tr,
               ),
               ScanStage.wordSelection => const _WordSelection(),
               ScanStage.savingDeck => _ProcessingOverlay(
@@ -327,19 +331,41 @@ class _WordSelection extends GetView<ScanController> {
             }),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            AppSpacing.lg,
-          ),
-          child: Obx(
-            () => AppButton(
-              label: LocaleKeys.scanAddToDeckButton.tr,
-              onPressed: controller.selectedWords.isEmpty
-                  ? null
-                  : () => _chooseDestination(context, controller),
+        SafeArea(
+          top: false,
+          // A floor under the buttons even on devices that under-report the
+          // gesture-nav inset (some ColorOS/MIUI builds), so the system nav
+          // never sits on top of them.
+          minimum: const EdgeInsets.only(bottom: AppSpacing.md),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              AppSpacing.sm,
+              AppSpacing.lg,
+              AppSpacing.md,
+            ),
+            child: Obx(
+              () => Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AppButton(
+                    label: LocaleKeys.scanAddToDeckButton.tr,
+                    onPressed: controller.selectedWords.isEmpty
+                        ? null
+                        : () => _chooseDestination(context, controller),
+                  ),
+                  // Once at least one batch is filed, a clear way to end the
+                  // scan without hunting for the small close button.
+                  if (controller.hasFiled) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    AppButton(
+                      variant: AppButtonVariant.text,
+                      label: LocaleKeys.scanFinishButton.tr,
+                      onPressed: controller.requestClose,
+                    ),
+                  ],
+                ],
+              ),
             ),
           ),
         ),
@@ -405,12 +431,84 @@ Future<void> _chooseDestination(
         title: LocaleKeys.scanTargetLanguageTitle.tr,
         subtitle: LocaleKeys.scanTargetLanguageBody.tr,
       );
-      if (targetLanguage != null) {
-        await controller.fileToNewDeck(targetLanguage);
-      }
+      if (targetLanguage == null || !context.mounted) return;
+
+      // Ask the user to name the new deck, pre-filled with the AI's
+      // suggestion so they can just accept it.
+      final name = await _promptDeckName(
+        context,
+        initial: controller.suggestedNameFor(targetLanguage),
+      );
+      if (name == null || name.isEmpty) return;
+
+      await controller.fileToNewDeck(targetLanguage, name: name);
     case ExistingDeckDestination(:final deck):
       await controller.fileToExistingDeck(deck);
   }
+}
+
+/// Asks the user to name the deck being created, pre-filled with [initial].
+/// Returns the trimmed name, or null if cancelled.
+Future<String?> _promptDeckName(
+  BuildContext context, {
+  required String initial,
+}) {
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController(text: initial);
+
+  return showAppSheet<String>(
+    context,
+    isScrollControlled: true,
+    builder: (sheetContext) {
+      return Padding(
+        padding: EdgeInsets.fromLTRB(
+          AppSpacing.lg,
+          0,
+          AppSpacing.lg,
+          MediaQuery.of(sheetContext).viewInsets.bottom +
+              MediaQuery.of(sheetContext).padding.bottom +
+              AppSpacing.lg,
+        ),
+        child: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                LocaleKeys.cardsNewDeckTitle.tr,
+                style: AppTextStyles.heading2,
+              ),
+              const SizedBox(height: AppSpacing.md),
+              AppTextField(
+                label: LocaleKeys.deckRenameTitle.tr,
+                controller: nameController,
+                textInputAction: TextInputAction.done,
+                validator: (value) => (value == null || value.trim().isEmpty)
+                    ? LocaleKeys.validatorFieldRequired.tr
+                    : null,
+              ),
+              const SizedBox(height: AppSpacing.lg),
+              AppButton(
+                label: LocaleKeys.commonSave.tr,
+                onPressed: () {
+                  if (formKey.currentState!.validate()) {
+                    Navigator.pop(sheetContext, nameController.text.trim());
+                  }
+                },
+              ),
+              const SizedBox(height: AppSpacing.xs),
+              AppButton(
+                variant: AppButtonVariant.text,
+                label: LocaleKeys.commonCancel.tr,
+                onPressed: () => Navigator.pop(sheetContext),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
 }
 
 /// Header above each language group in a mixed-language scan: the language's
@@ -520,10 +618,11 @@ class _WordCard extends StatelessWidget {
                         ],
                       ],
                     ),
-                    if (word.exampleSentence != null) ...[
+                    if (word.translation != null &&
+                        word.translation!.isNotEmpty) ...[
                       const SizedBox(height: 2),
                       Text(
-                        word.exampleSentence!,
+                        word.translation!,
                         style: AppTextStyles.caption.copyWith(
                           color: isSelected
                               ? Colors.white.withValues(alpha: 0.85)

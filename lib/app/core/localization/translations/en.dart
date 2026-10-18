@@ -209,6 +209,7 @@ const Map<String, String> en = {
   LocaleKeys.scanRetake: 'Retake',
   LocaleKeys.scanUsePhoto: 'Use photo',
   LocaleKeys.scanReadingText: 'Reading text…',
+  LocaleKeys.scanTranslatingText: 'Finding what each word means…',
   LocaleKeys.scanSelectWordsTitle: 'Select words to learn',
   LocaleKeys.scanSelectWordsSubtitle:
       'Tap the words you want to turn into flashcards.',
@@ -233,6 +234,7 @@ const Map<String, String> en = {
   LocaleKeys.scanDeckCreatedSuccess: '@name is ready with @count words!',
   LocaleKeys.scanDeckSaveError: "Couldn't save your deck. Please try again.",
   LocaleKeys.scanAddToDeckButton: 'Add to deck',
+  LocaleKeys.scanFinishButton: 'Finish',
   LocaleKeys.scanDestinationTitle: 'Add @count words to…',
   LocaleKeys.scanDestinationSubtitle:
       'Start a new deck, or add them to one you already have.',

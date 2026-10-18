@@ -211,6 +211,7 @@ const Map<String, String> es = {
   LocaleKeys.scanRetake: 'Repetir foto',
   LocaleKeys.scanUsePhoto: 'Usar foto',
   LocaleKeys.scanReadingText: 'Leyendo el texto…',
+  LocaleKeys.scanTranslatingText: 'Buscando qué significa cada palabra…',
   LocaleKeys.scanSelectWordsTitle: 'Elige las palabras que quieres aprender',
   LocaleKeys.scanSelectWordsSubtitle:
       'Toca las palabras que quieras convertir en tarjetas.',
@@ -237,6 +238,7 @@ const Map<String, String> es = {
   LocaleKeys.scanDeckSaveError:
       'No se pudo guardar tu mazo. Inténtalo de nuevo.',
   LocaleKeys.scanAddToDeckButton: 'Añadir al mazo',
+  LocaleKeys.scanFinishButton: 'Listo',
   LocaleKeys.scanDestinationTitle: 'Añadir @count palabras a…',
   LocaleKeys.scanDestinationSubtitle:
       'Crea un mazo nuevo o añádelas a uno que ya tengas.',

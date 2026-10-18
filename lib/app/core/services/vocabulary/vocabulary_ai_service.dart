@@ -9,7 +9,12 @@ import '../../../data/models/vocabulary_extraction_result.dart';
 abstract class VocabularyAiService {
   /// Picks the words worth learning out of [text], classifies each by CEFR
   /// level (A1-C2), writes one example sentence per word at that level,
-  /// and reports the text's source language plus a suggested deck name.
-  /// Throws on any failure - callers fall back to local extraction.
-  Future<VocabularyExtractionResult> extractVocabulary(String text);
+  /// tags each word's own language, translates each into [uiLanguage] (the
+  /// language the app's UI is in, e.g. "English", for the selection preview),
+  /// and reports the text's dominant source language plus a suggested deck
+  /// name. Throws on any failure - callers fall back to local extraction.
+  Future<VocabularyExtractionResult> extractVocabulary(
+    String text, {
+    String? uiLanguage,
+  });
 }

@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../core/localization/locale_keys.dart';
 import '../../core/services/deck/deck_repository.dart';
+import '../../core/services/locale/locale_service.dart';
 import '../../core/services/ocr/text_recognition_service.dart';
 import '../../core/services/translation/translation_ai_service.dart';
 import '../../core/services/vocabulary/vocabulary_ai_service.dart';
@@ -65,6 +66,11 @@ class ScanController extends GetxController {
   /// Which label the saving overlay shows - creating a deck and topping one
   /// up read differently, and a single scan can do both in turn.
   final savingLabel = RxnString();
+
+  /// The message shown on the processing overlay. Starts as "reading text"
+  /// and switches to the translating message while the word glosses are
+  /// being generated, so the list only appears once it's complete.
+  final processingLabel = RxnString();
 
   /// Total words saved so far in this scan, across every deck they were
   /// filed into. Drives the progress line on the selection screen and the
@@ -201,6 +207,7 @@ class ScanController extends GetxController {
     if (path == null) return;
 
     stage.value = ScanStage.processing;
+    processingLabel.value = null;
     try {
       final text = await _textRecognitionService.recognizeText(path);
       if (text.trim().isEmpty) {
@@ -208,9 +215,17 @@ class ScanController extends GetxController {
         return;
       }
 
+      // The app's own UI language, so each word is glossed into the language
+      // the user reads on the selection screen.
+      final uiCode = Get.find<LocaleService>().locale.value.languageCode;
+      final uiLanguage = VocabularyLanguages.byCode(uiCode)?.name ?? 'English';
+
       VocabularyExtractionResult result;
       try {
-        result = await _vocabularyAiService.extractVocabulary(text);
+        result = await _vocabularyAiService.extractVocabulary(
+          text,
+          uiLanguage: uiLanguage,
+        );
       } catch (_) {
         // No network, API error, etc. - degrade to the local word list
         // instead of failing the whole scan. No language/deck-name
@@ -227,12 +242,56 @@ class ScanController extends GetxController {
       sourceLanguageCode.value = result.sourceLanguageCode;
       sourceLanguageName.value = result.sourceLanguageName;
       suggestedDeckName.value = result.suggestedDeckName;
-      stage.value = result.words.isEmpty
-          ? ScanStage.empty
-          : ScanStage.wordSelection;
+
+      if (result.words.isEmpty) {
+        stage.value = ScanStage.empty;
+        return;
+      }
+
+      // Fill in the per-word translation shown on the select screen before
+      // revealing the list, so it appears complete rather than popping in.
+      // The extractor already provides it once redeployed (then this is a
+      // no-op and there's no wait); otherwise the already-deployed
+      // translate-words service fills the gap while the overlay shows a
+      // friendly message.
+      if (candidateWords.any((word) => (word.translation ?? '').isEmpty)) {
+        processingLabel.value = LocaleKeys.scanTranslatingText.tr;
+        await _fillMissingTranslations(uiLanguage);
+      }
+
+      stage.value = ScanStage.wordSelection;
     } catch (_) {
       AppSnackbar.error(LocaleKeys.scanProcessingError.tr);
       stage.value = ScanStage.reviewing;
+    }
+  }
+
+  /// Translates any candidate words that don't yet have a gloss into
+  /// [uiLanguageName] (the app's language) and attaches it, so the select
+  /// screen always shows a translation. No-op when the extractor already
+  /// filled them in; failures leave the words as-is.
+  Future<void> _fillMissingTranslations(String uiLanguageName) async {
+    final missing = candidateWords
+        .where((word) => (word.translation ?? '').isEmpty)
+        .toList();
+    if (missing.isEmpty) return;
+
+    try {
+      final translations = await _translationAiService.translateWords(
+        words: missing.map((word) => word.word).toList(),
+        sourceLanguage: sourceLanguageCode.value,
+        targetLanguage: uiLanguageName,
+      );
+
+      candidateWords.assignAll([
+        for (final word in candidateWords)
+          (word.translation ?? '').isEmpty &&
+                  (translations[word.word] ?? '').isNotEmpty
+              ? word.copyWith(translation: translations[word.word])
+              : word,
+      ]);
+    } catch (_) {
+      // Leave untranslated - the card just shows the word on its own.
     }
   }
 
@@ -257,7 +316,10 @@ class ScanController extends GetxController {
   ///
   /// On failure the selection is kept and the user returns to the
   /// word-selection screen to retry.
-  Future<void> fileToNewDeck(VocabularyLanguage targetLanguage) async {
+  Future<void> fileToNewDeck(
+    VocabularyLanguage targetLanguage, {
+    required String name,
+  }) async {
     final selected = selectedWords.toList();
     if (selected.isEmpty) return;
 
@@ -268,34 +330,26 @@ class ScanController extends GetxController {
       // dominant one, so a French batch pulled from a mostly-German scan
       // becomes a correct French deck.
       final sourceCode = selected.first.languageCode;
-      final sourceName =
-          VocabularyLanguages.byCode(sourceCode)?.name ??
-          sourceLanguageName.value ??
-          'Scan';
 
       final deckWords = await _translateSelection(
         selected,
         targetLanguageName: targetLanguage.name,
       );
 
-      final deckName =
-          suggestedDeckName.value ?? '$sourceName → ${targetLanguage.name}';
-
       await _deckRepository.createDeck(
-        name: deckName,
+        name: name,
         sourceLanguage: sourceCode,
         targetLanguage: targetLanguage.code,
         words: deckWords,
       );
 
-      // A deck's suggested name fits the first batch; a later batch going
-      // to its own new deck should get a fresh, generic name rather than
-      // reusing the AI's first guess.
+      // The AI's suggested name fits the first batch; a later batch to its
+      // own new deck gets its own name from the prompt, so clear it.
       suggestedDeckName.value = null;
 
       await _onBatchFiled(
         selected,
-        name: deckName,
+        name: name,
         count: deckWords.length,
         isNew: true,
       );
@@ -303,6 +357,18 @@ class ScanController extends GetxController {
       AppSnackbar.error(LocaleKeys.scanDeckSaveError.tr);
       stage.value = ScanStage.wordSelection;
     }
+  }
+
+  /// A sensible default deck name for the name prompt: the AI's thematic
+  /// suggestion when it's still available, otherwise a "source to target" pair.
+  String suggestedNameFor(VocabularyLanguage targetLanguage) {
+    final existing = suggestedDeckName.value;
+    if (existing != null && existing.isNotEmpty) return existing;
+    final sourceName =
+        VocabularyLanguages.byCode(selectedSourceCode)?.name ??
+        sourceLanguageName.value ??
+        'Scan';
+    return '$sourceName → ${targetLanguage.name}';
   }
 
   /// Files the current selection into an existing [deck], translating it

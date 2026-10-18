@@ -11,10 +11,17 @@ import 'vocabulary_ai_service.dart';
 /// trigger a (billable) call.
 class SupabaseEdgeVocabularyService implements VocabularyAiService {
   @override
-  Future<VocabularyExtractionResult> extractVocabulary(String text) async {
+  Future<VocabularyExtractionResult> extractVocabulary(
+    String text, {
+    String? uiLanguage,
+  }) async {
     final response = await Supabase.instance.client.functions.invoke(
       'extract-vocabulary',
-      body: {'text': text},
+      body: {
+        'text': text,
+        if (uiLanguage != null && uiLanguage.isNotEmpty)
+          'ui_language': uiLanguage,
+      },
     );
 
     if (response.status != 200) {

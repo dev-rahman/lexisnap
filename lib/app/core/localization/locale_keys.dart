@@ -219,6 +219,7 @@ class LocaleKeys {
   static const scanRetake = 'scan_retake';
   static const scanUsePhoto = 'scan_use_photo';
   static const scanReadingText = 'scan_reading_text';
+  static const scanTranslatingText = 'scan_translating_text';
   static const scanSelectWordsTitle = 'scan_select_words_title';
   static const scanSelectWordsSubtitle = 'scan_select_words_subtitle';
   static const scanSelectAll = 'scan_select_all';
@@ -239,6 +240,7 @@ class LocaleKeys {
   static const scanDeckCreatedSuccess = 'scan_deck_created_success';
   static const scanDeckSaveError = 'scan_deck_save_error';
   static const scanAddToDeckButton = 'scan_add_to_deck_button';
+  static const scanFinishButton = 'scan_finish_button';
   static const scanDestinationTitle = 'scan_destination_title';
   static const scanDestinationSubtitle = 'scan_destination_subtitle';
   static const scanDestinationNewDeck = 'scan_destination_new_deck';

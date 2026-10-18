@@ -216,6 +216,8 @@ const Map<String, String> de = {
   LocaleKeys.scanRetake: 'Erneut aufnehmen',
   LocaleKeys.scanUsePhoto: 'Foto verwenden',
   LocaleKeys.scanReadingText: 'Text wird gelesen …',
+  LocaleKeys.scanTranslatingText:
+      'Wir finden heraus, was jedes Wort bedeutet …',
   LocaleKeys.scanSelectWordsTitle: 'Wähle Wörter zum Lernen',
   LocaleKeys.scanSelectWordsSubtitle:
       'Tippe die Wörter an, aus denen du Karteikarten machen möchtest.',
@@ -241,6 +243,7 @@ const Map<String, String> de = {
   LocaleKeys.scanDeckSaveError:
       'Dein Stapel konnte nicht gespeichert werden. Bitte versuche es erneut.',
   LocaleKeys.scanAddToDeckButton: 'Zum Stapel hinzufügen',
+  LocaleKeys.scanFinishButton: 'Fertig',
   LocaleKeys.scanDestinationTitle: '@count Wörter hinzufügen zu …',
   LocaleKeys.scanDestinationSubtitle:
       'Erstelle einen neuen Stapel oder füge sie einem vorhandenen hinzu.',

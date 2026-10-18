@@ -221,6 +221,7 @@ const Map<String, String> fr = {
   LocaleKeys.scanRetake: 'Reprendre',
   LocaleKeys.scanUsePhoto: 'Utiliser la photo',
   LocaleKeys.scanReadingText: 'Lecture du texte…',
+  LocaleKeys.scanTranslatingText: 'On cherche le sens de chaque mot…',
   LocaleKeys.scanSelectWordsTitle: 'Choisissez les mots à apprendre',
   LocaleKeys.scanSelectWordsSubtitle:
       'Touchez les mots que vous voulez transformer en cartes mémo.',
@@ -246,6 +247,7 @@ const Map<String, String> fr = {
   LocaleKeys.scanDeckSaveError:
       "Impossible d'enregistrer votre paquet. Veuillez réessayer.",
   LocaleKeys.scanAddToDeckButton: 'Ajouter au paquet',
+  LocaleKeys.scanFinishButton: 'Terminer',
   LocaleKeys.scanDestinationTitle: 'Ajouter @count mots à…',
   LocaleKeys.scanDestinationSubtitle:
       'Créez un nouveau paquet ou ajoutez-les à un paquet existant.',

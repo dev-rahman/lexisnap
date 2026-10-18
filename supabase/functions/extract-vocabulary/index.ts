@@ -31,28 +31,39 @@ const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
 const MAX_TEXT_LENGTH = 6000;
 const CEFR_LEVELS = new Set(["A1", "A2", "B1", "B2", "C1", "C2"]);
 
-const SYSTEM_PROMPT =
-  "You are a vocabulary-extraction assistant for a language-learning " +
-  "flashcard app. Given OCR-scanned text, identify 5-25 words genuinely " +
-  "worth learning as vocabulary (skip trivial function words like " +
-  "articles/pronouns unless the text is clearly about them). For each " +
-  "word, classify its CEFR level (A1-C2) by how commonly it's learned, " +
-  "write a short dictionary-style definition of the word (in the same " +
-  "language as the word itself), and write exactly one natural example " +
-  "sentence that uses the word and is written at that same CEFR level - " +
-  "a B1 word gets a B1-appropriate sentence, not simplified or " +
-  "overcomplicated. Deduplicate case-insensitively. Tag EACH word with " +
-  "its own ISO 639-1 language code, because a scan can mix languages " +
-  "(for example a foreign word written next to its native-language " +
-  "translation). Also detect the overall/dominant source language of the " +
-  "scanned text (as an ISO 639-1 code and its English display name), and " +
-  "suggest a short, thematic name for a flashcard deck made from this " +
-  'text (e.g. "Restaurant menu vocabulary", not just "French words"). ' +
-  "Respond with ONLY a JSON object of this exact shape, no other text: " +
-  '{"language_code": string, "language_name": string, ' +
-  '"suggested_deck_name": string, "words": [{"word": string, ' +
-  '"level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "word_description": string, ' +
-  '"example_sentence": string, "language_code": string}, ...]}';
+// `uiLanguage` is the language the app's UI is in (e.g. "English"), so each
+// word can be glossed into the language the user reads, shown on the
+// word-selection screen. Defaults to English when the client doesn't send it.
+function buildSystemPrompt(uiLanguage?: string): string {
+  const gloss = uiLanguage && uiLanguage.trim().length > 0
+    ? uiLanguage.trim()
+    : "English";
+  return (
+    "You are a vocabulary-extraction assistant for a language-learning " +
+    "flashcard app. Given OCR-scanned text, identify 5-25 words genuinely " +
+    "worth learning as vocabulary (skip trivial function words like " +
+    "articles/pronouns unless the text is clearly about them). For each " +
+    "word, classify its CEFR level (A1-C2) by how commonly it's learned, " +
+    "write a short dictionary-style definition of the word (in the same " +
+    "language as the word itself), write exactly one natural example " +
+    "sentence that uses the word and is written at that same CEFR level " +
+    "(a B1 word gets a B1-appropriate sentence, not simplified or " +
+    `overcomplicated), and translate the word into ${gloss}. ` +
+    "Deduplicate case-insensitively. Tag EACH word with its own ISO 639-1 " +
+    "language code, because a scan can mix languages (for example a " +
+    "foreign word written next to its native-language translation). Also " +
+    "detect the overall/dominant source language of the scanned text (as " +
+    "an ISO 639-1 code and its English display name), and suggest a " +
+    'short, thematic name for a flashcard deck made from this text (e.g. ' +
+    '"Restaurant menu vocabulary", not just "French words"). Respond with ' +
+    "ONLY a JSON object of this exact shape, no other text: " +
+    '{"language_code": string, "language_name": string, ' +
+    '"suggested_deck_name": string, "words": [{"word": string, ' +
+    '"level": "A1"|"A2"|"B1"|"B2"|"C1"|"C2", "word_description": string, ' +
+    '"example_sentence": string, "language_code": string, ' +
+    '"translation": string}, ...]}'
+  );
+}
 
 Deno.serve(async (req) => {
   if (req.method !== "POST") {
@@ -64,9 +75,11 @@ Deno.serve(async (req) => {
   }
 
   let text: unknown;
+  let uiLanguage: unknown;
   try {
     const body = await req.json();
     text = body?.text;
+    uiLanguage = body?.ui_language;
   } catch {
     return jsonResponse({ error: "Invalid JSON body" }, 400);
   }
@@ -76,6 +89,9 @@ Deno.serve(async (req) => {
   }
 
   const truncatedText = text.slice(0, MAX_TEXT_LENGTH);
+  const systemPrompt = buildSystemPrompt(
+    typeof uiLanguage === "string" ? uiLanguage : undefined,
+  );
 
   try {
     const groqResponse = await fetch(
@@ -89,7 +105,7 @@ Deno.serve(async (req) => {
         body: JSON.stringify({
           model: "openai/gpt-oss-120b",
           messages: [
-            { role: "system", content: SYSTEM_PROMPT },
+            { role: "system", content: systemPrompt },
             { role: "user", content: truncatedText },
           ],
           response_format: { type: "json_object" },
@@ -166,6 +182,7 @@ function validateWords(parsed: unknown): Array<{
   word_description: string;
   example_sentence: string;
   language_code: string | null;
+  translation: string;
 }> {
   const rawWords = (parsed as { words?: unknown })?.words;
   if (!Array.isArray(rawWords)) return [];
@@ -184,6 +201,7 @@ function validateWords(parsed: unknown): Array<{
     word_description: string;
     example_sentence: string;
     language_code: string | null;
+    translation: string;
   }> = [];
 
   for (const item of rawWords) {
@@ -194,6 +212,7 @@ function validateWords(parsed: unknown): Array<{
     const exampleSentence = (item as { example_sentence?: unknown })
       ?.example_sentence;
     const wordLanguage = (item as { language_code?: unknown })?.language_code;
+    const translation = (item as { translation?: unknown })?.translation;
 
     if (
       typeof word === "string" &&
@@ -214,6 +233,8 @@ function validateWords(parsed: unknown): Array<{
           typeof wordLanguage === "string" && wordLanguage.trim().length > 0
             ? wordLanguage.trim().toLowerCase()
             : fallbackLanguage,
+        // Gloss into the app's UI language; don't drop a word if it's absent.
+        translation: typeof translation === "string" ? translation.trim() : "",
       });
     }
   }
