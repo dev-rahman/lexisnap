@@ -1,0 +1,111 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * LexiSnap design tokens — ported from lib/app/core/theme/app_colors.dart.
+ * Values are `R G B` triplets so Tailwind's `rgb(var(--x) / <alpha>)` works.
+ *
+ * Light values on :root. Dark values are applied both by an explicit
+ * [data-theme="dark"] (user choice) and by the OS preference unless the user
+ * forced light with [data-theme="light"].
+ */
+:root {
+  --ink: 28 37 65;
+  --ink-muted: 92 97 120;
+  --paper: 247 244 238;
+  --surface: 237 233 223;
+  --border: 223 217 205;
+  --panel: 28 37 65; /* deep navy focal panel */
+
+  --accent: 231 98 60; /* coral — single primary action only */
+  --accent-600: 189 80 49;
+
+  --success: 46 158 91;
+  --error: 229 72 77;
+  --alert: 163 59 42;
+  --confirm: 61 122 87;
+  --caution: 168 112 26;
+  --notice: 47 106 166;
+
+  --hue-teal: 42 157 143;
+  --hue-violet: 124 92 211;
+  --hue-amber: 233 162 59;
+  --hue-rose: 217 84 123;
+  --hue-sky: 59 130 196;
+  --hue-moss: 90 158 75;
+}
+
+/* Dark twins — see the comment in app_colors.dart on keeping contrast. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ink: 243 241 234;
+    --ink-muted: 180 183 200;
+    --paper: 20 22 42;
+    --surface: 30 33 56;
+    --border: 52 56 84;
+    --panel: 37 42 74;
+
+    --hue-teal: 79 195 181;
+    --hue-violet: 162 139 234;
+    --hue-amber: 243 188 106;
+    --hue-rose: 236 125 157;
+    --hue-sky: 111 174 228;
+    --hue-moss: 131 194 117;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ink: 243 241 234;
+  --ink-muted: 180 183 200;
+  --paper: 20 22 42;
+  --surface: 30 33 56;
+  --border: 52 56 84;
+  --panel: 37 42 74;
+
+  --hue-teal: 79 195 181;
+  --hue-violet: 162 139 234;
+  --hue-amber: 243 188 106;
+  --hue-rose: 236 125 157;
+  --hue-sky: 111 174 228;
+  --hue-moss: 131 194 117;
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    background-color: rgb(var(--paper));
+    color: rgb(var(--ink));
+    font-family: var(--font-display), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+  /* Tighter default rhythm — Rahman prefers compact spacing. */
+  button {
+    touch-action: manipulation;
+  }
+}
+
+@layer utilities {
+  /* The one focal card: solid navy, white text in both themes. */
+  .panel-surface {
+    background-color: rgb(var(--panel));
+    color: #ffffff;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
+  }
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

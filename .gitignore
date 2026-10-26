@@ -1,0 +1,16 @@
+# Monorepo root. Each app also has its own .gitignore
+# (mobile-app/.gitignore for Flutter, web-app/.gitignore for Next.js).
+
+.DS_Store
+*.log
+
+# Env files anywhere — never commit secrets. (.env.example is kept.)
+**/.env
+**/.env.local
+**/.env*.local
+
+# Safety nets for generated output in any subproject
+**/node_modules/
+**/.next/
+**/build/
+**/.dart_tool/
