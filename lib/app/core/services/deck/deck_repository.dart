@@ -37,11 +37,46 @@ abstract class DeckRepository {
     required String targetLanguage,
   });
 
-  /// The signed-in user's decks, most recently created first.
-  Future<List<Deck>> listDecks();
+  /// One page of the signed-in user's decks, most recently created first.
+  /// Paginated so the list scales to a large backlog; [offset] is how many
+  /// decks to skip and [limit] the page size.
+  Future<List<Deck>> listDecks({int offset = 0, int limit = 20});
 
-  /// A single deck and its flashcards.
+  /// Totals across *all* of the user's decks (not just a loaded page), for
+  /// the decks screen's stats row and "do I have any cards" checks.
+  Future<({int deckCount, int cardCount})> deckTotals();
+
+  /// Every deck that shares the given language pair, most recent first -
+  /// the move/copy/merge destination list, resolved server-side so it's
+  /// complete even when the decks list itself is only partly paged in.
+  Future<List<Deck>> listDecksByLanguagePair({
+    required String? sourceLanguage,
+    required String targetLanguage,
+  });
+
+  /// A single deck and its flashcards (all of them). Prefer [getDeckMeta] +
+  /// [listDeckCards] for the browsing screen; this stays for the operations
+  /// that genuinely need every card in memory (e.g. merging a whole deck).
   Future<(Deck, List<Flashcard>)> getDeck(String deckId);
+
+  /// A single deck's metadata and its total card count, without pulling the
+  /// cards themselves - the header for the paginated card list.
+  Future<Deck> getDeckMeta(String deckId);
+
+  /// How many of a deck's cards are due right now, counted server-side so
+  /// the header is right even when only a page of cards is loaded.
+  Future<int> deckDueCount(String deckId);
+
+  /// One page of a deck's cards, oldest first (stable order for paging).
+  /// The deck's language pair is passed in (the caller already has it from
+  /// [getDeckMeta]), so a page fetch is a single query.
+  Future<List<Flashcard>> listDeckCards(
+    String deckId, {
+    required String? sourceLanguage,
+    required String targetLanguage,
+    int offset = 0,
+    int limit = 20,
+  });
 
   Future<void> renameDeck(String deckId, String newName);
 

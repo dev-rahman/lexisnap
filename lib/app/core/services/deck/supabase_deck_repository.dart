@@ -90,13 +90,89 @@ class SupabaseDeckRepository implements DeckRepository {
   }
 
   @override
-  Future<List<Deck>> listDecks() async {
+  Future<List<Deck>> listDecks({int offset = 0, int limit = 20}) async {
     final rows = await _client
         .from('decks')
         .select('*, flashcards(count)')
-        .order('created_at', ascending: false);
+        .order('created_at', ascending: false)
+        .range(offset, offset + limit - 1);
 
     return [for (final row in rows) _deckFromRow(row)];
+  }
+
+  @override
+  Future<({int deckCount, int cardCount})> deckTotals() async {
+    // Two head-only count queries (RLS scopes both to the signed-in user),
+    // so the stats row reflects every deck/card, not just the loaded page.
+    final deckCount = await _client.from('decks').count();
+    final cardCount = await _client.from('flashcards').count();
+    return (deckCount: deckCount, cardCount: cardCount);
+  }
+
+  @override
+  Future<List<Deck>> listDecksByLanguagePair({
+    required String? sourceLanguage,
+    required String targetLanguage,
+  }) async {
+    final base = _client
+        .from('decks')
+        .select('*, flashcards(count)')
+        .eq('target_language', targetLanguage);
+    // A null source language is a distinct value in SQL - `.eq` never matches
+    // it, so filter explicitly for IS NULL in that case.
+    final matched = sourceLanguage == null
+        ? base.isFilter('source_language', null)
+        : base.eq('source_language', sourceLanguage);
+    final rows = await matched.order('created_at', ascending: false);
+    return [for (final row in rows) _deckFromRow(row)];
+  }
+
+  @override
+  Future<Deck> getDeckMeta(String deckId) async {
+    final row = await _client
+        .from('decks')
+        .select('*, flashcards(count)')
+        .eq('id', deckId)
+        .single();
+    return _deckFromRow(row);
+  }
+
+  @override
+  Future<int> deckDueCount(String deckId) async {
+    return _client
+        .from('flashcards')
+        .count()
+        .eq('deck_id', deckId)
+        .lte('due_at', DateTime.now().toIso8601String());
+  }
+
+  @override
+  Future<List<Flashcard>> listDeckCards(
+    String deckId, {
+    required String? sourceLanguage,
+    required String targetLanguage,
+    int offset = 0,
+    int limit = 20,
+  }) async {
+    final rows = await _client
+        .from('flashcards')
+        .select('*, example_sentences(*)')
+        .eq('deck_id', deckId)
+        // created_at then id so bulk-inserted cards (same timestamp) still
+        // have one stable total order - without the tiebreak, paging could
+        // repeat or skip a card.
+        .order('created_at')
+        .order('id')
+        .range(offset, offset + limit - 1);
+
+    return [
+      for (final card in rows)
+        _flashcardFromRow(
+          card,
+          sourceLanguage: sourceLanguage,
+          targetLanguage: targetLanguage,
+        ),
+    ];
   }
 
   @override

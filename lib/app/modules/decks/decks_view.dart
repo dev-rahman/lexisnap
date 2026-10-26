@@ -29,6 +29,7 @@ class DecksView extends GetView<DecksController> {
         bottom: false,
         top: false,
         child: SingleChildScrollView(
+          controller: controller.scrollController,
           padding: EdgeInsets.fromLTRB(
             AppSpacing.lg,
             AppTopSafeArea.height(context),
@@ -65,7 +66,7 @@ class DecksView extends GetView<DecksController> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DeckStatsRow(
-          deckCount: controller.decks.length,
+          deckCount: controller.deckCount,
           wordCount: controller.totalCardCount,
           dueCount: controller.dueCount,
         ),
@@ -92,6 +93,11 @@ class DecksView extends GetView<DecksController> {
           DeckCard(deck: deck, onTap: () => controller.goToDeck(deck)),
           const SizedBox(height: AppSpacing.sm),
         ],
+        if (controller.isLoadingMoreDecks.value)
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+            child: Center(child: CircularProgressIndicator()),
+          ),
       ],
     );
   }

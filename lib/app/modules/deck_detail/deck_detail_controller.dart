@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
@@ -12,11 +13,31 @@ class DeckDetailController extends GetxController {
 
   late final String _deckId = Get.arguments as String;
 
+  /// How many cards a page holds. Browsing stays light even for a deck near
+  /// the per-deck quota; whole-deck actions load the rest on demand.
+  static const _cardsPageSize = 20;
+
   final isLoading = true.obs;
   final deck = Rxn<Deck>();
+
+  /// The cards loaded so far - one page at first, growing as the user scrolls
+  /// (and pulled in full by [_ensureAllCardsLoaded] for whole-deck actions).
   final flashcards = <Flashcard>[].obs;
 
-  int get dueCount => flashcards.where((card) => card.isDue).length;
+  /// True while a further page is being appended, for the tail spinner.
+  final isLoadingMoreCards = false.obs;
+
+  /// False once a short page comes back - nothing left to fetch.
+  bool _hasMoreCards = true;
+
+  /// Drives infinite scroll on the card list; disposed in [onClose].
+  final scrollController = ScrollController();
+
+  /// The deck's due count, counted server-side so the header is right even
+  /// when only a page of cards is in memory.
+  final _dueCount = 0.obs;
+
+  int get dueCount => _dueCount.value;
 
   /// Multi-select state for the card list. [isSelecting] turns the list into
   /// a picker (checkboxes, no swipe, tap toggles); [selectedCardIds] is what
@@ -28,24 +49,26 @@ class DeckDetailController extends GetxController {
   bool get hasSelection => selectedCardIds.isNotEmpty;
   bool isSelected(String cardId) => selectedCardIds.contains(cardId);
 
+  /// The deck's total card count (from its metadata), so "select all" and the
+  /// toggle label are judged against the whole deck, not just the loaded page.
+  int get _totalCards => deck.value?.cardCount ?? flashcards.length;
+
   bool get allSelected =>
-      flashcards.isNotEmpty && selectedCardIds.length == flashcards.length;
+      _totalCards > 0 && selectedCardIds.length == _totalCards;
 
   /// Decks a selection can move or copy into: everything the user owns that
   /// shares this deck's language pair, since a card's languages come from its
   /// deck - putting it in a mismatched deck would misrepresent it. The deck
-  /// itself is excluded.
-  List<Deck> get compatibleDecks {
+  /// itself is excluded. Resolved server-side so it's complete even when the
+  /// decks list is only partly paged in.
+  Future<List<Deck>> fetchCompatibleDecks() async {
     final current = deck.value;
     if (current == null) return const [];
-    return Get.find<DecksController>().decks
-        .where(
-          (other) =>
-              other.id != current.id &&
-              other.sourceLanguage == current.sourceLanguage &&
-              other.targetLanguage == current.targetLanguage,
-        )
-        .toList();
+    final matches = await _deckRepository.listDecksByLanguagePair(
+      sourceLanguage: current.sourceLanguage,
+      targetLanguage: current.targetLanguage,
+    );
+    return matches.where((other) => other.id != current.id).toList();
   }
 
   void enterSelection(String cardId) {
@@ -57,10 +80,14 @@ class DeckDetailController extends GetxController {
     if (!selectedCardIds.remove(cardId)) selectedCardIds.add(cardId);
   }
 
-  void toggleSelectAll() {
+  Future<void> toggleSelectAll() async {
     if (allSelected) {
       selectedCardIds.clear();
     } else {
+      // "Select all" means the whole deck, so pull in any cards not yet
+      // paged in before selecting - otherwise it would quietly select only
+      // what happens to be on screen.
+      await _ensureAllCardsLoaded();
       selectedCardIds.assignAll(flashcards.map((card) => card.id));
     }
   }
@@ -108,11 +135,26 @@ class DeckDetailController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(_onScroll);
     _load();
   }
 
-  /// Re-fetches the deck and its flashcards - used after a study session so
-  /// due counts and cards reflect the just-recorded reviews.
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+    final position = scrollController.position;
+    if (position.pixels >= position.maxScrollExtent - 320) {
+      loadMoreCards();
+    }
+  }
+
+  /// Re-fetches the deck and its first page of flashcards - used after a
+  /// study session so due counts and cards reflect the just-recorded reviews.
   ///
   /// [silent] skips the loading spinner, for a refresh that follows a small
   /// change the user just made (editing or deleting a card) where the list
@@ -122,16 +164,65 @@ class DeckDetailController extends GetxController {
   Future<void> _load({bool silent = false}) async {
     if (!silent) isLoading.value = true;
     try {
-      final (loadedDeck, loadedFlashcards) = await _deckRepository.getDeck(
+      final meta = await _deckRepository.getDeckMeta(_deckId);
+      deck.value = meta;
+
+      final firstPage = await _deckRepository.listDeckCards(
         _deckId,
+        sourceLanguage: meta.sourceLanguage,
+        targetLanguage: meta.targetLanguage,
+        offset: 0,
+        limit: _cardsPageSize,
       );
-      deck.value = loadedDeck;
-      flashcards.assignAll(loadedFlashcards);
+      flashcards.assignAll(firstPage);
+      _hasMoreCards = firstPage.length == _cardsPageSize;
+
+      _dueCount.value = await _deckRepository.deckDueCount(_deckId);
     } catch (_) {
       AppSnackbar.error(LocaleKeys.deckLoadError.tr);
     } finally {
       isLoading.value = false;
     }
+  }
+
+  /// Appends the next page of cards as the user scrolls near the end.
+  Future<void> loadMoreCards() async {
+    if (isLoadingMoreCards.value || !_hasMoreCards || isLoading.value) return;
+    final current = deck.value;
+    if (current == null) return;
+
+    isLoadingMoreCards.value = true;
+    try {
+      final next = await _deckRepository.listDeckCards(
+        _deckId,
+        sourceLanguage: current.sourceLanguage,
+        targetLanguage: current.targetLanguage,
+        offset: flashcards.length,
+        limit: _cardsPageSize,
+      );
+      flashcards.addAll(next);
+      _hasMoreCards = next.length == _cardsPageSize;
+    } catch (_) {
+      // Keep what's loaded; the next scroll past the threshold retries.
+    } finally {
+      isLoadingMoreCards.value = false;
+    }
+  }
+
+  /// Pulls every remaining card into [flashcards] - for whole-deck actions
+  /// (studying, merging, select-all) that need the full set, not just a page.
+  Future<void> _ensureAllCardsLoaded() async {
+    if (!_hasMoreCards) return;
+    final (_, all) = await _deckRepository.getDeck(_deckId);
+    flashcards.assignAll(all);
+    _hasMoreCards = false;
+  }
+
+  /// The deck's full card list, loading any not-yet-paged cards first. For
+  /// starting a study or listen session over the whole deck.
+  Future<List<Flashcard>> allCards() async {
+    await _ensureAllCardsLoaded();
+    return flashcards.toList();
   }
 
   Future<void> renameDeck(String newName) async {
@@ -330,6 +421,9 @@ class DeckDetailController extends GetxController {
   /// duplicates, then this deck is deleted and we leave its (now gone) detail.
   Future<void> mergeIntoDeck(Deck target) async {
     try {
+      // Merge moves the whole deck across, so every card has to be in memory,
+      // not just the page the user scrolled to.
+      await _ensureAllCardsLoaded();
       final part = await _dedupeAgainst(target.id, flashcards.toList());
       if (part.freshIds.isNotEmpty) {
         await _deckRepository.moveFlashcards(

@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../../core/localization/locale_keys.dart';
@@ -26,6 +27,10 @@ class DecksController extends GetxController {
   /// the user likes, not a second full session they have to commit to.
   static const practiceRoundSize = 10;
 
+  /// How many decks a page holds. The list is bounded (a per-user quota),
+  /// but paging keeps the first paint cheap and the scroll lazy.
+  static const _decksPageSize = 20;
+
   DeckRepository get _deckRepository => Get.find<DeckRepository>();
 
   StudyPreferencesService get _studyPreferences =>
@@ -33,6 +38,24 @@ class DecksController extends GetxController {
 
   final isLoadingDecks = true.obs;
   final decks = <Deck>[].obs;
+
+  /// True while a further page of decks is being appended, so the list can
+  /// show a quiet spinner at its tail rather than jumping.
+  final isLoadingMoreDecks = false.obs;
+
+  /// False once a page comes back short, meaning there's nothing left to
+  /// fetch - stops the scroll listener from firing pointless requests.
+  bool _hasMoreDecks = true;
+
+  /// Drives infinite scroll on the decks list. Owned here (not the view) so
+  /// it survives rebuilds; disposed in [onClose].
+  final scrollController = ScrollController();
+
+  // Totals across every deck, from a server-side count rather than the
+  // loaded page, so the stats row and "has any cards" stay right under
+  // pagination.
+  final _totalDeckCount = 0.obs;
+  final _totalCardCount = 0.obs;
 
   /// Everything due right now across every deck, soonest first. Home
   /// offers this as a single review session so the user never has to
@@ -50,10 +73,13 @@ class DecksController extends GetxController {
 
   int get dueCount => dueCards.length;
 
-  bool get hasCards => decks.any((deck) => deck.cardCount > 0);
+  /// The user's total number of decks, across every page.
+  int get deckCount => _totalDeckCount.value;
+
+  bool get hasCards => _totalCardCount.value > 0;
 
   /// Every card the user owns, across all decks.
-  int get totalCardCount => decks.fold(0, (sum, deck) => sum + deck.cardCount);
+  int get totalCardCount => _totalCardCount.value;
 
   /// Nothing is owed, but there are cards to practise ahead of schedule -
   /// the state that earns an extra round instead of a dead-end
@@ -63,13 +89,40 @@ class DecksController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    scrollController.addListener(_onScroll);
     refreshDecks();
+  }
+
+  @override
+  void onClose() {
+    scrollController.dispose();
+    super.onClose();
+  }
+
+  void _onScroll() {
+    if (!scrollController.hasClients) return;
+    final position = scrollController.position;
+    // Kick off the next page a little before the very bottom, so the new
+    // rows are usually ready by the time the user reaches them.
+    if (position.pixels >= position.maxScrollExtent - 320) {
+      loadMoreDecks();
+    }
   }
 
   Future<void> refreshDecks() async {
     isLoadingDecks.value = true;
     try {
-      decks.assignAll(await _deckRepository.listDecks());
+      final firstPage = await _deckRepository.listDecks(
+        offset: 0,
+        limit: _decksPageSize,
+      );
+      decks.assignAll(firstPage);
+      _hasMoreDecks = firstPage.length == _decksPageSize;
+
+      final totals = await _deckRepository.deckTotals();
+      _totalDeckCount.value = totals.deckCount;
+      _totalCardCount.value = totals.cardCount;
+
       dueCards.assignAll(
         await _deckRepository.listDueFlashcards(limit: _dueQueueLimit),
       );
@@ -78,6 +131,28 @@ class DecksController extends GetxController {
       // clearing them out on a transient network error.
     } finally {
       isLoadingDecks.value = false;
+    }
+  }
+
+  /// Appends the next page of decks when the user scrolls near the end.
+  /// Guards against overlapping fetches and stops once the backlog is
+  /// exhausted.
+  Future<void> loadMoreDecks() async {
+    if (isLoadingMoreDecks.value || !_hasMoreDecks || isLoadingDecks.value) {
+      return;
+    }
+    isLoadingMoreDecks.value = true;
+    try {
+      final next = await _deckRepository.listDecks(
+        offset: decks.length,
+        limit: _decksPageSize,
+      );
+      decks.addAll(next);
+      _hasMoreDecks = next.length == _decksPageSize;
+    } catch (_) {
+      // Keep what's loaded; the next scroll past the threshold retries.
+    } finally {
+      isLoadingMoreDecks.value = false;
     }
   }
 

@@ -32,8 +32,9 @@ const MAX_TEXT_LENGTH = 6000;
 const CEFR_LEVELS = new Set(["A1", "A2", "B1", "B2", "C1", "C2"]);
 
 // `uiLanguage` is the language the app's UI is in (e.g. "English"), so each
-// word can be glossed into the language the user reads, shown on the
-// word-selection screen. Defaults to English when the client doesn't send it.
+// word can be glossed AND defined in the language the user reads - the
+// translation shown on the word-selection screen, and the dictionary-style
+// definition on the card. Defaults to English when the client doesn't send it.
 function buildSystemPrompt(uiLanguage?: string): string {
   const gloss = uiLanguage && uiLanguage.trim().length > 0
     ? uiLanguage.trim()
@@ -44,8 +45,9 @@ function buildSystemPrompt(uiLanguage?: string): string {
     "worth learning as vocabulary (skip trivial function words like " +
     "articles/pronouns unless the text is clearly about them). For each " +
     "word, classify its CEFR level (A1-C2) by how commonly it's learned, " +
-    "write a short dictionary-style definition of the word (in the same " +
-    "language as the word itself), write exactly one natural example " +
+    `write a short dictionary-style definition of the word in ${gloss} ` +
+    "(the language the learner reads, NOT the word's own language) so they " +
+    "understand its meaning and usage, write exactly one natural example " +
     "sentence that uses the word and is written at that same CEFR level " +
     "(a B1 word gets a B1-appropriate sentence, not simplified or " +
     `overcomplicated), and translate the word into ${gloss}. ` +
