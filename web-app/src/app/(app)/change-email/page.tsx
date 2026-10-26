@@ -1,8 +1,8 @@
 "use client";
+import { PageShell } from "@/components/shell/PageShell";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
@@ -59,15 +59,8 @@ export default function ChangeEmailPage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-lg font-bold text-ink">{t("email_change_title")}</h1>
-      </header>
-
-      <div className="px-5">
+    <PageShell title={t("email_change_title")}>
+      <div>
         {step === "newEmail" && (
           <>
             <p className="mb-1 mt-2 text-ink-muted">{t("email_change_subtitle")}</p>
@@ -114,6 +107,6 @@ export default function ChangeEmailPage() {
           </>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

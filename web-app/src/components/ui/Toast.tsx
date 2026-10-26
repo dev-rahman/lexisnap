@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { onToast, type ToastMessage, type ToastTone } from "@/lib/toast";
 
 const TONE_BG: Record<ToastTone, string> = {
-  // Muted/darkened registers so they read as one family (see app_colors.dart).
   success: "bg-confirm",
   error: "bg-alert",
   warning: "bg-caution",
@@ -31,7 +30,7 @@ export function ToastHost() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className={`pointer-events-auto w-full max-w-sm rounded-md px-4 py-3 text-sm font-medium text-white shadow-lg ${TONE_BG[t.tone]}`}
+          className={`pointer-events-auto w-full max-w-sm animate-slide-up rounded-2xl px-4 py-3.5 text-sm font-medium text-white shadow-pop ${TONE_BG[t.tone]}`}
           role="status"
         >
           {t.message}

@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Camera, ChevronLeft, ChevronRight } from "lucide-react";
+import { Camera, ChevronRight } from "lucide-react";
+
+import { PageShell } from "@/components/shell/PageShell";
 
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -70,15 +72,8 @@ export default function EditProfilePage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-lg font-bold text-ink">{t("edit_profile_title")}</h1>
-      </header>
-
-      <div className="px-5 pb-10">
+    <PageShell title={t("edit_profile_title")}>
+      <div>
         {/* Photo */}
         <div className="mb-6 flex flex-col items-center gap-3 py-4">
           <div className="relative">
@@ -126,7 +121,7 @@ export default function EditProfilePage() {
       </div>
 
       <PasswordSheet open={pwdOpen} onClose={() => setPwdOpen(false)} hasPassword={user?.hasPassword ?? false} />
-    </div>
+    </PageShell>
   );
 }
 

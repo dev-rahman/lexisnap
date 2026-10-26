@@ -5,10 +5,8 @@ import { useEffect, type ReactNode } from "react";
 import { cn } from "@/lib/utils/cn";
 
 /**
- * A bottom sheet on phones, a centered card on wider screens. Used for the
- * many bottom-sheet flows in the app (scan source, study mode, language
- * picker, confirmations). The drag handle is hand-sized tight, per the
- * spacing note.
+ * A bottom sheet on phones, a centered dialog on wider screens. Used for the
+ * app's many sheet flows (scan destination, study mode, pickers, confirms).
  */
 export function Sheet({
   open,
@@ -37,34 +35,24 @@ export function Sheet({
   if (!open) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onClose}
-      />
+    <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center" role="dialog" aria-modal="true">
+      <div className="absolute inset-0 animate-fade-in bg-ink/40 backdrop-blur-sm" onClick={onClose} />
       <div
         className={cn(
-          "relative z-10 w-full max-w-md animate-[slideUp_.2s_ease] bg-paper p-5 pb-6 shadow-2xl",
-          "rounded-t-xl sm:rounded-xl",
+          "relative z-10 w-full max-w-md animate-slide-up bg-card p-5 pb-7 shadow-pop",
+          "rounded-t-3xl sm:rounded-3xl sm:p-6",
           className,
         )}
       >
-        <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-border sm:hidden" />
-        {title && (
-          <h2 className="mb-3 text-lg font-bold text-ink">{title}</h2>
-        )}
+        <div className="mx-auto mb-4 h-1.5 w-10 rounded-full bg-border sm:hidden" />
+        {title && <h2 className="mb-4 text-lg font-bold text-ink">{title}</h2>}
         {children}
       </div>
-      <style>{`@keyframes slideUp{from{transform:translateY(16px);opacity:.6}to{transform:translateY(0);opacity:1}}`}</style>
     </div>
   );
 }
 
-/** A yes/no confirmation sheet. */
+/** A yes/no confirmation dialog. */
 export function ConfirmSheet({
   open,
   onClose,
@@ -86,11 +74,11 @@ export function ConfirmSheet({
 }) {
   return (
     <Sheet open={open} onClose={onClose} title={title}>
-      {message && <p className="mb-5 text-sm text-ink-muted">{message}</p>}
+      {message && <p className="mb-5 text-[15px] leading-relaxed text-ink-muted">{message}</p>}
       <div className="flex gap-3">
         <button
           onClick={onClose}
-          className="h-12 flex-1 rounded-md border border-border bg-surface font-semibold text-ink"
+          className="h-12 flex-1 rounded-full border border-border bg-card font-semibold text-ink transition hover:bg-surface"
         >
           {cancelLabel}
         </button>
@@ -100,7 +88,7 @@ export function ConfirmSheet({
             onClose();
           }}
           className={cn(
-            "h-12 flex-1 rounded-md font-semibold text-white",
+            "h-12 flex-1 rounded-full font-semibold text-white transition active:scale-[0.97]",
             danger ? "bg-error" : "bg-accent",
           )}
         >

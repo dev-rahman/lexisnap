@@ -3,7 +3,6 @@
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import {
-  ChevronLeft,
   Copy,
   Headphones,
   MoreVertical,
@@ -12,9 +11,12 @@ import {
   FolderInput,
 } from "lucide-react";
 
+import { PageShell } from "@/components/shell/PageShell";
+
 import { CardDetailSheet } from "@/components/decks/CardDetailSheet";
 import { CardEditSheet } from "@/components/decks/CardEditSheet";
 import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { ConfirmSheet, Sheet } from "@/components/ui/Sheet";
 import { Spinner } from "@/components/ui/Spinner";
 import { TextField } from "@/components/ui/TextField";
@@ -152,24 +154,29 @@ export default function DeckDetailPage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      {/* Header */}
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="flex-1 truncate text-lg font-bold text-ink">{deck.name}</h1>
-        <button onClick={() => setSelectMode((v) => !v)} className="text-sm font-medium text-accent">
-          {selectMode ? t("common_cancel") : t("scan_select_all")}
-        </button>
-        <button onClick={() => setMenuOpen(true)} aria-label="Menu" className="text-ink-muted">
-          <MoreVertical size={22} />
-        </button>
-      </header>
-
-      <div className="px-5 pb-28">
+    <PageShell
+      title={deck.name}
+      actions={
+        <>
+          <button
+            onClick={() => setSelectMode((v) => !v)}
+            className="rounded-lg px-2 py-1 text-sm font-medium text-accent"
+          >
+            {selectMode ? t("common_cancel") : t("scan_select_all")}
+          </button>
+          <button
+            onClick={() => setMenuOpen(true)}
+            aria-label="Menu"
+            className="rounded-lg p-1.5 text-ink-muted transition hover:bg-card"
+          >
+            <MoreVertical size={22} />
+          </button>
+        </>
+      }
+    >
+      <div className="pb-24">
         {/* Hero */}
-        <section className="panel-surface mb-5 rounded-xl p-5">
+        <section className="panel-surface mb-6 rounded-3xl p-6">
           <p className="text-sm text-white/70">
             {t("deck_summary", {
               source: source?.name ?? deck.sourceLanguage ?? "—",
@@ -202,42 +209,43 @@ export default function DeckDetailPage() {
               <button
                 key={card.id}
                 onClick={() => (selectMode ? toggleSel(card.id) : setDetail(card))}
-                className={`flex items-center gap-3 rounded-lg border p-3.5 text-left transition ${
-                  isSel ? "border-accent bg-accent/10" : "border-border bg-surface"
+                className={`flex items-center gap-3 rounded-2xl border p-4 text-left transition ${
+                  isSel ? "border-accent bg-accent/10" : "border-border bg-card hover:bg-surface"
                 }`}
               >
                 {selectMode && (
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                    className={`flex h-5 w-5 items-center justify-center rounded-full border-2 text-[11px] ${
                       isSel ? "border-accent bg-accent text-white" : "border-border"
                     }`}
                   >
                     {isSel ? "✓" : ""}
                   </span>
                 )}
-                <span className={`h-2 w-2 shrink-0 rounded-full ${HUE_BG[hue]}`} />
+                <span className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-sm font-bold text-white ${HUE_BG[hue]}`}>
+                  {card.word.slice(0, 1).toUpperCase()}
+                </span>
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-semibold text-ink">{card.word}</span>
                   <span className="block truncate text-sm text-ink-muted">{card.translation}</span>
                 </span>
-                {card.level && <span className="text-xs text-ink-muted">{card.level}</span>}
+                {card.level && <Chip>{card.level}</Chip>}
               </button>
             );
           })}
           {cards.length >= limit && (
-            <button
-              onClick={() => setLimit((l) => l + CARDS_PAGE_SIZE)}
-              className="mt-1 flex h-11 items-center justify-center rounded-md border border-border text-sm text-ink-muted"
-            >
-              {isFetching ? <Spinner className="h-4 w-4" /> : t("home_see_all")}
-            </button>
+            <div className="mt-2 flex justify-center">
+              <Button variant="secondary" size="md" loading={isFetching} onClick={() => setLimit((l) => l + CARDS_PAGE_SIZE)}>
+                {t("home_see_all")}
+              </Button>
+            </div>
           )}
         </div>
       </div>
 
       {/* Selection action bar */}
       {selectMode && selected.size > 0 && (
-        <div className="fixed inset-x-0 bottom-0 mx-auto flex max-w-md items-center gap-2 border-t border-border bg-paper/95 p-3 backdrop-blur safe-bottom">
+        <div className="fixed inset-x-0 bottom-0 mx-auto flex max-w-2xl items-center gap-2 border-t border-border bg-paper/95 p-3 backdrop-blur-lg safe-bottom md:left-64">
           <span className="px-1 text-sm font-medium text-ink">{selected.size}</span>
           <ActionBtn icon={<FolderInput size={18} />} label={t("deck_merge_menu").split(" ")[0]} onClick={() => setDest("move")} />
           <ActionBtn icon={<Copy size={18} />} label="Copy" onClick={() => setDest("copy")} />
@@ -332,7 +340,7 @@ export default function DeckDetailPage() {
           deleteDeck={deleteDeck}
         />
       )}
-    </div>
+    </PageShell>
   );
 }
 
@@ -451,7 +459,7 @@ function DestinationPicker({
               key={d.id}
               disabled={busy}
               onClick={() => pick(d)}
-              className="flex w-full items-center justify-between rounded-lg border border-border bg-surface p-3 text-left disabled:opacity-50"
+              className="flex w-full items-center justify-between rounded-lg border border-border bg-card p-3 text-left disabled:opacity-50"
             >
               <span className="font-medium text-ink">{d.name}</span>
               <span className="text-sm text-ink-muted">{d.cardCount}</span>

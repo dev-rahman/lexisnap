@@ -3,72 +3,76 @@
 @tailwind utilities;
 
 /*
- * LexiSnap design tokens — ported from lib/app/core/theme/app_colors.dart.
- * Values are `R G B` triplets so Tailwind's `rgb(var(--x) / <alpha>)` works.
- *
- * Light values on :root. Dark values are applied both by an explicit
- * [data-theme="dark"] (user choice) and by the OS preference unless the user
- * forced light with [data-theme="light"].
+ * LexiSnap design system v2.
+ * Tokens are `R G B` triplets so Tailwind's rgb(var(--x) / <alpha>) works.
+ * Light on :root; dark via [data-theme="dark"] and the OS preference unless
+ * the user forced light.
  */
 :root {
-  --ink: 28 37 65;
-  --ink-muted: 92 97 120;
-  --paper: 247 244 238;
-  --surface: 237 233 223;
-  --border: 223 217 205;
-  --panel: 28 37 65; /* deep navy focal panel */
+  --ink: 27 32 58; /* primary text / brand navy */
+  --ink-muted: 110 115 138;
+  --paper: 249 248 245; /* warm, soft canvas */
+  --surface: 243 241 236; /* quiet fill (chips, tracks) */
+  --card: 255 255 255; /* crisp cards */
+  --border: 234 231 224; /* warm hairline */
+  --panel: 24 29 54; /* deep navy focal panel */
 
-  --accent: 231 98 60; /* coral — single primary action only */
-  --accent-600: 189 80 49;
+  --accent: 233 95 58; /* coral — the one primary action */
+  --accent-600: 200 74 42;
 
-  --success: 46 158 91;
-  --error: 229 72 77;
+  --success: 32 160 92;
+  --error: 226 72 77;
   --alert: 163 59 42;
-  --confirm: 61 122 87;
-  --caution: 168 112 26;
-  --notice: 47 106 166;
+  --confirm: 47 125 86;
+  --caution: 170 112 26;
+  --notice: 45 108 168;
 
-  --hue-teal: 42 157 143;
+  --hue-teal: 23 157 143;
   --hue-violet: 124 92 211;
-  --hue-amber: 233 162 59;
-  --hue-rose: 217 84 123;
-  --hue-sky: 59 130 196;
-  --hue-moss: 90 158 75;
+  --hue-amber: 227 158 54;
+  --hue-rose: 214 80 120;
+  --hue-sky: 52 128 198;
+  --hue-moss: 86 158 72;
+
+  --radius: 1.25rem;
 }
 
-/* Dark twins — see the comment in app_colors.dart on keeping contrast. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --ink: 243 241 234;
-    --ink-muted: 180 183 200;
-    --paper: 20 22 42;
-    --surface: 30 33 56;
-    --border: 52 56 84;
-    --panel: 37 42 74;
-
-    --hue-teal: 79 195 181;
-    --hue-violet: 162 139 234;
-    --hue-amber: 243 188 106;
-    --hue-rose: 236 125 157;
-    --hue-sky: 111 174 228;
-    --hue-moss: 131 194 117;
+    --ink: 237 239 246;
+    --ink-muted: 150 156 180;
+    --paper: 13 15 30;
+    --surface: 26 29 50;
+    --card: 23 27 48;
+    --border: 42 47 74;
+    --panel: 34 40 72;
+    --accent: 240 110 74;
+    --accent-600: 214 86 52;
+    --hue-teal: 79 197 183;
+    --hue-violet: 165 141 236;
+    --hue-amber: 244 190 108;
+    --hue-rose: 238 127 159;
+    --hue-sky: 113 176 230;
+    --hue-moss: 133 196 119;
   }
 }
 
 :root[data-theme="dark"] {
-  --ink: 243 241 234;
-  --ink-muted: 180 183 200;
-  --paper: 20 22 42;
-  --surface: 30 33 56;
-  --border: 52 56 84;
-  --panel: 37 42 74;
-
-  --hue-teal: 79 195 181;
-  --hue-violet: 162 139 234;
-  --hue-amber: 243 188 106;
-  --hue-rose: 236 125 157;
-  --hue-sky: 111 174 228;
-  --hue-moss: 131 194 117;
+  --ink: 237 239 246;
+  --ink-muted: 150 156 180;
+  --paper: 13 15 30;
+  --surface: 26 29 50;
+  --card: 23 27 48;
+  --border: 42 47 74;
+  --panel: 34 40 72;
+  --accent: 240 110 74;
+  --accent-600: 214 86 52;
+  --hue-teal: 79 197 183;
+  --hue-violet: 165 141 236;
+  --hue-amber: 244 190 108;
+  --hue-rose: 238 127 159;
+  --hue-sky: 113 176 230;
+  --hue-moss: 133 196 119;
 }
 
 @layer base {
@@ -78,34 +82,64 @@
   body {
     background-color: rgb(var(--paper));
     color: rgb(var(--ink));
-    font-family: var(--font-display), system-ui, sans-serif;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     overscroll-behavior-y: none;
   }
-  /* Tighter default rhythm — Rahman prefers compact spacing. */
+  h1, h2, h3 {
+    font-family: var(--font-display), system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  ::selection {
+    background: rgb(var(--accent) / 0.2);
+  }
   button {
     touch-action: manipulation;
   }
 }
 
 @layer utilities {
-  /* The one focal card: solid navy, white text in both themes. */
+  /* Focal panel: solid navy, white text in both themes. */
   .panel-surface {
     background-color: rgb(var(--panel));
-    color: #ffffff;
+    color: #fff;
   }
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
+  /* Soft card shadow (light only; flat in dark). */
+  .shadow-card {
+    box-shadow:
+      0 1px 2px rgb(20 22 40 / 0.04),
+      0 8px 24px rgb(20 22 40 / 0.06);
   }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .shadow-pop {
+    box-shadow:
+      0 2px 6px rgb(20 22 40 / 0.06),
+      0 16px 40px rgb(20 22 40 / 0.12);
   }
-  .safe-top {
-    padding-top: env(safe-area-inset-top);
+  :root[data-theme="dark"] .shadow-card,
+  :root[data-theme="dark"] .shadow-pop {
+    box-shadow: none;
   }
-  .safe-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .shadow-card,
+    :root:not([data-theme="light"]) .shadow-pop {
+      box-shadow: none;
+    }
   }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
 }
+
+@keyframes slide-up {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+.animate-slide-up { animation: slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.animate-fade-in { animation: fade-in 0.18s ease; }

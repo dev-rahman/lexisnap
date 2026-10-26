@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   Bell,
-  ChevronLeft,
   ChevronRight,
   Globe,
   GraduationCap,
@@ -14,6 +13,8 @@ import {
   Moon,
   Target,
 } from "lucide-react";
+
+import { PageShell } from "@/components/shell/PageShell";
 
 import { Avatar } from "@/components/ui/Avatar";
 import { Button } from "@/components/ui/Button";
@@ -59,19 +60,11 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-lg font-bold text-ink">{t("profile_your_account")}</h1>
-      </header>
-
-      <div className="px-5 pb-10">
+    <PageShell title={t("profile_your_account")}>
         {/* Account card */}
         <button
           onClick={() => router.push("/edit-profile")}
-          className="mb-6 flex w-full items-center gap-3 rounded-xl border border-border bg-surface p-4 text-left"
+          className="card mb-6 flex w-full items-center gap-3 rounded-2xl p-4 text-left"
         >
           <Avatar src={user?.avatarUrl} name={user?.fullName} email={user?.email} size={52} />
           <span className="min-w-0 flex-1">
@@ -83,7 +76,7 @@ export default function ProfilePage() {
           <ChevronRight size={20} className="text-ink-muted" />
         </button>
 
-        <div className="overflow-hidden rounded-xl border border-border">
+        <div className="card overflow-hidden rounded-2xl">
           <Row icon={<Bell size={20} />} label={t("reminder_settings_title")} value={prefs.reminderEnabled ? t("reminder_every_day_at", { time }) : t("reminder_off")} onClick={() => setSheet("reminder")} />
           <Row icon={<GraduationCap size={20} />} label={t("study_mode_title")} value={t(modeLabelKey(prefs.studyMode))} onClick={() => setSheet("mode")} />
           <Row icon={<Target size={20} />} label={t("goal_settings_title")} value={t("goal_cards_per_day", { count: dailyGoal })} onClick={() => setSheet("goal")} />
@@ -99,7 +92,6 @@ export default function ProfilePage() {
         >
           <LogOut size={18} /> {t("profile_sign_out")}
         </button>
-      </div>
 
       {/* Sheets */}
       <ReminderSheet open={sheet === "reminder"} onClose={() => setSheet(null)} />
@@ -118,7 +110,7 @@ export default function ProfilePage() {
         danger
         onConfirm={doSignOut}
       />
-    </div>
+    </PageShell>
   );
 }
 
@@ -145,7 +137,7 @@ function Row({
   return (
     <button
       onClick={onClick}
-      className={`flex w-full items-center gap-3 bg-surface px-4 py-3.5 text-left ${last ? "" : "border-b border-border"}`}
+      className={`flex w-full items-center gap-3 bg-card px-4 py-3.5 text-left ${last ? "" : "border-b border-border"}`}
     >
       <span className="text-ink-muted">{icon}</span>
       <span className="flex-1 font-medium text-ink">{label}</span>

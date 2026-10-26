@@ -2,7 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { AlertTriangle, ChevronLeft } from "lucide-react";
+import { AlertTriangle } from "lucide-react";
+
+import { PageShell } from "@/components/shell/PageShell";
 
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
@@ -53,15 +55,8 @@ export default function DeleteAccountPage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-lg font-bold text-error">{t("edit_profile_delete_account")}</h1>
-      </header>
-
-      <div className="px-5 pb-10">
+    <PageShell title={t("edit_profile_delete_account")}>
+      <div>
         <div className="mb-5 flex items-center gap-3 rounded-xl bg-error/10 p-4 text-error">
           <AlertTriangle size={24} />
           <span className="font-semibold">
@@ -128,6 +123,6 @@ export default function DeleteAccountPage() {
           </>
         )}
       </div>
-    </div>
+    </PageShell>
   );
 }

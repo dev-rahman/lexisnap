@@ -18,7 +18,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="mb-1.5 block text-sm font-medium text-ink-muted"
+            className="mb-1.5 block text-sm font-medium text-ink"
           >
             {label}
           </label>
@@ -28,21 +28,21 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             ref={ref}
             id={inputId}
             className={cn(
-              "h-12 w-full rounded-md border bg-surface px-3.5 text-ink outline-none transition placeholder:text-ink-muted/60",
-              "focus:border-accent focus:ring-2 focus:ring-accent/30",
+              "h-12 w-full rounded-2xl border bg-card px-4 text-ink outline-none transition placeholder:text-ink-muted/60",
+              "focus:border-accent focus:ring-4 focus:ring-accent/12",
               error ? "border-error" : "border-border",
-              trailing && "pr-11",
+              trailing ? "pr-12" : "",
               className,
             )}
             {...props}
           />
           {trailing && (
-            <div className="absolute inset-y-0 right-2 flex items-center">
+            <div className="absolute inset-y-0 right-3 flex items-center text-ink-muted">
               {trailing}
             </div>
           )}
         </div>
-        {error && <p className="mt-1 text-sm text-alert">{error}</p>}
+        {error && <p className="mt-1.5 text-sm text-alert">{error}</p>}
       </div>
     );
   },

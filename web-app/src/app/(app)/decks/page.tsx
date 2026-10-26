@@ -7,7 +7,10 @@ import { Layers, Sparkles } from "lucide-react";
 import { DeckCard } from "@/components/decks/DeckCard";
 import { TabScaffold } from "@/components/shell/TabScaffold";
 import { Button } from "@/components/ui/Button";
-import { Spinner } from "@/components/ui/Spinner";
+import { Card } from "@/components/ui/Card";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { IconTile } from "@/components/ui/IconTile";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useT } from "@/components/providers/I18nProvider";
 import {
   DECKS_PAGE_SIZE,
@@ -33,85 +36,78 @@ export default function DecksPage() {
 
   const mixedHref =
     studyMode === "listen"
-      ? dueCount > 0
-        ? "/listen?mode=due"
-        : "/listen?mode=practice"
-      : dueCount > 0
-        ? "/study?mode=due"
-        : "/study?mode=practice";
+      ? dueCount > 0 ? "/listen?mode=due" : "/listen?mode=practice"
+      : dueCount > 0 ? "/study?mode=due" : "/study?mode=practice";
 
   return (
-    <TabScaffold active="decks">
-      <h1 className="mb-4 text-2xl font-bold text-ink">{t("decks_all")}</h1>
+    <TabScaffold active="decks" title={t("decks_all")}>
+      <h1 className="mb-5 text-[28px] font-bold text-ink md:hidden">{t("decks_all")}</h1>
 
-      {/* Stats row */}
-      <div className="mb-4 grid grid-cols-3 gap-2.5">
+      <div className="mb-5 grid grid-cols-3 gap-3">
         <Stat label={t("decks_stat_decks")} value={totals?.deckCount ?? 0} />
         <Stat label={t("decks_stat_words")} value={totals?.cardCount ?? 0} />
-        <Stat label={t("decks_stat_due")} value={dueCount} />
+        <Stat label={t("decks_stat_due")} value={dueCount} accent={dueCount > 0} />
       </div>
 
-      {/* Mixed review */}
       {hasCards && (
         <button
           onClick={() => router.push(mixedHref)}
-          className="panel-surface mb-5 flex w-full items-center gap-3 rounded-xl p-4 text-left transition active:scale-[0.99]"
+          className="panel-surface mb-6 flex w-full items-center gap-4 rounded-3xl p-5 text-left transition hover:brightness-110 active:scale-[0.99]"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-md bg-accent/20 text-accent">
+          <IconTile size="lg" className="bg-accent/20 text-accent">
             <Sparkles size={22} />
-          </span>
+          </IconTile>
           <span className="flex-1">
-            <span className="block font-semibold">{t("decks_mixed_title")}</span>
-            <span className="text-sm text-white/70">
-              {dueCount > 0
-                ? t("decks_mixed_due", { count: dueCount })
-                : t("decks_mixed_practice")}
+            <span className="block font-bold">{t("decks_mixed_title")}</span>
+            <span className="text-sm text-white/65">
+              {dueCount > 0 ? t("decks_mixed_due", { count: dueCount }) : t("decks_mixed_practice")}
             </span>
           </span>
         </button>
       )}
 
       {isLoading ? (
-        <div className="flex justify-center py-10 text-ink-muted">
-          <Spinner />
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-28 rounded-2xl" />
+          ))}
         </div>
       ) : decks.length === 0 ? (
-        <div className="rounded-xl border border-dashed border-border p-8 text-center">
-          <Layers size={32} className="mx-auto mb-2 text-ink-muted" />
-          <p className="font-semibold text-ink">{t("home_no_decks_title")}</p>
-          <p className="mt-1 text-sm text-ink-muted">{t("home_no_decks_body")}</p>
-          <Button
-            variant="primary"
-            className="mt-4"
-            onClick={() => router.push("/scan")}
-          >
-            {t("scan_source_title")}
-          </Button>
-        </div>
+        <EmptyState
+          icon={<Layers size={24} />}
+          title={t("home_no_decks_title")}
+          body={t("home_no_decks_body")}
+          action={
+            <Button variant="primary" onClick={() => router.push("/scan")}>
+              {t("scan_source_title")}
+            </Button>
+          }
+        />
       ) : (
-        <div className="flex flex-col gap-2.5">
-          {decks.map((deck) => (
-            <DeckCard key={deck.id} deck={deck} />
-          ))}
+        <>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+            {decks.map((deck) => (
+              <DeckCard key={deck.id} deck={deck} />
+            ))}
+          </div>
           {canLoadMore && (
-            <button
-              onClick={() => setLimit((l) => l + DECKS_PAGE_SIZE)}
-              className="mt-2 flex h-11 items-center justify-center rounded-md border border-border text-sm font-medium text-ink-muted"
-            >
-              {isFetching ? <Spinner className="h-4 w-4" /> : t("home_see_all")}
-            </button>
+            <div className="mt-5 flex justify-center">
+              <Button variant="secondary" size="md" loading={isFetching} onClick={() => setLimit((l) => l + DECKS_PAGE_SIZE)}>
+                {t("home_see_all")}
+              </Button>
+            </div>
           )}
-        </div>
+        </>
       )}
     </TabScaffold>
   );
 }
 
-function Stat({ label, value }: { label: string; value: number }) {
+function Stat({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
   return (
-    <div className="rounded-lg border border-border bg-surface p-3 text-center">
-      <div className="text-xl font-bold text-ink">{value}</div>
-      <div className="text-xs text-ink-muted">{label}</div>
-    </div>
+    <Card className="p-4 text-center">
+      <div className={`text-2xl font-bold ${accent ? "text-accent" : "text-ink"}`}>{value}</div>
+      <div className="mt-0.5 text-xs text-ink-muted">{label}</div>
+    </Card>
   );
 }

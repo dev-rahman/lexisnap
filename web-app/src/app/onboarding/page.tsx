@@ -37,7 +37,7 @@ export default function OnboardingPage() {
   const current = PAGES[page];
 
   return (
-    <main className="flex min-h-dvh flex-col bg-paper px-6 py-8 safe-top safe-bottom">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col bg-paper px-6 py-8 safe-top safe-bottom">
       <div className="flex items-center justify-between">
         <BrandMark size="sm" />
         <button onClick={finish} className="text-sm font-medium text-ink-muted">

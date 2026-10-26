@@ -2,10 +2,12 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { Volume2, X } from "lucide-react";
+import { Check, Volume2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 import { ConfirmSheet } from "@/components/ui/Sheet";
+import { ProgressRing } from "@/components/ui/ProgressRing";
 import { useT } from "@/components/providers/I18nProvider";
 import type { Flashcard, StudyMode } from "@/lib/data/models";
 import { useStudySession } from "@/lib/hooks/useStudySession";
@@ -30,10 +32,8 @@ export function StudySessionView({
   const [picked, setPicked] = useState<number | null>(null);
   const [leaving, setLeaving] = useState(false);
   const shownAt = useRef<number>(Date.now());
-
   const step = session.step;
 
-  // Reset per-step interaction state and the answer timer.
   useEffect(() => {
     setRevealed(false);
     setPicked(null);
@@ -41,97 +41,94 @@ export function StudySessionView({
   }, [step?.card.id, step?.kind]);
 
   if (session.isComplete) {
-    return (
-      <SessionSummary
-        reviewed={session.reviewedCount}
-        accuracy={session.accuracy}
-        onDone={() => router.back()}
-      />
-    );
+    return <SessionSummary reviewed={session.reviewedCount} accuracy={session.accuracy} onDone={() => router.back()} />;
   }
   if (!step) return null;
 
   const elapsed = () => Date.now() - shownAt.current;
 
-  async function choose(index: number) {
+  function choose(index: number) {
     if (picked !== null) return;
     setPicked(index);
     const correct = index === step!.answerIndex;
     const ms = elapsed();
-    setTimeout(() => session.answer(correct, ms), 650);
+    setTimeout(() => session.answer(correct, ms), 620);
   }
 
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col px-5 py-4">
-      {/* Top bar: leave + progress */}
+    <div className="mx-auto flex min-h-dvh max-w-xl flex-col px-5 py-5">
+      {/* Top bar */}
       <div className="flex items-center gap-3 safe-top">
-        <button onClick={() => setLeaving(true)} aria-label="Leave" className="text-ink-muted">
-          <X size={24} />
+        <button
+          onClick={() => setLeaving(true)}
+          aria-label="Leave"
+          className="flex h-9 w-9 items-center justify-center rounded-full text-ink-muted transition hover:bg-surface"
+        >
+          <X size={22} />
         </button>
-        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface">
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-surface">
           <div
-            className="h-full rounded-full bg-accent transition-all"
+            className="h-full rounded-full bg-accent transition-all duration-300"
             style={{ width: `${Math.round(session.progress * 100)}%` }}
           />
         </div>
-        <span className="text-sm tabular-nums text-ink-muted">
-          {t("study_progress", {
-            current: session.retiredCount,
-            total: session.plannedTotal,
-          })}
+        <span className="text-sm font-semibold tabular-nums text-ink-muted">
+          {t("study_progress", { current: session.retiredCount, total: session.plannedTotal })}
         </span>
       </div>
 
       {practiceOnly && (
-        <p className="mt-3 rounded-md bg-hue-sky/15 px-3 py-2 text-center text-sm text-ink-muted">
+        <p className="mt-4 rounded-2xl bg-hue-sky/12 px-4 py-2.5 text-center text-sm text-ink-muted">
           {t("study_nothing_due_body")}
         </p>
       )}
 
-      {/* Prompt */}
-      <div className="flex flex-1 flex-col items-center justify-center">
-        <button
-          onClick={() => speak(step.card.word, step.card.sourceLanguage)}
-          className="mb-2 flex items-center gap-2 text-3xl font-bold text-ink"
-        >
-          {step.card.word}
-          <Volume2 size={22} className="text-ink-muted" />
-        </button>
-        {step.card.level && (
-          <span className="rounded-full bg-surface px-2 py-0.5 text-xs font-semibold text-ink-muted">
-            {step.card.level}
-          </span>
-        )}
-
-        {step.kind === "recall" && revealed && (
-          <p className="mt-6 text-2xl font-semibold text-accent">
-            {step.card.translation}
-          </p>
-        )}
+      {/* Prompt card */}
+      <div className="flex flex-1 items-center justify-center py-6">
+        <div className="w-full rounded-3xl border border-border bg-card p-8 text-center shadow-card">
+          <button
+            onClick={() => speak(step.card.word, step.card.sourceLanguage)}
+            className="mx-auto flex items-center gap-2.5 text-[34px] font-bold leading-tight text-ink"
+          >
+            {step.card.word}
+            <Volume2 size={24} className="text-ink-muted" />
+          </button>
+          {step.card.level && (
+            <div className="mt-3 flex justify-center">
+              <Chip>{step.card.level}</Chip>
+            </div>
+          )}
+          {step.kind === "recall" && revealed && (
+            <div className="mt-6 border-t border-border pt-5">
+              <p className="text-2xl font-semibold text-accent">{step.card.translation}</p>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Answer area */}
       {step.kind === "choice" ? (
-        <div className="grid grid-cols-1 gap-2.5 pb-6">
-          <p className="mb-1 text-center text-sm text-ink-muted">{t("study_choice_prompt")}</p>
+        <div className="space-y-2.5 pb-4">
+          <p className="mb-1 text-center text-sm font-medium text-ink-muted">{t("study_choice_prompt")}</p>
           {step.options.map((opt, i) => (
             <button
               key={i}
               onClick={() => choose(i)}
               className={cn(
-                "h-14 rounded-md border px-4 text-left font-medium transition",
-                picked === null && "border-border bg-surface text-ink",
-                picked !== null && i === step.answerIndex && "border-success bg-success/15 text-ink",
-                picked !== null && i === picked && i !== step.answerIndex && "border-error bg-error/15 text-ink",
-                picked !== null && i !== picked && i !== step.answerIndex && "border-border bg-surface opacity-60",
+                "flex h-14 w-full items-center justify-between rounded-2xl border px-5 text-left font-semibold transition",
+                picked === null && "border-border bg-card text-ink hover:border-ink-muted/40",
+                picked !== null && i === step.answerIndex && "border-success bg-success/12 text-ink",
+                picked !== null && i === picked && i !== step.answerIndex && "border-error bg-error/12 text-ink",
+                picked !== null && i !== picked && i !== step.answerIndex && "border-border bg-card opacity-55",
               )}
             >
               {opt}
+              {picked !== null && i === step.answerIndex && <Check size={20} className="text-success" />}
             </button>
           ))}
         </div>
       ) : (
-        <div className="pb-6">
+        <div className="pb-4">
           {!revealed ? (
             <Button variant="secondary" size="lg" fullWidth onClick={() => setRevealed(true)}>
               {t("study_tap_to_reveal")}
@@ -153,11 +150,7 @@ export function StudySessionView({
         open={leaving}
         onClose={() => setLeaving(false)}
         title={t("study_leave_title")}
-        message={
-          session.remaining === 1
-            ? t("study_leave_body_one")
-            : t("study_leave_body", { count: session.remaining })
-        }
+        message={session.remaining === 1 ? t("study_leave_body_one") : t("study_leave_body", { count: session.remaining })}
         cancelLabel={t("study_leave_keep_going")}
         confirmLabel={t("study_leave_confirm")}
         danger
@@ -170,26 +163,19 @@ export function StudySessionView({
   );
 }
 
-function SessionSummary({
-  reviewed,
-  accuracy,
-  onDone,
-}: {
-  reviewed: number;
-  accuracy: number;
-  onDone: () => void;
-}) {
+function SessionSummary({ reviewed, accuracy, onDone }: { reviewed: number; accuracy: number; onDone: () => void }) {
   const t = useT();
   return (
-    <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-4 px-6 text-center">
-      <div className="text-5xl">🎉</div>
-      <h1 className="text-2xl font-bold text-ink">{t("study_complete_title")}</h1>
-      <p className="text-ink-muted">{t("study_complete_body", { count: reviewed })}</p>
-      <div className="my-2 rounded-xl bg-surface px-6 py-3">
-        <div className="text-3xl font-bold text-accent">{Math.round(accuracy * 100)}%</div>
-        <div className="text-xs text-ink-muted">{t("study_accuracy")}</div>
+    <div className="mx-auto flex min-h-dvh max-w-md flex-col items-center justify-center gap-5 px-6 text-center">
+      <ProgressRing value={accuracy} size={132} stroke={11} trackClassName="text-surface" barClassName="text-accent">
+        <span className="text-3xl font-bold text-ink">{Math.round(accuracy * 100)}%</span>
+        <span className="text-xs text-ink-muted">{t("study_accuracy")}</span>
+      </ProgressRing>
+      <div>
+        <h1 className="text-2xl font-bold text-ink">{t("study_complete_title")}</h1>
+        <p className="mt-1 text-ink-muted">{t("study_complete_body", { count: reviewed })}</p>
       </div>
-      <Button variant="primary" size="lg" fullWidth onClick={onDone}>
+      <Button variant="primary" size="lg" fullWidth className="max-w-xs" onClick={onDone}>
         {t("study_done")}
       </Button>
     </div>

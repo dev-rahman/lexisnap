@@ -1,8 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { ChevronDown, ChevronLeft } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+
+import { PageShell } from "@/components/shell/PageShell";
 
 import { Button } from "@/components/ui/Button";
 import { useT } from "@/components/providers/I18nProvider";
@@ -21,7 +22,6 @@ const FAQS: { q: MessageKey; a: MessageKey }[] = [
 
 export default function HelpPage() {
   const t = useT();
-  const router = useRouter();
   const user = useAppSelector((s) => s.auth.user);
   const [open, setOpen] = useState<number | null>(0);
   const [message, setMessage] = useState("");
@@ -61,15 +61,8 @@ export default function HelpPage() {
   }
 
   return (
-    <div className="mx-auto min-h-dvh max-w-md bg-paper">
-      <header className="flex items-center gap-2 px-4 py-3 safe-top">
-        <button onClick={() => router.back()} aria-label="Back" className="text-ink">
-          <ChevronLeft size={26} />
-        </button>
-        <h1 className="text-lg font-bold text-ink">{t("help_title")}</h1>
-      </header>
-
-      <div className="px-5 pb-10">
+    <PageShell title={t("help_title")}>
+      <div>
         <h2 className="mb-3 font-bold text-ink">{t("help_faq_title")}</h2>
         <div className="overflow-hidden rounded-xl border border-border">
           {FAQS.map((f, i) => (
@@ -104,6 +97,6 @@ export default function HelpPage() {
           {t("help_email_support_button")}
         </Button>
       </div>
-    </div>
+    </PageShell>
   );
 }
