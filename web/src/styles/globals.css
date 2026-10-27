@@ -1,0 +1,150 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---- Design tokens (rgb channels for /<alpha> support) ------------------ */
+:root,
+:root[data-theme="light"] {
+  --ink: 27 32 56; /* #1B2038 ink navy */
+  --ink-soft: 58 65 96;
+  --ink-muted: 110 118 148;
+  --paper: 251 247 240; /* #FBF7F0 warm cream */
+  --surface: 245 238 228;
+  --card: 255 255 255;
+  --border: 231 223 210;
+
+  --coral: 241 90 50; /* #F15A32 */
+  --coral-dark: 198 64 30;
+  --coral-soft: 255 236 228;
+  --flame: 255 159 28; /* #FF9F1C */
+  --flame-dark: 214 124 8;
+  --success: 43 182 115; /* #2BB673 */
+  --success-dark: 28 140 86;
+  --error: 224 72 72;
+  --error-dark: 183 48 48;
+
+  --hue-teal: 23 153 143;
+  --hue-violet: 124 92 211;
+  --hue-amber: 227 158 54;
+  --hue-rose: 214 80 120;
+  --hue-sky: 52 128 198;
+  --hue-moss: 86 158 72;
+
+  --font-display: "Baloo 2";
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --ink: 237 240 252; /* light text on dark */
+  --ink-soft: 198 204 228;
+  --ink-muted: 150 158 190;
+  --paper: 16 19 34; /* deep navy canvas */
+  --surface: 24 28 48;
+  --card: 30 35 58;
+  --border: 48 55 86;
+
+  --coral: 255 112 73;
+  --coral-dark: 198 64 30;
+  --coral-soft: 58 36 30;
+  --flame: 255 176 66;
+  --flame-dark: 201 120 20;
+  --success: 59 205 136;
+  --success-dark: 32 150 96;
+  --error: 247 103 103;
+  --error-dark: 190 60 60;
+
+  --hue-teal: 44 193 180;
+  --hue-violet: 157 128 240;
+  --hue-amber: 243 182 86;
+  --hue-rose: 236 110 150;
+  --hue-sky: 94 166 232;
+  --hue-moss: 122 196 104;
+  color-scheme: dark;
+}
+
+* {
+  border-color: rgb(var(--border));
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background-color: rgb(var(--paper));
+  color: rgb(var(--ink));
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  min-height: 100dvh;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: "Baloo 2", system-ui, sans-serif;
+}
+
+/* Warm gradient wash behind the whole app so it never reads as flat grey. */
+.app-wash {
+  background-image:
+    radial-gradient(1100px 520px at 12% -8%, rgb(var(--coral) / 0.1), transparent 60%),
+    radial-gradient(900px 480px at 108% 4%, rgb(var(--hue-violet) / 0.1), transparent 55%),
+    radial-gradient(900px 600px at 50% 120%, rgb(var(--hue-teal) / 0.08), transparent 60%);
+}
+
+::selection {
+  background: rgb(var(--coral) / 0.22);
+}
+
+/* Scrollbars — unobtrusive, on-brand. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--border)) transparent;
+}
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 9999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+@layer components {
+  /* 3D "pressable" button: solid fill + darker bottom lip that depresses. */
+  .btn3d {
+    @apply relative inline-flex select-none items-center justify-center gap-2
+      rounded-2xl font-display font-bold tracking-tight
+      transition-[transform,box-shadow] duration-100 ease-out
+      active:translate-y-[3px] disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .card-surface {
+    @apply rounded-3xl border border-border/70 bg-card shadow-card;
+  }
+
+  .hover-lift {
+    @apply transition-transform duration-200 ease-out hover:-translate-y-1;
+  }
+
+  .tint-ring {
+    @apply ring-1 ring-inset ring-black/5;
+  }
+}
+
+@layer utilities {
+  .safe-top { padding-top: env(safe-area-inset-top); }
+  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+  .pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 0.5rem); }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .text-balance { text-wrap: balance; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
