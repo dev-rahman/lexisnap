@@ -9,12 +9,14 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { ProgressRing } from "@/components/ui/ProgressRing";
 import { useStreakView } from "@/lib/hooks/useStreakView";
 import { useT } from "@/providers/I18nProvider";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { openScanPicker } from "@/store/slices/shellSlice";
 import { useGetDecksQuery, useGetDueCardsQuery } from "@/store/api/decksApi";
 
 export function Home() {
   const t = useT();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
   const { streak, week, goalMet, goalProgress } = useStreakView();
 
@@ -92,7 +94,7 @@ export function Home() {
         </div>
 
         {/* Scan card */}
-        <Link to="/scan" className="block">
+        <button onClick={() => dispatch(openScanPicker())} className="block h-full text-left">
           <div className="hover-lift group flex h-full flex-col justify-between gap-6 rounded-2xl border border-border bg-card p-6">
             <div className="flex items-center justify-between">
               <span className="grid h-12 w-12 place-items-center rounded-2xl bg-coral-soft text-coral">
@@ -105,7 +107,7 @@ export function Home() {
               <p className="mt-1 text-sm text-ink-muted">{t("home_scan_cta_subtitle")}</p>
             </div>
           </div>
-        </Link>
+        </button>
       </section>
 
       {/* Recent decks */}
@@ -135,7 +137,7 @@ export function Home() {
             title={t("home_no_decks_title")}
             description={t("home_no_decks_body")}
             action={
-              <Button onClick={() => navigate("/scan")} leftIcon={<ScanLine size={18} />}>
+              <Button onClick={() => dispatch(openScanPicker())} leftIcon={<ScanLine size={18} />}>
                 {t("nav_scan")}
               </Button>
             }

@@ -6,6 +6,8 @@ import { DeckTile, DeckTileSkeleton } from "@/components/decks/DeckTile";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { useT } from "@/providers/I18nProvider";
+import { useAppDispatch } from "@/store/hooks";
+import { openScanPicker } from "@/store/slices/shellSlice";
 import {
   DECKS_PAGE_SIZE,
   useGetDecksQuery,
@@ -41,6 +43,7 @@ function Stat({
 export function Decks() {
   const t = useT();
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [limit, setLimit] = useState(DECKS_PAGE_SIZE);
 
   const { data: totals } = useGetDeckTotalsQuery();
@@ -134,7 +137,7 @@ export function Decks() {
             title={t("home_no_decks_title")}
             description={t("home_no_decks_body")}
             action={
-              <Button onClick={() => navigate("/scan")} leftIcon={<ScanLine size={18} />}>
+              <Button onClick={() => dispatch(openScanPicker())} leftIcon={<ScanLine size={18} />}>
                 {t("nav_scan")}
               </Button>
             }

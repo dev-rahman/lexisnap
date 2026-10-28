@@ -1,5 +1,6 @@
 import { Outlet } from "react-router-dom";
 
+import { ScanPickerDialog } from "@/components/scan/ScanPickerDialog";
 import { BottomNav } from "./BottomNav";
 import { TopBar } from "./TopBar";
 
@@ -13,6 +14,7 @@ export function AppLayout() {
         <Outlet />
       </main>
       <BottomNav />
+      <ScanPickerDialog />
     </div>
   );
 }

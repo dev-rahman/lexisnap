@@ -8,9 +8,15 @@ export type ShellTab = "home" | "decks";
 export interface ShellState {
   tab: ShellTab;
   navBarMinimized: boolean;
+  /** The "take photo / choose image" scan picker dialog. */
+  scanPickerOpen: boolean;
 }
 
-const initialState: ShellState = { tab: "home", navBarMinimized: false };
+const initialState: ShellState = {
+  tab: "home",
+  navBarMinimized: false,
+  scanPickerOpen: false,
+};
 
 const shellSlice = createSlice({
   name: "shell",
@@ -22,8 +28,15 @@ const shellSlice = createSlice({
     setNavBarMinimized(state, action: PayloadAction<boolean>) {
       state.navBarMinimized = action.payload;
     },
+    openScanPicker(state) {
+      state.scanPickerOpen = true;
+    },
+    closeScanPicker(state) {
+      state.scanPickerOpen = false;
+    },
   },
 });
 
-export const { setTab, setNavBarMinimized } = shellSlice.actions;
+export const { setTab, setNavBarMinimized, openScanPicker, closeScanPicker } =
+  shellSlice.actions;
 export default shellSlice.reducer;

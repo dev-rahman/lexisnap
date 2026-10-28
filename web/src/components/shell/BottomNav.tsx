@@ -1,14 +1,16 @@
 import { Home, Layers, ScanLine } from "lucide-react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 import { useT } from "@/providers/I18nProvider";
+import { useAppDispatch } from "@/store/hooks";
+import { openScanPicker } from "@/store/slices/shellSlice";
 import { cn } from "@/lib/utils/cn";
 
 /** Floating rounded bottom tab bar, shown on every breakpoint, with a centered
  *  coral Scan button. Calm — a soft shadow, no chunky 3D lip. */
 export function BottomNav() {
   const t = useT();
-  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const tab = ({ isActive }: { isActive: boolean }) =>
     cn(
@@ -26,7 +28,7 @@ export function BottomNav() {
 
         <div className="flex w-20 justify-center">
           <button
-            onClick={() => navigate("/scan")}
+            onClick={() => dispatch(openScanPicker())}
             aria-label={t("nav_scan")}
             className="btn3d -mt-6 h-14 w-14 rounded-full bg-coral text-white shadow-pop"
           >
