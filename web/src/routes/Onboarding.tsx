@@ -2,6 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { BrandMark } from "@/components/brand/BrandMark";
+import {
+  ScanScene,
+  SentencesScene,
+  StudyScene,
+  WordsScene,
+} from "@/components/brand/Illustrations";
 import { Button } from "@/components/ui/Button";
 import { useT } from "@/providers/I18nProvider";
 import { useAppDispatch } from "@/store/hooks";
@@ -15,10 +21,10 @@ export function Onboarding() {
   const [index, setIndex] = useState(0);
 
   const slides = [
-    { emoji: "📸", bg: "from-coral to-flame", title: t("onboarding_scan_title"), body: t("onboarding_scan_body") },
-    { emoji: "✨", bg: "from-hue-violet to-hue-sky", title: t("onboarding_words_title"), body: t("onboarding_words_body") },
-    { emoji: "💬", bg: "from-hue-teal to-hue-moss", title: t("onboarding_sentences_title"), body: t("onboarding_sentences_body") },
-    { emoji: "🔥", bg: "from-flame to-coral", title: t("onboarding_deck_title"), body: t("onboarding_deck_body") },
+    { Scene: ScanScene, title: t("onboarding_scan_title"), body: t("onboarding_scan_body") },
+    { Scene: WordsScene, title: t("onboarding_words_title"), body: t("onboarding_words_body") },
+    { Scene: SentencesScene, title: t("onboarding_sentences_title"), body: t("onboarding_sentences_body") },
+    { Scene: StudyScene, title: t("onboarding_deck_title"), body: t("onboarding_deck_body") },
   ];
   const last = index === slides.length - 1;
   const slide = slides[index];
@@ -43,19 +49,21 @@ export function Onboarding() {
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <div
-          key={index}
-          className={cn(
-            "mb-10 grid h-40 w-40 animate-pop-in place-items-center rounded-[2rem] bg-gradient-to-br text-7xl shadow-card",
-            slide.bg,
-          )}
-        >
-          <span>{slide.emoji}</span>
+        <div key={index} className="mb-8 h-56 w-56 animate-pop-in sm:h-64 sm:w-64">
+          <slide.Scene />
         </div>
-        <h1 className="max-w-sm font-display text-3xl font-bold text-ink text-balance">
+        <h1
+          key={`t-${index}`}
+          className="max-w-sm animate-[rise-in_0.4s_ease-out] font-display text-3xl font-bold text-ink text-balance"
+        >
           {slide.title}
         </h1>
-        <p className="mt-3 max-w-sm text-[17px] text-ink-muted text-balance">{slide.body}</p>
+        <p
+          key={`b-${index}`}
+          className="mt-3 max-w-sm animate-[rise-in_0.5s_ease-out] text-[17px] text-ink-muted text-balance"
+        >
+          {slide.body}
+        </p>
       </div>
 
       <div className="mx-auto w-full max-w-sm space-y-6">

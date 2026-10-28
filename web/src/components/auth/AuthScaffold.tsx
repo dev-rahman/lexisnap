@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 import { BrandMark } from "@/components/brand/BrandMark";
+import { AuthIllustration } from "@/components/brand/Illustrations";
 
 /** Two-pane auth layout: a vivid branded panel on desktop, the form on the
  *  right (full-width on mobile). Keeps auth screens premium, never flat. */
@@ -19,7 +20,12 @@ export function AuthScaffold({
         {/* Brand panel — calm deep navy, coral accent */}
         <div className="relative hidden flex-1 overflow-hidden rounded-3xl bg-panel p-10 text-white lg:flex lg:flex-col">
           <BrandMark size="md" showIcon={false} className="[&_.text-ink]:text-white" />
-          <div className="mt-auto">
+
+          <div className="flex flex-1 items-center justify-center py-4">
+            <AuthIllustration className="animate-[rise-in_0.6s_ease-out]" />
+          </div>
+
+          <div>
             <p className="font-display text-4xl font-bold leading-tight text-balance">
               Snap a page.
               <br />

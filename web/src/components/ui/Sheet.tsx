@@ -39,7 +39,7 @@ export function Sheet({
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-end justify-center sm:items-center">
       <div
-        className="absolute inset-0 bg-ink/50 backdrop-blur-sm animate-[rise-in_0.2s_ease-out]"
+        className="absolute inset-0 bg-ink/50 backdrop-blur-sm animate-[rise-in_0.2s_ease-out] dark:bg-black/70"
         onClick={onClose}
       />
       <div
