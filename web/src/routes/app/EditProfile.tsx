@@ -86,7 +86,7 @@ export function EditProfile() {
   }
 
   return (
-    <div className="mx-auto max-w-xl">
+    <div className="mx-auto max-w-2xl">
       <PageHeader title={t("profile_edit_profile")} />
 
       <div className="space-y-5">

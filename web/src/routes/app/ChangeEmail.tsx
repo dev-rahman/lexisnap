@@ -62,7 +62,7 @@ export function ChangeEmail() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto max-w-2xl">
       <PageHeader title={t("email_change_title")} subtitle={t("email_change_subtitle")} />
       <Card className="space-y-4">
         {step === "enter" && (

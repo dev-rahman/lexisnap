@@ -17,12 +17,12 @@ export function PageHeader({
 }) {
   const navigate = useNavigate();
   return (
-    <header className="mb-5 flex items-start gap-3">
+    <header className="mb-5 flex items-center gap-3">
       {back && (
         <button
           onClick={onBack ?? (() => navigate(-1))}
           aria-label="Back"
-          className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-card text-ink-soft transition-colors hover:bg-ink/5"
+          className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-border bg-card text-ink-soft transition-colors hover:bg-ink/5"
         >
           <ArrowLeft size={20} />
         </button>

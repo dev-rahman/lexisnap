@@ -40,7 +40,7 @@ export function DeleteAccount() {
   }
 
   return (
-    <div className="mx-auto max-w-md">
+    <div className="mx-auto max-w-2xl">
       <PageHeader title={t("delete_title")} />
 
       <Card className="space-y-5">

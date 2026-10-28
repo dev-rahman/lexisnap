@@ -46,7 +46,15 @@ import {
 } from "@/store/api/decksApi";
 import { cn } from "@/lib/utils/cn";
 
-type DeckSheet = null | "menu" | "rename" | "delete" | "move" | "copy" | "merge";
+type DeckSheet =
+  | null
+  | "menu"
+  | "rename"
+  | "delete"
+  | "move"
+  | "copy"
+  | "merge"
+  | "delete-cards";
 
 export function DeckDetail() {
   const { id = "" } = useParams();
@@ -142,13 +150,17 @@ export function DeckDetail() {
   }
 
   async function onDeleteSelected() {
+    setBusy(true);
     try {
       const count = selected.size;
       await deleteCards({ flashcardIds: [...selected], deckId: id }).unwrap();
       toast.success(t("cards_deleted_success", { count }));
+      setSheet(null);
       exitSelect();
     } catch {
       toast.error(t("cards_delete_error"));
+    } finally {
+      setBusy(false);
     }
   }
 
@@ -363,7 +375,7 @@ export function DeckDetail() {
               <Copy size={18} /> {t("cards_copy")}
             </button>
             <button
-              onClick={onDeleteSelected}
+              onClick={() => setSheet("delete-cards")}
               className="flex flex-1 flex-col items-center gap-0.5 rounded-xl py-1.5 text-xs font-bold text-error hover:bg-error/5"
             >
               <Trash2 size={18} /> {t("cards_delete")}
@@ -440,6 +452,25 @@ export function DeckDetail() {
         }
       >
         <p className="text-ink-muted">{t("deck_delete_body", { name: deck.name })}</p>
+      </Sheet>
+
+      {/* Delete selected cards confirmation */}
+      <Sheet
+        open={sheet === "delete-cards"}
+        onClose={() => setSheet(null)}
+        title={t("cards_delete_title", { count: selected.size })}
+        footer={
+          <div className="flex gap-3">
+            <Button variant="ghost" fullWidth onClick={() => setSheet(null)} disabled={busy}>
+              {t("common_cancel")}
+            </Button>
+            <Button variant="danger" fullWidth onClick={onDeleteSelected} disabled={busy}>
+              {t("cards_delete_confirm")}
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-ink-muted">{t("cards_delete_body")}</p>
       </Sheet>
 
       {/* Move / Copy / Merge target pickers */}
