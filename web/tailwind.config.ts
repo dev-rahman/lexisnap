@@ -84,6 +84,10 @@ const config: Config = {
           "0%,100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-8px)" },
         },
+        shimmer: {
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
+        },
       },
       animation: {
         "pop-in": "pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1) both",
@@ -91,6 +95,7 @@ const config: Config = {
         shake: "shake 0.4s ease-in-out",
         "flame-flicker": "flame-flicker 1.6s ease-in-out infinite",
         float: "float 3.5s ease-in-out infinite",
+        shimmer: "shimmer 1.6s ease-in-out infinite",
       },
     },
   },

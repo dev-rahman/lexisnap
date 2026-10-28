@@ -5,6 +5,7 @@ import { hueFor } from "@/lib/domain/deckHue";
 import { languageByCode } from "@/lib/data/languages";
 import { Card } from "@/components/ui/Card";
 import { IconTile } from "@/components/ui/IconTile";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useT } from "@/providers/I18nProvider";
 
 export function DeckTile({ deck }: { deck: Deck }) {
@@ -40,5 +41,5 @@ export function DeckTile({ deck }: { deck: Deck }) {
 }
 
 export function DeckTileSkeleton() {
-  return <div className="h-[128px] animate-pulse rounded-2xl bg-ink/[0.05]" />;
+  return <Skeleton className="h-[128px]" />;
 }

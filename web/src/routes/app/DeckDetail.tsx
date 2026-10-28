@@ -226,7 +226,19 @@ export function DeckDetail() {
     return (
       <div className="mx-auto max-w-2xl">
         <PageHeader title="…" />
-        <Skeleton className="h-28 w-full" />
+        {/* Hero */}
+        <Skeleton className="mb-5 h-[88px] w-full" />
+        {/* Action buttons */}
+        <div className="mb-5 grid grid-cols-2 gap-3">
+          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-full" />
+        </div>
+        {/* Card list */}
+        <div className="space-y-2">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-16 w-full" />
+          ))}
+        </div>
       </div>
     );
   }
