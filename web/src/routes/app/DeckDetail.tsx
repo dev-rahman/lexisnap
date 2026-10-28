@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   CheckSquare,
@@ -31,6 +31,7 @@ import { languageByCode } from "@/lib/data/languages";
 import { toast } from "@/lib/toast";
 import { useT } from "@/providers/I18nProvider";
 import { useAppDispatch } from "@/store/hooks";
+import { setBottomNavHidden } from "@/store/slices/shellSlice";
 import {
   CARDS_PAGE_SIZE,
   decksApi,
@@ -78,6 +79,14 @@ export function DeckDetail() {
   const [editCard, setEditCard] = useState<Flashcard | null>(null);
   const [selectMode, setSelectMode] = useState(false);
   const [selected, setSelected] = useState<Set<string>>(new Set());
+
+  // The selection action bar lives at the bottom while cards are selected, so
+  // hide the global bottom nav then to avoid overlapping it.
+  const selectionBarActive = selectMode && selected.size > 0;
+  useEffect(() => {
+    dispatch(setBottomNavHidden(selectionBarActive));
+  }, [selectionBarActive, dispatch]);
+  useEffect(() => () => void dispatch(setBottomNavHidden(false)), [dispatch]);
   const [busy, setBusy] = useState(false);
 
   const source = languageByCode(deck?.sourceLanguage);

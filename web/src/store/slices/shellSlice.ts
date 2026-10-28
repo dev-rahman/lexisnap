@@ -10,12 +10,16 @@ export interface ShellState {
   navBarMinimized: boolean;
   /** The "take photo / choose image" scan picker dialog. */
   scanPickerOpen: boolean;
+  /** Hide the floating bottom nav (e.g. while a contextual action bar — like
+   *  deck multi-select — occupies the bottom). */
+  bottomNavHidden: boolean;
 }
 
 const initialState: ShellState = {
   tab: "home",
   navBarMinimized: false,
   scanPickerOpen: false,
+  bottomNavHidden: false,
 };
 
 const shellSlice = createSlice({
@@ -34,9 +38,17 @@ const shellSlice = createSlice({
     closeScanPicker(state) {
       state.scanPickerOpen = false;
     },
+    setBottomNavHidden(state, action: PayloadAction<boolean>) {
+      state.bottomNavHidden = action.payload;
+    },
   },
 });
 
-export const { setTab, setNavBarMinimized, openScanPicker, closeScanPicker } =
-  shellSlice.actions;
+export const {
+  setTab,
+  setNavBarMinimized,
+  openScanPicker,
+  closeScanPicker,
+  setBottomNavHidden,
+} = shellSlice.actions;
 export default shellSlice.reducer;

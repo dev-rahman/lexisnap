@@ -2,7 +2,7 @@ import { Home, Layers, ScanLine } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 import { useT } from "@/providers/I18nProvider";
-import { useAppDispatch } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { openScanPicker } from "@/store/slices/shellSlice";
 import { cn } from "@/lib/utils/cn";
 
@@ -11,6 +11,9 @@ import { cn } from "@/lib/utils/cn";
 export function BottomNav() {
   const t = useT();
   const dispatch = useAppDispatch();
+  const hidden = useAppSelector((s) => s.shell.bottomNavHidden);
+
+  if (hidden) return null;
 
   const tab = ({ isActive }: { isActive: boolean }) =>
     cn(
