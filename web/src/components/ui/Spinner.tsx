@@ -1,5 +1,8 @@
 import { cn } from "@/lib/utils/cn";
+import { BrandLoader } from "@/components/brand/BrandLoader";
 
+/** Small inline spinner, used inside buttons and compact controls where an
+ *  animated logo would be out of place. */
 export function Spinner({ className }: { className?: string }) {
   return (
     <span
@@ -13,10 +16,11 @@ export function Spinner({ className }: { className?: string }) {
   );
 }
 
+/** Full-screen loading state: the animated LexiSnap logo instead of a ring. */
 export function FullPageSpinner() {
   return (
     <div className="app-wash flex min-h-dvh items-center justify-center bg-paper">
-      <Spinner className="h-9 w-9" />
+      <BrandLoader />
     </div>
   );
 }

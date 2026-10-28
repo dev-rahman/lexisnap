@@ -15,7 +15,7 @@ import { Card } from "@/components/ui/Card";
 import { Chip } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { IconTile } from "@/components/ui/IconTile";
-import { Spinner } from "@/components/ui/Spinner";
+import { BrandLoader } from "@/components/brand/BrandLoader";
 import { TextField } from "@/components/ui/TextField";
 import { BrandMark } from "@/components/brand/BrandMark";
 import { VOCABULARY_LANGUAGES, languageByCode, type VocabularyLanguage } from "@/lib/data/languages";
@@ -134,7 +134,7 @@ export function Scan() {
         {/* processing / savingDeck */}
         {(scan.stage === "processing" || scan.stage === "savingDeck") && (
           <div className="flex flex-1 flex-col items-center justify-center gap-5 text-center">
-            <Spinner className="h-12 w-12" />
+            <BrandLoader size={60} showWord={false} />
             <p className="font-display text-lg font-bold text-ink">
               {scan.processingLabel ?? scan.savingLabel ?? t("scan_reading_text")}
             </p>
