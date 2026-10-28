@@ -21,9 +21,8 @@ export function GoogleButton({ label }: { label: string }) {
       onClick={onClick}
       disabled={loading}
       className={cn(
-        "btn3d h-12 w-full border-2 border-border bg-card text-ink",
-        "shadow-[0_4px_0_rgb(var(--border))] active:shadow-[0_1px_0_rgb(var(--border))]",
-        "disabled:opacity-60",
+        "btn3d h-12 w-full border border-border bg-card text-ink shadow-soft",
+        "hover:border-coral/40 disabled:opacity-60",
       )}
     >
       <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden>

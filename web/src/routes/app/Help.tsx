@@ -50,7 +50,7 @@ export function Help() {
 
       <section className="space-y-5">
         <div>
-          <h2 className="mb-3 font-display text-lg font-extrabold text-ink">
+          <h2 className="mb-3 font-display text-lg font-bold text-ink">
             {t("help_faq_title")}
           </h2>
           <Card padded={false} className="divide-y divide-border overflow-hidden">
@@ -80,7 +80,7 @@ export function Help() {
         </div>
 
         <Card className="space-y-3">
-          <h2 className="font-display text-lg font-extrabold text-ink">
+          <h2 className="font-display text-lg font-bold text-ink">
             {t("help_still_need_help")}
           </h2>
           <p className="text-sm text-ink-muted">{t("help_send_message_body")}</p>

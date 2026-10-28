@@ -16,26 +16,21 @@ export function AuthScaffold({
   return (
     <div className="app-wash min-h-dvh bg-paper">
       <div className="mx-auto flex min-h-dvh max-w-5xl flex-col lg:flex-row lg:items-stretch lg:gap-10 lg:px-6 lg:py-10">
-        {/* Brand panel */}
-        <div className="relative hidden flex-1 overflow-hidden rounded-4xl bg-gradient-to-br from-coral to-flame p-10 text-white lg:flex lg:flex-col">
-          <BrandMark size="md" className="[&_span]:text-white [&_.text-coral]:text-white" />
+        {/* Brand panel — calm deep navy, coral accent */}
+        <div className="relative hidden flex-1 overflow-hidden rounded-3xl bg-panel p-10 text-white lg:flex lg:flex-col">
+          <BrandMark size="md" showIcon={false} className="[&_.text-ink]:text-white" />
           <div className="mt-auto">
-            <p className="font-display text-4xl font-extrabold leading-tight text-balance">
+            <p className="font-display text-4xl font-bold leading-tight text-balance">
               Snap a page.
               <br />
               Learn the words
               <br />
-              that matter.
+              <span className="text-coral">that matter.</span>
             </p>
-            <p className="mt-4 max-w-sm text-white/85">
+            <p className="mt-4 max-w-sm text-white/65">
               Point your camera at any text — LexiSnap finds the vocabulary worth
               knowing and turns it into flashcards you'll actually remember.
             </p>
-            <div className="mt-8 flex gap-3 text-4xl">
-              <span className="animate-float">📸</span>
-              <span className="animate-float [animation-delay:0.4s]">✨</span>
-              <span className="animate-float [animation-delay:0.8s]">🔥</span>
-            </div>
           </div>
         </div>
 
@@ -45,7 +40,7 @@ export function AuthScaffold({
             <div className="lg:hidden">
               <BrandMark size="md" />
             </div>
-            <h1 className="mt-8 font-display text-3xl font-extrabold text-ink lg:mt-0">
+            <h1 className="mt-8 font-display text-3xl font-bold text-ink lg:mt-0">
               {title}
             </h1>
             {subtitle && <p className="mt-2 text-ink-muted">{subtitle}</p>}

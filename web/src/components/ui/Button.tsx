@@ -14,25 +14,19 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   rightIcon?: ReactNode;
 }
 
-// Each variant = fill colour + a darker "lip" rendered as a bottom box-shadow.
-// Pressing removes the lip and translates down (handled by .btn3d + active:).
+// Flat, calm variants — solid fills with a soft shadow and a gentle press.
 const VARIANTS: Record<Variant, string> = {
-  primary:
-    "bg-coral text-white shadow-[0_4px_0_rgb(var(--coral-dark))] hover:brightness-[1.03] active:shadow-[0_1px_0_rgb(var(--coral-dark))]",
-  success:
-    "bg-success text-white shadow-[0_4px_0_rgb(var(--success-dark))] hover:brightness-[1.03] active:shadow-[0_1px_0_rgb(var(--success-dark))]",
-  danger:
-    "bg-error text-white shadow-[0_4px_0_rgb(var(--error-dark))] hover:brightness-[1.03] active:shadow-[0_1px_0_rgb(var(--error-dark))]",
-  secondary:
-    "bg-card text-ink border-2 border-border shadow-[0_4px_0_rgb(var(--border))] hover:border-coral/40 active:shadow-[0_1px_0_rgb(var(--border))]",
-  ghost:
-    "bg-transparent text-ink-soft hover:bg-ink/5 active:translate-y-0 active:scale-[0.98]",
+  primary: "bg-coral text-white shadow-soft hover:brightness-[1.04]",
+  success: "bg-success text-white shadow-soft hover:brightness-[1.04]",
+  danger: "bg-error text-white shadow-soft hover:brightness-[1.04]",
+  secondary: "bg-card text-ink border border-border hover:border-coral/50 hover:bg-coral-soft/40",
+  ghost: "bg-transparent text-ink-soft hover:bg-ink/5",
 };
 
 const SIZES: Record<Size, string> = {
   sm: "h-10 px-4 text-sm",
-  md: "h-12 px-5 text-[15px]",
-  lg: "h-14 px-7 text-lg",
+  md: "h-11 px-5 text-[15px]",
+  lg: "h-13 px-7 text-base",
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(

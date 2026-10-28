@@ -114,7 +114,7 @@ export function Profile() {
 
   return (
     <div className="mx-auto max-w-2xl space-y-5">
-      <h1 className="font-display text-[2rem] font-extrabold text-ink">
+      <h1 className="font-display text-[2rem] font-bold text-ink">
         {t("profile_your_account")}
       </h1>
 
@@ -123,7 +123,7 @@ export function Profile() {
         <Card interactive className="flex items-center gap-4">
           <Avatar name={user?.fullName} email={user?.email} src={user?.avatarUrl} size={60} />
           <div className="min-w-0 flex-1">
-            <h2 className="truncate font-display text-xl font-extrabold text-ink">
+            <h2 className="truncate font-display text-xl font-bold text-ink">
               {user?.fullName ?? t("common_full_name")}
             </h2>
             <p className="truncate text-sm text-ink-muted">{user?.email}</p>
@@ -261,7 +261,7 @@ export function Profile() {
                   : "border-border hover:border-coral/40",
               )}
             >
-              <div className="font-display text-3xl font-extrabold text-ink">{g}</div>
+              <div className="font-display text-3xl font-bold text-ink">{g}</div>
               <div className="text-xs font-semibold text-ink-muted">
                 {t("goal_cards_per_day", { count: g })}
               </div>

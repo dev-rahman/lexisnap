@@ -60,10 +60,10 @@ export function Scan() {
         {scan.stage === "pickingImage" && (
           <div className="flex flex-1 flex-col justify-center">
             <div className="mb-8 text-center">
-              <div className="mx-auto mb-5 grid h-24 w-24 animate-float place-items-center rounded-[2rem] bg-coral-soft text-6xl">
+              <div className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-3xl bg-coral-soft text-5xl">
                 📸
               </div>
-              <h1 className="font-display text-2xl font-extrabold text-ink">
+              <h1 className="font-display text-2xl font-bold text-ink">
                 {t("scan_source_title")}
               </h1>
               <p className="mt-1 text-ink-muted">{t("scan_source_subtitle")}</p>
@@ -185,7 +185,7 @@ export function Scan() {
     return (
       <div className="flex flex-1 flex-col">
         <div className="mb-4">
-          <h1 className="font-display text-2xl font-extrabold text-ink">
+          <h1 className="font-display text-2xl font-bold text-ink">
             {t("scan_select_words_title")}
           </h1>
           <p className="text-ink-muted">{t("scan_select_words_subtitle")}</p>
@@ -278,7 +278,7 @@ export function Scan() {
           <button onClick={onBack} className="mb-2 text-sm font-bold text-coral">
             ← {t("common_cancel")}
           </button>
-          <h1 className="font-display text-2xl font-extrabold text-ink">
+          <h1 className="font-display text-2xl font-bold text-ink">
             {t("scan_destination_title")}
           </h1>
           <p className="text-ink-muted">{t("scan_destination_subtitle")}</p>
@@ -292,7 +292,7 @@ export function Scan() {
             <Plus size={22} />
           </IconTile>
           <div className="flex-1">
-            <p className="font-display font-extrabold text-ink">
+            <p className="font-display font-bold text-ink">
               {t("scan_destination_new_deck")}
             </p>
             <p className="text-sm text-ink-muted">{t("scan_destination_new_deck_hint")}</p>
@@ -341,7 +341,7 @@ export function Scan() {
           <button onClick={onBack} className="mb-2 text-sm font-bold text-coral">
             ← {t("common_cancel")}
           </button>
-          <h1 className="font-display text-2xl font-extrabold text-ink">
+          <h1 className="font-display text-2xl font-bold text-ink">
             {t("scan_target_language_title")}
           </h1>
           <p className="text-ink-muted">{t("scan_target_language_body")}</p>

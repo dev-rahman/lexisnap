@@ -20,8 +20,8 @@ export default defineConfig({
         name: "LexiSnap",
         short_name: "LexiSnap",
         description: "Scan text, learn the words that matter.",
-        theme_color: "#F15A32",
-        background_color: "#FBF7F0",
+        theme_color: "#E7623C",
+        background_color: "#F7F4EE",
         display: "standalone",
         start_url: "/",
         icons: [

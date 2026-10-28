@@ -19,133 +19,112 @@ export function Home() {
   const { streak, week, goalMet, goalProgress } = useStreakView();
 
   const { data: due } = useGetDueCardsQuery();
-  const { data: decks, isLoading: decksLoading } = useGetDecksQuery(6);
+  const { data: decks, isLoading: decksLoading } = useGetDecksQuery(10);
 
   const dueCount = due?.length ?? 0;
   const firstName = user?.fullName?.split(" ")[0];
 
   return (
-    <div className="mx-auto max-w-3xl space-y-7">
+    <div className="space-y-8">
       {/* Greeting */}
-      <header className="flex items-center justify-between">
-        <div>
-          <h1 className="font-display text-[2rem] font-extrabold leading-tight text-ink">
-            {firstName
-              ? t("home_greeting", { name: firstName })
-              : t("home_greeting_generic")}
-          </h1>
-          <p className="mt-0.5 text-ink-muted">{t("home_subtitle")}</p>
-        </div>
+      <header>
+        <h1 className="font-display text-3xl font-bold leading-tight text-ink">
+          {firstName ? t("home_greeting", { name: firstName }) : t("home_greeting_generic")}
+        </h1>
+        <p className="mt-1 text-ink-muted">{t("home_subtitle")}</p>
       </header>
 
-      {/* Today hero */}
-      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-coral via-coral to-flame p-6 text-white shadow-card-lift sm:p-7">
-        <div
-          className="pointer-events-none absolute -right-10 -top-12 h-48 w-48 rounded-full bg-white/10"
-          aria-hidden
-        />
-        <div className="relative flex flex-col gap-6 sm:flex-row sm:items-center">
-          <ProgressRing
-            progress={goalProgress}
-            size={128}
-            stroke={13}
-            barClassName="text-white"
-            trackClassName="text-white/25"
-          >
-            <div className="px-2 text-center">
-              <div className="font-display text-4xl font-extrabold leading-none">
-                {streak.reviewsToday}
-                <span className="text-xl font-bold text-white/70">/{streak.dailyGoal}</span>
+      {/* Today + Scan — two columns on large screens so wide layouts fill well */}
+      <section className="grid gap-5 lg:grid-cols-3">
+        {/* Today hero: calm deep-navy panel, coral accent */}
+        <div className="rounded-2xl bg-panel p-6 text-white shadow-card lg:col-span-2 lg:p-7">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
+            <ProgressRing
+              progress={goalProgress}
+              size={116}
+              stroke={10}
+              barClassName="text-coral"
+              trackClassName="text-white/15"
+            >
+              <div className="text-center">
+                <div className="font-display text-3xl font-bold leading-none">
+                  {streak.reviewsToday}
+                  <span className="text-lg font-semibold text-white/55">/{streak.dailyGoal}</span>
+                </div>
+                <div className="mt-0.5 text-xs font-medium text-white/60">{t("decks_stat_words")}</div>
               </div>
-              <div className="mt-1 text-[11px] font-bold uppercase leading-tight tracking-wide text-white/75">
-                {t("decks_stat_words")}
-              </div>
-            </div>
-          </ProgressRing>
+            </ProgressRing>
 
-          <div className="flex-1">
-            <div className="flex items-center gap-3">
-              <StreakFlame count={streak.current} size={44} />
-              <div>
-                <div className="font-display text-4xl font-extrabold leading-none">
-                  {streak.current}
-                </div>
-                <div className="text-sm font-semibold text-white/80">
-                  {t("home_streak_best", { count: streak.longest })}
+            <div className="flex-1">
+              <div className="flex items-center gap-3">
+                <StreakFlame count={streak.current} size={38} />
+                <div>
+                  <div className="font-display text-3xl font-bold leading-none">{streak.current}</div>
+                  <div className="text-sm text-white/55">{t("home_streak_best", { count: streak.longest })}</div>
                 </div>
               </div>
+              <div className="mt-5">
+                <WeekStrip days={week} tone="onColor" />
+              </div>
             </div>
-            <div className="mt-5 rounded-2xl bg-white/12 p-3 backdrop-blur-sm">
-              <WeekStrip days={week} tone="onColor" />
-            </div>
+          </div>
+
+          <div className="mt-6">
+            {dueCount > 0 ? (
+              <Button fullWidth size="lg" onClick={() => navigate("/study?mixed=1")} rightIcon={<ArrowRight size={18} />}>
+                {dueCount === 1 ? t("home_review_cta_one") : t("home_review_cta", { count: dueCount })}
+              </Button>
+            ) : goalMet ? (
+              <div className="flex items-center justify-center gap-2 rounded-2xl bg-white/10 py-3 font-display text-base font-semibold">
+                {t("home_caught_up_today")}
+              </div>
+            ) : (
+              <Button
+                fullWidth
+                size="lg"
+                onClick={() => navigate("/study?mixed=1&practice=1")}
+                rightIcon={<ArrowRight size={18} />}
+              >
+                {t("home_practice_cta")}
+              </Button>
+            )}
           </div>
         </div>
 
-        <div className="relative mt-6">
-          {dueCount > 0 ? (
-            <button
-              onClick={() => navigate("/study?mixed=1")}
-              className="btn3d h-14 w-full bg-white text-coral shadow-[0_4px_0_rgb(0_0_0/0.12)] active:shadow-[0_1px_0_rgb(0_0_0/0.12)]"
-            >
-              {dueCount === 1
-                ? t("home_review_cta_one")
-                : t("home_review_cta", { count: dueCount })}
-              <ArrowRight size={20} />
-            </button>
-          ) : goalMet ? (
-            <div className="flex items-center justify-center gap-2 rounded-2xl bg-white/15 py-3.5 font-display text-lg font-bold">
-              🎉 {t("home_caught_up_today")}
+        {/* Scan card */}
+        <Link to="/scan" className="block">
+          <div className="hover-lift group flex h-full flex-col justify-between gap-6 rounded-2xl border border-border bg-card p-6">
+            <div className="flex items-center justify-between">
+              <span className="grid h-12 w-12 place-items-center rounded-2xl bg-coral-soft text-coral">
+                <ScanLine size={24} />
+              </span>
+              <ChevronRight className="text-ink-muted transition-transform group-hover:translate-x-1" />
             </div>
-          ) : (
-            <button
-              onClick={() => navigate("/study?mixed=1&practice=1")}
-              className="btn3d h-14 w-full bg-white text-coral shadow-[0_4px_0_rgb(0_0_0/0.12)] active:shadow-[0_1px_0_rgb(0_0_0/0.12)]"
-            >
-              {t("home_practice_cta")}
-              <ArrowRight size={20} />
-            </button>
-          )}
-        </div>
+            <div>
+              <h3 className="font-display text-lg font-bold text-ink">{t("home_scan_cta_title")}</h3>
+              <p className="mt-1 text-sm text-ink-muted">{t("home_scan_cta_subtitle")}</p>
+            </div>
+          </div>
+        </Link>
       </section>
-
-      {/* Scan card */}
-      <Link to="/scan" className="block">
-        <div className="hover-lift group flex items-center gap-4 overflow-hidden rounded-3xl border-2 border-hue-violet/25 bg-hue-violet/10 p-5">
-          <div className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-hue-violet text-white shadow-[0_4px_0_rgb(var(--hue-violet))] brightness-95">
-            <ScanLine size={26} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="font-display text-lg font-extrabold text-ink">
-              {t("home_scan_cta_title")}
-            </h3>
-            <p className="text-sm text-ink-muted">{t("home_scan_cta_subtitle")}</p>
-          </div>
-          <ChevronRight className="text-hue-violet transition-transform group-hover:translate-x-1" />
-        </div>
-      </Link>
 
       {/* Recent decks */}
       <section>
-        <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-xl font-extrabold text-ink">
-            {t("home_your_decks")}
-          </h2>
-          <Link
-            to="/decks"
-            className="flex items-center gap-1 text-sm font-bold text-coral hover:underline"
-          >
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="font-display text-xl font-bold text-ink">{t("home_your_decks")}</h2>
+          <Link to="/decks" className="flex items-center gap-1 text-sm font-semibold text-coral hover:underline">
             {t("home_see_all")} <ChevronRight size={16} />
           </Link>
         </div>
 
         {decksLoading ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-            {Array.from({ length: 4 }).map((_, i) => (
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {Array.from({ length: 5 }).map((_, i) => (
               <DeckTileSkeleton key={i} />
             ))}
           </div>
         ) : decks && decks.length > 0 ? (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             {decks.map((deck) => (
               <DeckTile key={deck.id} deck={deck} />
             ))}

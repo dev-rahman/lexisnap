@@ -130,7 +130,7 @@ export function EditProfile() {
 
         {/* Password */}
         <Card className="space-y-3">
-          <h2 className="font-display text-lg font-extrabold text-ink">
+          <h2 className="font-display text-lg font-bold text-ink">
             {t("forgot_password_new_password")}
           </h2>
           {user?.hasPassword && (

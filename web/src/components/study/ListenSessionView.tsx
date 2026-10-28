@@ -86,7 +86,7 @@ export function ListenSessionView({ cards }: { cards: Flashcard[] }) {
 
         <h1
           className={cn(
-            "mt-8 font-display text-5xl font-extrabold transition-colors",
+            "mt-8 font-display text-5xl font-bold transition-colors",
             phase === "word" ? "text-ink" : "text-ink-muted",
           )}
         >
@@ -126,7 +126,7 @@ export function ListenSessionView({ cards }: { cards: Flashcard[] }) {
               setPlaying((p) => !p);
             }
           }}
-          className="btn3d h-20 w-20 rounded-full bg-coral text-white shadow-[0_5px_0_rgb(var(--coral-dark))] active:shadow-[0_1px_0_rgb(var(--coral-dark))]"
+          className="btn3d h-20 w-20 rounded-full bg-coral text-white shadow-pop"
         >
           {playing ? <Pause size={34} fill="currentColor" /> : <Play size={34} fill="currentColor" />}
         </button>

@@ -28,7 +28,7 @@ export function PageHeader({
         </button>
       )}
       <div className="min-w-0 flex-1">
-        <h1 className="truncate font-display text-2xl font-extrabold text-ink">
+        <h1 className="truncate font-display text-2xl font-bold text-ink">
           {title}
         </h1>
         {subtitle && <p className="mt-0.5 text-sm text-ink-muted">{subtitle}</p>}

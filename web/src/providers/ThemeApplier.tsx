@@ -17,7 +17,7 @@ export function ThemeApplier() {
       root.setAttribute("data-theme", resolved);
       const meta = document.querySelector('meta[name="theme-color"]');
       if (meta) {
-        meta.setAttribute("content", resolved === "dark" ? "#101322" : "#F15A32");
+        meta.setAttribute("content", resolved === "dark" ? "#14162A" : "#E7623C");
       }
     };
 

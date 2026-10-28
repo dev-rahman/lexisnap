@@ -55,7 +55,7 @@ export function Sheet({
       >
         {title && (
           <div className="flex items-center justify-between border-b border-border px-6 py-4">
-            <h2 className="font-display text-lg font-extrabold text-ink">{title}</h2>
+            <h2 className="font-display text-lg font-bold text-ink">{title}</h2>
             <button
               onClick={onClose}
               className="grid h-9 w-9 place-items-center rounded-full text-ink-muted hover:bg-ink/5 hover:text-ink"

@@ -20,17 +20,17 @@ export function DeckTile({ deck }: { deck: Deck }) {
           <IconTile hue={hue} solid size="md">
             {deck.name.trim().charAt(0).toUpperCase() || "?"}
           </IconTile>
-          <span className="flex items-center gap-1 text-xl">
+          <span className="flex items-center gap-1 text-lg">
             {source?.flag ?? "📄"}
-            <span className="text-ink-muted">→</span>
+            <span className="text-sm text-ink-muted">→</span>
             {target?.flag ?? "🏳️"}
           </span>
         </div>
         <div className="mt-1">
-          <h3 className="line-clamp-2 font-display text-[17px] font-extrabold leading-tight text-ink">
+          <h3 className="line-clamp-2 font-display text-base font-bold leading-snug text-ink">
             {deck.name}
           </h3>
-          <p className="mt-1 text-sm font-semibold text-ink-muted">
+          <p className="mt-0.5 text-sm text-ink-muted">
             {t("home_deck_card_count", { count: deck.cardCount })}
           </p>
         </div>
@@ -40,5 +40,5 @@ export function DeckTile({ deck }: { deck: Deck }) {
 }
 
 export function DeckTileSkeleton() {
-  return <div className="h-[132px] animate-pulse rounded-3xl bg-ink/[0.06]" />;
+  return <div className="h-[128px] animate-pulse rounded-2xl bg-ink/[0.05]" />;
 }

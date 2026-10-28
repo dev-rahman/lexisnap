@@ -81,7 +81,7 @@ export function DeleteAccount() {
 
         {step === "confirm" && (
           <>
-            <h2 className="text-center font-display text-lg font-extrabold text-ink">
+            <h2 className="text-center font-display text-lg font-bold text-ink">
               {t("delete_confirm_title")}
             </h2>
             <label className="flex items-start gap-3 rounded-2xl bg-surface px-4 py-3 text-sm text-ink">
@@ -110,7 +110,7 @@ export function DeleteAccount() {
 
         {step === "final" && (
           <>
-            <h2 className="text-center font-display text-lg font-extrabold text-ink">
+            <h2 className="text-center font-display text-lg font-bold text-ink">
               {t("delete_final_title")}
             </h2>
             <p className="text-center text-sm text-ink-muted">{t("delete_final_body")}</p>

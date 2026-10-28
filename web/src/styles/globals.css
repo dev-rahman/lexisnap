@@ -2,63 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ---- Design tokens (rgb channels for /<alpha> support) ------------------ */
+/* ---- Design tokens — the exact mobile-app palette (app_colors.dart) ------ */
 :root,
 :root[data-theme="light"] {
-  --ink: 27 32 56; /* #1B2038 ink navy */
-  --ink-soft: 58 65 96;
-  --ink-muted: 110 118 148;
-  --paper: 251 247 240; /* #FBF7F0 warm cream */
-  --surface: 245 238 228;
+  --ink: 28 37 65; /* #1C2541 */
+  --ink-soft: 62 70 99;
+  --ink-muted: 92 97 120; /* #5C6178 */
+  --paper: 247 244 238; /* #F7F4EE warm paper */
+  --surface: 237 233 223; /* #EDE9DF */
   --card: 255 255 255;
-  --border: 231 223 210;
+  --border: 223 217 205; /* #DFD9CD */
+  --panel: 28 37 65; /* #1C2541 focal panel */
 
-  --coral: 241 90 50; /* #F15A32 */
-  --coral-dark: 198 64 30;
-  --coral-soft: 255 236 228;
-  --flame: 255 159 28; /* #FF9F1C */
-  --flame-dark: 214 124 8;
-  --success: 43 182 115; /* #2BB673 */
-  --success-dark: 28 140 86;
-  --error: 224 72 72;
-  --error-dark: 183 48 48;
+  --coral: 231 98 60; /* #E7623C accent */
+  --coral-dark: 189 80 49; /* #BD5031 */
+  --coral-soft: 249 228 219;
+  --flame: 233 162 59; /* amber hue #E9A23B */
+  --flame-dark: 168 112 26; /* #A8701A */
+  --success: 46 158 91; /* #2E9E5B */
+  --success-dark: 38 129 75;
+  --error: 229 72 77; /* #E5484D */
+  --error-dark: 163 59 42; /* #A33B2A alert */
 
-  --hue-teal: 23 153 143;
-  --hue-violet: 124 92 211;
-  --hue-amber: 227 158 54;
-  --hue-rose: 214 80 120;
-  --hue-sky: 52 128 198;
-  --hue-moss: 86 158 72;
+  --hue-teal: 42 157 143; /* #2A9D8F */
+  --hue-violet: 124 92 211; /* #7C5CD3 */
+  --hue-amber: 233 162 59; /* #E9A23B */
+  --hue-rose: 217 84 123; /* #D9547B */
+  --hue-sky: 59 130 196; /* #3B82C4 */
+  --hue-moss: 90 158 75; /* #5A9E4B */
 
   --font-display: "Baloo 2";
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --ink: 237 240 252; /* light text on dark */
-  --ink-soft: 198 204 228;
-  --ink-muted: 150 158 190;
-  --paper: 16 19 34; /* deep navy canvas */
-  --surface: 24 28 48;
-  --card: 30 35 58;
-  --border: 48 55 86;
+  --ink: 243 241 234; /* #F3F1EA */
+  --ink-soft: 198 202 216;
+  --ink-muted: 180 183 200; /* #B4B7C8 */
+  --paper: 20 22 42; /* #14162A */
+  --surface: 30 33 56; /* #1E2138 */
+  --card: 34 38 64;
+  --border: 52 56 84; /* #343854 */
+  --panel: 37 42 74; /* #252A4A panelDark */
 
-  --coral: 255 112 73;
-  --coral-dark: 198 64 30;
-  --coral-soft: 58 36 30;
-  --flame: 255 176 66;
+  --coral: 231 98 60; /* coral reads correctly in both themes */
+  --coral-dark: 189 80 49;
+  --coral-soft: 58 36 25;
+  --flame: 243 188 106; /* amber dark #F3BC6A */
   --flame-dark: 201 120 20;
-  --success: 59 205 136;
-  --success-dark: 32 150 96;
-  --error: 247 103 103;
-  --error-dark: 190 60 60;
+  --success: 46 158 91;
+  --success-dark: 38 129 75;
+  --error: 229 72 77;
+  --error-dark: 194 59 64;
 
-  --hue-teal: 44 193 180;
-  --hue-violet: 157 128 240;
-  --hue-amber: 243 182 86;
-  --hue-rose: 236 110 150;
-  --hue-sky: 94 166 232;
-  --hue-moss: 122 196 104;
+  --hue-teal: 79 195 181; /* #4FC3B5 */
+  --hue-violet: 162 139 234; /* #A28BEA */
+  --hue-amber: 243 188 106; /* #F3BC6A */
+  --hue-rose: 236 125 157; /* #EC7D9D */
+  --hue-sky: 111 174 228; /* #6FAEE4 */
+  --hue-moss: 131 194 117; /* #83C275 */
   color-scheme: dark;
 }
 
@@ -85,12 +87,10 @@ h1, h2, h3, h4, .font-display {
   font-family: "Baloo 2", system-ui, sans-serif;
 }
 
-/* Warm gradient wash behind the whole app so it never reads as flat grey. */
+/* A single, very subtle warm tint from the top — calm, not a gradient show. */
 .app-wash {
   background-image:
-    radial-gradient(1100px 520px at 12% -8%, rgb(var(--coral) / 0.1), transparent 60%),
-    radial-gradient(900px 480px at 108% 4%, rgb(var(--hue-violet) / 0.1), transparent 55%),
-    radial-gradient(900px 600px at 50% 120%, rgb(var(--hue-teal) / 0.08), transparent 60%);
+    radial-gradient(1200px 560px at 50% -12%, rgb(var(--coral) / 0.05), transparent 70%);
 }
 
 ::selection {
@@ -111,24 +111,20 @@ h1, h2, h3, h4, .font-display {
 }
 
 @layer components {
-  /* 3D "pressable" button: solid fill + darker bottom lip that depresses. */
+  /* Flat, calm pressable button — a gentle press, no chunky 3D lip. */
   .btn3d {
     @apply relative inline-flex select-none items-center justify-center gap-2
-      rounded-2xl font-display font-bold tracking-tight
-      transition-[transform,box-shadow] duration-100 ease-out
-      active:translate-y-[3px] disabled:pointer-events-none disabled:opacity-50;
+      rounded-2xl font-display font-semibold tracking-tight
+      transition-[transform,filter,background-color,border-color] duration-150 ease-out
+      active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50;
   }
 
   .card-surface {
-    @apply rounded-3xl border border-border/70 bg-card shadow-card;
+    @apply rounded-2xl border border-border bg-card shadow-soft;
   }
 
   .hover-lift {
-    @apply transition-transform duration-200 ease-out hover:-translate-y-1;
-  }
-
-  .tint-ring {
-    @apply ring-1 ring-inset ring-black/5;
+    @apply transition-all duration-200 ease-out hover:-translate-y-0.5 hover:shadow-soft;
   }
 }
 

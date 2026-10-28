@@ -26,7 +26,7 @@ export function StreakFlame({
         width={size}
         height={size}
         style={{ transform: `scale(${scale})` }}
-        className={cn("origin-bottom", alive && "animate-flame-flicker")}
+        className="origin-bottom"
       >
         <defs>
           <linearGradient id="flame-g" x1="0" y1="1" x2="0" y2="0">

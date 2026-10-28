@@ -46,13 +46,13 @@ export function Onboarding() {
         <div
           key={index}
           className={cn(
-            "mb-10 grid h-44 w-44 animate-pop-in place-items-center rounded-[2.5rem] bg-gradient-to-br text-7xl shadow-card-lift",
+            "mb-10 grid h-40 w-40 animate-pop-in place-items-center rounded-[2rem] bg-gradient-to-br text-7xl shadow-card",
             slide.bg,
           )}
         >
-          <span className="animate-float">{slide.emoji}</span>
+          <span>{slide.emoji}</span>
         </div>
-        <h1 className="max-w-sm font-display text-3xl font-extrabold text-ink text-balance">
+        <h1 className="max-w-sm font-display text-3xl font-bold text-ink text-balance">
           {slide.title}
         </h1>
         <p className="mt-3 max-w-sm text-[17px] text-ink-muted text-balance">{slide.body}</p>

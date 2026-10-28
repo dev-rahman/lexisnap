@@ -12,7 +12,7 @@ const BASE = process.env.BASE_URL ?? "http://localhost:4173";
 const OUT = join(dirname(fileURLToPath(import.meta.url)), "shots");
 mkdirSync(OUT, { recursive: true });
 
-const WIDTHS = { phone: 390, tablet: 834, desktop: 1440 };
+const WIDTHS = { phone: 390, tablet: 834, desktop: 1440, ultra: 1920 };
 
 // name, path, demo?, waitFor selector/text
 const SCREENS = [

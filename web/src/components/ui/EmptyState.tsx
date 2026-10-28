@@ -22,10 +22,10 @@ export function EmptyState({
         className,
       )}
     >
-      <div className="mb-4 grid h-20 w-20 animate-float place-items-center rounded-3xl bg-coral-soft text-5xl">
+      <div className="mb-4 grid h-16 w-16 place-items-center rounded-2xl bg-coral-soft text-4xl">
         <span>{emoji}</span>
       </div>
-      <h3 className="font-display text-xl font-extrabold text-ink">{title}</h3>
+      <h3 className="font-display text-lg font-bold text-ink">{title}</h3>
       {description && (
         <p className="mt-1.5 max-w-xs text-[15px] text-ink-muted">{description}</p>
       )}

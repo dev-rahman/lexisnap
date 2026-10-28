@@ -14,6 +14,7 @@ const config: Config = {
         surface: "rgb(var(--surface) / <alpha-value>)",
         card: "rgb(var(--card) / <alpha-value>)",
         border: "rgb(var(--border) / <alpha-value>)",
+        panel: "rgb(var(--panel) / <alpha-value>)",
         coral: "rgb(var(--coral) / <alpha-value>)",
         "coral-dark": "rgb(var(--coral-dark) / <alpha-value>)",
         "coral-soft": "rgb(var(--coral-soft) / <alpha-value>)",
@@ -40,15 +41,20 @@ const config: Config = {
         "3xl": "1.75rem",
         "4xl": "2.25rem",
       },
+      spacing: {
+        13: "3.25rem",
+      },
       maxWidth: {
         content: "66rem",
+        wide: "78rem",
         focus: "40rem",
       },
       boxShadow: {
-        card: "0 1px 2px rgb(27 32 56 / 0.04), 0 12px 28px -12px rgb(27 32 56 / 0.18)",
+        soft: "0 1px 2px rgb(27 32 56 / 0.04), 0 6px 16px -10px rgb(27 32 56 / 0.14)",
+        card: "0 1px 2px rgb(27 32 56 / 0.04), 0 8px 20px -12px rgb(27 32 56 / 0.16)",
         "card-lift":
-          "0 2px 4px rgb(27 32 56 / 0.06), 0 22px 42px -16px rgb(27 32 56 / 0.28)",
-        pop: "0 10px 30px -8px rgb(241 90 50 / 0.5)",
+          "0 2px 4px rgb(27 32 56 / 0.05), 0 16px 34px -16px rgb(27 32 56 / 0.22)",
+        pop: "0 8px 24px -10px rgb(241 90 50 / 0.4)",
       },
       keyframes: {
         "pop-in": {

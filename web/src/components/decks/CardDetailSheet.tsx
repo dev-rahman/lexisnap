@@ -64,7 +64,7 @@ export function CardDetailSheet({
           <SpeakLine
             text={card.word}
             lang={card.sourceLanguage}
-            className="justify-center font-display text-3xl font-extrabold text-ink"
+            className="justify-center font-display text-3xl font-bold text-ink"
           />
           {card.level && (
             <span className="mt-2 inline-block rounded-full bg-coral-soft px-3 py-0.5 text-xs font-bold text-coral">
@@ -80,7 +80,7 @@ export function CardDetailSheet({
 
         {card.wordDescription && (
           <div className="rounded-2xl bg-surface p-4">
-            <p className="mb-1 text-xs font-bold uppercase tracking-wide text-ink-muted">
+            <p className="mb-1 text-xs font-semibold text-ink-muted">
               {t("card_detail_meaning")}
             </p>
             <p className="text-[15px] text-ink">{card.wordDescription}</p>

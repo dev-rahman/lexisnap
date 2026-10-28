@@ -274,7 +274,7 @@ export function DeckDetail() {
       {/* Select toggle */}
       {deck.cardCount > 0 && (
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-display text-lg font-extrabold text-ink">
+          <h2 className="font-display text-lg font-bold text-ink">
             {t("decks_stat_words")}
           </h2>
           <button

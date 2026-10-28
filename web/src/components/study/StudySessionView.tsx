@@ -123,11 +123,11 @@ function ChoiceStep({ step, session }: { step: NonNullable<Session["step"]>; ses
   return (
     <div className="flex flex-1 flex-col">
       <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <p className="mb-3 text-sm font-bold uppercase tracking-wide text-ink-muted">
+        <p className="mb-3 text-sm font-medium text-ink-muted">
           {t("study_choice_prompt")}
         </p>
         <div className="flex items-center gap-3">
-          <h2 className="font-display text-4xl font-extrabold text-ink">{step.card.word}</h2>
+          <h2 className="font-display text-4xl font-bold text-ink">{step.card.word}</h2>
           <SpeakButton text={step.card.word} lang={step.card.sourceLanguage} />
         </div>
         {step.card.level && (
@@ -155,11 +155,10 @@ function ChoiceStep({ step, session }: { step: NonNullable<Session["step"]>; ses
               className={cn(
                 "btn3d h-auto min-h-[3.5rem] justify-start px-5 py-3 text-left text-[17px] font-bold",
                 state === "idle" &&
-                  "bg-card text-ink border-2 border-border shadow-[0_4px_0_rgb(var(--border))] active:shadow-[0_1px_0_rgb(var(--border))]",
-                state === "correct" &&
-                  "bg-success text-white shadow-[0_4px_0_rgb(var(--success-dark))] animate-pop-in",
+                  "bg-card text-ink border border-border shadow-soft hover:border-coral/40",
+                state === "correct" && "bg-success text-white animate-pop-in",
                 state === "wrong" && "bg-error text-white animate-shake",
-                state === "dim" && "bg-card text-ink-muted border-2 border-border opacity-50",
+                state === "dim" && "bg-card text-ink-muted border border-border opacity-50",
               )}
             >
               {opt}
@@ -198,7 +197,7 @@ function RecallStep({ step, session }: { step: NonNullable<Session["step"]>; ses
           )}
         >
           <div className="flex items-center justify-center gap-3">
-            <h2 className="font-display text-4xl font-extrabold text-ink">{step.card.word}</h2>
+            <h2 className="font-display text-4xl font-bold text-ink">{step.card.word}</h2>
             <SpeakButton text={step.card.word} lang={step.card.sourceLanguage} />
           </div>
           {!revealed ? (
@@ -254,7 +253,7 @@ function Celebration({
       <div className="mb-6 grid h-28 w-28 animate-pop-in place-items-center rounded-[2rem] bg-gradient-to-br from-coral to-flame text-7xl shadow-card-lift">
         🎉
       </div>
-      <h1 className="font-display text-3xl font-extrabold text-ink">
+      <h1 className="font-display text-3xl font-bold text-ink">
         {t("study_complete_title")}
       </h1>
       <p className="mt-1 text-ink-muted">{t("study_complete_body")}</p>
@@ -268,8 +267,8 @@ function Celebration({
           trackClassName="text-ink/10"
         >
           <div>
-            <div className="font-display text-3xl font-extrabold text-ink">{accuracy}%</div>
-            <div className="text-[11px] font-bold uppercase text-ink-muted">
+            <div className="font-display text-3xl font-bold text-ink">{accuracy}%</div>
+            <div className="text-xs font-medium text-ink-muted">
               {t("study_accuracy")}
             </div>
           </div>
@@ -278,10 +277,10 @@ function Celebration({
         {!practiceOnly && (
           <div className="flex flex-col items-center">
             <StreakFlame count={streak.current} size={64} />
-            <div className="mt-1 font-display text-3xl font-extrabold text-ink">
+            <div className="mt-1 font-display text-3xl font-bold text-ink">
               {streak.current}
             </div>
-            <div className="text-[11px] font-bold uppercase text-ink-muted">
+            <div className="text-xs font-medium text-ink-muted">
               {t("study_streak_days", { count: streak.current })}
             </div>
           </div>
