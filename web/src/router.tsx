@@ -1,5 +1,5 @@
 import { lazy, Suspense, type ComponentType } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet, ScrollRestoration } from "react-router-dom";
 
 import { AppLayout } from "@/components/shell/AppLayout";
 import { FullPageSpinner } from "@/components/ui/Spinner";
@@ -33,7 +33,21 @@ const lz = (el: React.ReactNode) => (
 const authed = (el: React.ReactNode) => <RequireAuth>{lz(el)}</RequireAuth>;
 const guestOnly = (el: React.ReactNode) => <RedirectIfAuthed>{lz(el)}</RedirectIfAuthed>;
 
+// Pathless root: resets scroll to the top on new navigations and restores the
+// previous position on back/forward, so pages no longer open mid-scroll.
+function Root() {
+  return (
+    <>
+      <ScrollRestoration />
+      <Outlet />
+    </>
+  );
+}
+
 export const router = createBrowserRouter([
+  {
+    element: <Root />,
+    children: [
   { path: "/", element: <Splash /> },
   { path: "/auth/callback", element: <AuthCallback /> },
   { path: "/onboarding", element: lz(<Onboarding />) },
@@ -63,4 +77,6 @@ export const router = createBrowserRouter([
   },
 
   { path: "*", element: <Splash /> },
+    ],
+  },
 ]);
