@@ -13,12 +13,15 @@ import {
 } from "lucide-react";
 
 import { Avatar } from "@/components/ui/Avatar";
+import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Sheet } from "@/components/ui/Sheet";
 import { Toggle } from "@/components/ui/Toggle";
 import { APP_LOCALES, type AppLocale } from "@/lib/i18n";
 import { signOut } from "@/lib/auth/authService";
+import { isDemo } from "@/lib/demo";
+import { setUser } from "@/store/slices/authSlice";
 import { saveReminderSettings, subscribeToPush, unsubscribeFromPush } from "@/lib/services/push";
 import { toast } from "@/lib/toast";
 import { useT } from "@/providers/I18nProvider";
@@ -86,6 +89,33 @@ export function Profile() {
   const dailyGoal = useAppSelector((s) => s.streak.dailyGoal);
 
   const [sheet, setSheet] = useState<null | "mode" | "goal" | "language">(null);
+  const [signOutOpen, setSignOutOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  // Robust sign-out: end the Supabase session (or clear demo mode), drop the
+  // user from the store immediately, and route to /login — don't rely solely
+  // on the auth listener firing.
+  async function confirmSignOut() {
+    setSigningOut(true);
+    try {
+      if (isDemo()) {
+        try {
+          localStorage.removeItem("lexisnap_demo");
+        } catch {
+          /* ignore */
+        }
+      } else {
+        await signOut();
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t("common_something_went_wrong"));
+    } finally {
+      dispatch(setUser(null));
+      setSignOutOpen(false);
+      setSigningOut(false);
+      navigate("/login", { replace: true });
+    }
+  }
 
   async function toggleReminder(enabled: boolean) {
     if (enabled) {
@@ -214,11 +244,30 @@ export function Profile() {
       </Card>
 
       <button
-        onClick={() => signOut()}
+        onClick={() => setSignOutOpen(true)}
         className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-error/30 bg-error/5 py-3.5 font-display font-bold text-error transition-colors hover:bg-error/10"
       >
         <LogOut size={18} /> {t("profile_sign_out")}
       </button>
+
+      {/* Sign-out confirmation */}
+      <Sheet
+        open={signOutOpen}
+        onClose={() => setSignOutOpen(false)}
+        title={t("sign_out_confirm_title")}
+        footer={
+          <div className="flex gap-3">
+            <Button variant="ghost" fullWidth onClick={() => setSignOutOpen(false)}>
+              {t("common_cancel")}
+            </Button>
+            <Button variant="danger" fullWidth loading={signingOut} onClick={confirmSignOut}>
+              {t("profile_sign_out")}
+            </Button>
+          </div>
+        }
+      >
+        <p className="text-ink-muted">{t("sign_out_confirm_body")}</p>
+      </Sheet>
 
       {/* Study-mode sheet */}
       <Sheet open={sheet === "mode"} onClose={() => setSheet(null)} title={t("study_mode_title")}>
