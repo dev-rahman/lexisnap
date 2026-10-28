@@ -20,7 +20,7 @@ export function Home() {
   const user = useAppSelector((s) => s.auth.user);
   const { streak, week, goalMet, goalProgress } = useStreakView();
 
-  const { data: due } = useGetDueCardsQuery();
+  const { data: due, isLoading: dueLoading } = useGetDueCardsQuery();
   const { data: decks, isLoading: decksLoading } = useGetDecksQuery(10);
 
   const dueCount = due?.length ?? 0;
@@ -72,7 +72,10 @@ export function Home() {
           </div>
 
           <div className="mt-6">
-            {dueCount > 0 ? (
+            {dueLoading ? (
+              // White-tinted shimmer so it reads on the dark navy panel.
+              <div className="h-[52px] w-full animate-shimmer rounded-2xl bg-[length:200%_100%] bg-[linear-gradient(90deg,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.18)_50%,rgba(255,255,255,0.08)_75%)]" />
+            ) : dueCount > 0 ? (
               <Button fullWidth size="lg" onClick={() => navigate("/study?mixed=1")} rightIcon={<ArrowRight size={18} />}>
                 {dueCount === 1 ? t("home_review_cta_one") : t("home_review_cta", { count: dueCount })}
               </Button>
@@ -87,7 +90,9 @@ export function Home() {
                 onClick={() => navigate("/study?mixed=1&practice=1")}
                 rightIcon={<ArrowRight size={18} />}
               >
-                {t("home_practice_cta")}
+                {t("home_practice_cta", {
+                  count: Math.max(1, streak.dailyGoal - streak.reviewsToday),
+                })}
               </Button>
             )}
           </div>
