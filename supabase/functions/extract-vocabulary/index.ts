@@ -19,16 +19,40 @@
 // mode) - so the exact shape is spelled out in the prompt instead, and the
 // result is defensively validated below before it's trusted.
 //
-// `verify_jwt` is left at Supabase's default (true), so only requests
-// carrying a signed-in LexiSnap user's auth token reach this code - the
-// Flutter client gets this for free via `functions.invoke`, matching the
-// app's `AuthMiddleware(requiresAuth: true)` on the scan route.
+// Auth: `verify_jwt` (Supabase's default) only proves the bearer token is a
+// valid project JWT - and the public anon key is one - so it does NOT by itself
+// keep anonymous traffic off this paid Groq call. The handler additionally
+// requires a real signed-in user (see `authenticatedUserId`). Clients get the
+// token for free via `functions.invoke` when a session exists.
 //
 // Deploy: supabase functions deploy extract-vocabulary
 // Secret:  supabase secrets set GROQ_API_KEY=gsk_...
 
+import { createClient } from "npm:@supabase/supabase-js@2";
+
 const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
+// Auto-injected into every Edge Function by Supabase.
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
+const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 const MAX_TEXT_LENGTH = 6000;
+
+// Require a *real signed-in user*, not merely a valid project JWT. `verify_jwt`
+// only proves the bearer token is signed by this project - and the public anon
+// key (shipped in every client bundle) is such a token - so it alone does NOT
+// keep anonymous traffic out. We validate the token against Supabase Auth and
+// insist on an actual user, so this metered, paid Groq call can't be driven by
+// anyone who copies the public anon key out of the app. Returns the user id, or
+// null when the caller isn't an authenticated user.
+async function authenticatedUserId(req: Request): Promise<string | null> {
+  const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
+  if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
+  const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  const { data, error } = await client.auth.getUser(token);
+  if (error || !data.user || data.user.role !== "authenticated") return null;
+  return data.user.id;
+}
 const CEFR_LEVELS = new Set(["A1", "A2", "B1", "B2", "C1", "C2"]);
 
 // `uiLanguage` is the language the app's UI is in (e.g. "English"), so each
@@ -74,6 +98,12 @@ Deno.serve(async (req) => {
 
   if (!GROQ_API_KEY) {
     return jsonResponse({ error: "Server misconfigured" }, 500);
+  }
+
+  // Gate the paid Groq call behind a real signed-in user (see note above).
+  const userId = await authenticatedUserId(req);
+  if (!userId) {
+    return jsonResponse({ error: "Unauthorized" }, 401);
   }
 
   let text: unknown;
