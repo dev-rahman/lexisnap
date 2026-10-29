@@ -6,7 +6,11 @@ import type { Deck, DeckWord, VocabularyWord } from "@/lib/data/models";
 import * as repo from "@/lib/data/repository";
 import { extractVocabulary as regexExtract } from "@/lib/domain/vocabularyExtractor";
 import { recognizeText } from "@/lib/services/ocr";
-import { extractVocabulary, translateWords } from "@/lib/services/vocabulary";
+import {
+  extractVocabulary,
+  QuotaExceededError,
+  translateWords,
+} from "@/lib/services/vocabulary";
 import { toast } from "@/lib/toast";
 import { translate, type MessageKey } from "@/lib/i18n";
 import { decksApi } from "@/store/api/decksApi";
@@ -83,8 +87,13 @@ export function useScanController() {
         code = result.sourceLanguageCode;
         name = result.sourceLanguageName;
         suggested = result.suggestedDeckName;
-      } catch {
-        // Offline / API error — degrade to the local regex extractor.
+      } catch (err) {
+        // Daily AI scan cap hit — tell the user, then still give them the
+        // local regex extraction so the scan isn't a dead end. Any other
+        // error (offline / API) degrades the same way, silently.
+        if (err instanceof QuotaExceededError) {
+          toast.warning(t("scan_limit_reached"));
+        }
         words = regexExtract(text).map((w) => ({
           word: w,
           level: null,
@@ -128,8 +137,12 @@ export function useScanController() {
               ),
             ),
           );
-        } catch {
-          // Leave untranslated — the chip just shows the word alone.
+        } catch (err) {
+          // Daily translate cap hit — let the user know; otherwise leave the
+          // words untranslated (the chip just shows the word alone).
+          if (err instanceof QuotaExceededError) {
+            toast.warning(t("translate_limit_reached"));
+          }
         }
       }
 
@@ -219,8 +232,12 @@ export function useScanController() {
           }),
         );
         finishIfDone(scan.candidateWords.length - selected.length);
-      } catch {
-        toast.error(t("scan_deck_save_error"));
+      } catch (err) {
+        toast.error(
+          err instanceof QuotaExceededError
+            ? t("translate_limit_reached")
+            : t("scan_deck_save_error"),
+        );
         dispatch(setStage("wordSelection"));
       }
     },
@@ -253,8 +270,12 @@ export function useScanController() {
           }),
         );
         finishIfDone(scan.candidateWords.length - fresh.length);
-      } catch {
-        toast.error(t("scan_deck_save_error"));
+      } catch (err) {
+        toast.error(
+          err instanceof QuotaExceededError
+            ? t("translate_limit_reached")
+            : t("scan_deck_save_error"),
+        );
         dispatch(setStage("wordSelection"));
       }
     },

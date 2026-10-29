@@ -15,7 +15,10 @@
 // Deploy: supabase functions deploy translate-words
 // Secret:  supabase secrets set GROQ_API_KEY=gsk_... (shared with extract-vocabulary)
 
-import { createClient } from "npm:@supabase/supabase-js@2";
+import {
+  createClient,
+  type SupabaseClient,
+} from "npm:@supabase/supabase-js@2";
 
 const GROQ_API_KEY = Deno.env.get("GROQ_API_KEY");
 // Auto-injected into every Edge Function by Supabase.
@@ -23,22 +26,30 @@ const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
 const SUPABASE_ANON_KEY = Deno.env.get("SUPABASE_ANON_KEY");
 const MAX_WORDS = 100;
 
-// Require a *real signed-in user*, not merely a valid project JWT. `verify_jwt`
-// only proves the bearer token is signed by this project - and the public anon
-// key (shipped in every client bundle) is such a token - so it alone does NOT
-// keep anonymous traffic out. We validate the token against Supabase Auth and
-// insist on an actual user, so this metered, paid Groq call can't be driven by
-// anyone who copies the public anon key out of the app. Returns the user id, or
-// null when the caller isn't an authenticated user.
-async function authenticatedUserId(req: Request): Promise<string | null> {
+// Daily per-user cap on this (Groq-backed) "translate" action, by subscription
+// tier. Until billing exists every user resolves to 'free'; when it does,
+// derive the tier in `tierFor` and these numbers apply automatically. Higher
+// than scans because translating is downstream of a scan and bounded by
+// MAX_WORDS per call. Tune freely - this is the one place to change.
+const TRANSLATE_LIMITS = { free: 20, plus: 200, pro: 800 } as const;
+type Tier = keyof typeof TRANSLATE_LIMITS;
+function tierFor(_user: { id: string }): Tier {
+  return "free";
+}
+
+// A Supabase client scoped to the caller's bearer token, so Postgres sees them
+// as the authenticated user (auth.uid() resolves, RLS applies) - needed for the
+// quota RPCs. Returns the client and token, or null when auth is missing.
+function authContext(
+  req: Request,
+): { client: SupabaseClient; token: string } | null {
   const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "");
   if (!token || !SUPABASE_URL || !SUPABASE_ANON_KEY) return null;
   const client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${token}` } },
   });
-  const { data, error } = await client.auth.getUser(token);
-  if (error || !data.user || data.user.role !== "authenticated") return null;
-  return data.user.id;
+  return { client, token };
 }
 
 function buildSystemPrompt(targetLanguage: string, sourceLanguage?: string): string {
@@ -66,9 +77,17 @@ Deno.serve(async (req) => {
     return jsonResponse({ error: "Server misconfigured" }, 500);
   }
 
-  // Gate the paid Groq call behind a real signed-in user (see note above).
-  const userId = await authenticatedUserId(req);
-  if (!userId) {
+  // Gate the Groq call behind a real signed-in user (see note above):
+  // verify_jwt alone is satisfied by the public anon key.
+  const ctx = authContext(req);
+  if (!ctx) {
+    return jsonResponse({ error: "Unauthorized" }, 401);
+  }
+  const { data: userData, error: userError } = await ctx.client.auth.getUser(
+    ctx.token,
+  );
+  const user = userData?.user;
+  if (userError || !user || user.role !== "authenticated") {
     return jsonResponse({ error: "Unauthorized" }, 401);
   }
 
@@ -100,6 +119,31 @@ Deno.serve(async (req) => {
 
   const truncatedWords = words.slice(0, MAX_WORDS) as string[];
 
+  // Charge one translate against the user's daily cap for their tier, before
+  // the (expensive) Groq call. -1 means they're already at the cap today.
+  const translateLimit = TRANSLATE_LIMITS[tierFor(user)];
+  const { data: remaining, error: quotaError } = await ctx.client.rpc(
+    "consume_ai_quota",
+    { p_action: "translate", p_limit: translateLimit },
+  );
+  if (quotaError) {
+    console.error("consume_ai_quota failed", quotaError);
+    return jsonResponse({ error: "Internal error" }, 500);
+  }
+  if (remaining === -1) {
+    return jsonResponse(
+      {
+        error: "Daily translate limit reached",
+        code: "quota_exceeded",
+        limit: translateLimit,
+      },
+      429,
+    );
+  }
+
+  // Give the quota back on any non-success, so a Groq outage or a malformed
+  // response doesn't burn the user's daily allowance.
+  let translateSucceeded = false;
   try {
     const groqResponse = await fetch(
       "https://api.groq.com/openai/v1/chat/completions",
@@ -150,10 +194,15 @@ Deno.serve(async (req) => {
       return jsonResponse({ error: "No valid translations in AI response" }, 502);
     }
 
+    translateSucceeded = true;
     return jsonResponse({ translations }, 200);
   } catch (error) {
     console.error("translate-words failed", error);
     return jsonResponse({ error: "Internal error" }, 500);
+  } finally {
+    if (!translateSucceeded) {
+      await ctx.client.rpc("refund_ai_quota", { p_action: "translate" });
+    }
   }
 });
 

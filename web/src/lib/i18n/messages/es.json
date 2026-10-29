@@ -363,5 +363,7 @@
   "study_mode_listen_hint": "Audio sin manos, sin calificar",
   "study_mode_title": "Modo de estudio",
   "goal_settings_title": "Meta diaria",
-  "goal_cards_per_day": "{count} tarjetas al día"
+  "goal_cards_per_day": "{count} tarjetas al día",
+  "scan_limit_reached": "Has alcanzado el límite de escaneos de hoy; se mostrará una detección básica de palabras.",
+  "translate_limit_reached": "Has alcanzado el límite de traducciones de hoy. Inténtalo de nuevo mañana."
 }

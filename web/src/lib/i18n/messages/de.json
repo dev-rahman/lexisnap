@@ -363,5 +363,7 @@
   "study_mode_listen_hint": "Freihändig, ohne Bewertung",
   "study_mode_title": "Lernmodus",
   "goal_settings_title": "Tagesziel",
-  "goal_cards_per_day": "{count} Karten pro Tag"
+  "goal_cards_per_day": "{count} Karten pro Tag",
+  "scan_limit_reached": "Du hast dein heutiges Scan-Limit erreicht – es wird eine einfache Worterkennung angezeigt.",
+  "translate_limit_reached": "Du hast dein heutiges Übersetzungslimit erreicht. Versuche es morgen erneut."
 }

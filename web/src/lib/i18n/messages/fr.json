@@ -363,5 +363,7 @@
   "study_mode_listen_hint": "Mains libres, rien n'est évalué",
   "study_mode_title": "Mode de révision",
   "goal_settings_title": "Objectif quotidien",
-  "goal_cards_per_day": "{count} cartes par jour"
+  "goal_cards_per_day": "{count} cartes par jour",
+  "scan_limit_reached": "Vous avez atteint votre limite de scans du jour ; une détection de mots basique est affichée.",
+  "translate_limit_reached": "Vous avez atteint votre limite de traductions du jour. Réessayez demain."
 }

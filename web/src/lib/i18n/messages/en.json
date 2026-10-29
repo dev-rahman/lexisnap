@@ -364,5 +364,7 @@
   "study_mode_listen_hint": "Hands-free audio, nothing graded",
   "study_mode_title": "Study mode",
   "goal_settings_title": "Daily goal",
-  "goal_cards_per_day": "{count} cards a day"
+  "goal_cards_per_day": "{count} cards a day",
+  "scan_limit_reached": "You've reached today's scan limit — showing basic word detection instead.",
+  "translate_limit_reached": "You've reached today's translation limit. Try again tomorrow."
 }

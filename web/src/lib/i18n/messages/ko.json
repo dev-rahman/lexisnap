@@ -363,5 +363,7 @@
   "study_mode_listen_hint": "손대지 않고 듣기, 채점 없음",
   "study_mode_title": "학습 모드",
   "goal_settings_title": "일일 목표",
-  "goal_cards_per_day": "하루 {count}장"
+  "goal_cards_per_day": "하루 {count}장",
+  "scan_limit_reached": "오늘의 스캔 한도에 도달했습니다. 기본 단어 인식 결과를 표시합니다.",
+  "translate_limit_reached": "오늘의 번역 한도에 도달했습니다. 내일 다시 시도해 주세요."
 }
