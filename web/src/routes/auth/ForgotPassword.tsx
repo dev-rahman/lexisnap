@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock, KeyRound, ArrowLeft } from "lucide-react";
 
 import { AuthScaffold } from "@/components/auth/AuthScaffold";
+import { Captcha } from "@/components/auth/Captcha";
 import { Button } from "@/components/ui/Button";
 import { TextField } from "@/components/ui/TextField";
+import { captchaEnabled } from "@/lib/config";
 import {
   sendPasswordResetEmail,
   updatePassword,
@@ -26,6 +28,10 @@ export function ForgotPassword() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [cooldown, setCooldown] = useState(0);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  // Bumped after every send so the single-use Turnstile widget remounts and
+  // issues a fresh token for the next send / resend.
+  const [captchaKey, setCaptchaKey] = useState(0);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -38,13 +44,18 @@ export function ForgotPassword() {
     setError(null);
     setLoading(true);
     try {
-      await sendPasswordResetEmail(email);
+      await sendPasswordResetEmail(email, captchaToken ?? undefined);
       setStep("code");
       setCooldown(RESEND_SECONDS);
     } catch (err) {
       setError(err instanceof Error ? err.message : t("common_something_went_wrong"));
     } finally {
       setLoading(false);
+      // Each Turnstile token is single-use — drop it and remount for the next send.
+      if (captchaEnabled) {
+        setCaptchaToken(null);
+        setCaptchaKey((k) => k + 1);
+      }
     }
   }
 
@@ -111,6 +122,7 @@ export function ForgotPassword() {
             error={error}
             required
           />
+          {captchaEnabled && <Captcha key={captchaKey} onToken={setCaptchaToken} />}
           <Button type="submit" fullWidth size="lg" loading={loading}>
             {t("forgot_password_button")}
           </Button>
@@ -132,6 +144,9 @@ export function ForgotPassword() {
           <Button type="submit" fullWidth size="lg" loading={loading}>
             {t("forgot_password_verify_button")}
           </Button>
+          {captchaEnabled && cooldown <= 0 && (
+            <Captcha key={captchaKey} onToken={setCaptchaToken} />
+          )}
           <button
             type="button"
             onClick={resend}
