@@ -22,6 +22,7 @@ const Scan = named(import("@/routes/app/Scan"), "Scan");
 const Study = named(import("@/routes/app/Study"), "Study");
 const Listen = named(import("@/routes/app/Listen"), "Listen");
 const Profile = named(import("@/routes/app/Profile"), "Profile");
+const Subscription = named(import("@/routes/app/Subscription"), "Subscription");
 const EditProfile = named(import("@/routes/app/EditProfile"), "EditProfile");
 const ChangeEmail = named(import("@/routes/app/ChangeEmail"), "ChangeEmail");
 const DeleteAccount = named(import("@/routes/app/DeleteAccount"), "DeleteAccount");
@@ -69,6 +70,7 @@ export const router = createBrowserRouter([
       { path: "/decks", element: <Decks /> },
       { path: "/deck/:id", element: <DeckDetail /> },
       { path: "/profile", element: lz(<Profile />) },
+      { path: "/subscription", element: lz(<Subscription />) },
       { path: "/edit-profile", element: lz(<EditProfile />) },
       { path: "/change-email", element: lz(<ChangeEmail />) },
       { path: "/delete-account", element: lz(<DeleteAccount />) },

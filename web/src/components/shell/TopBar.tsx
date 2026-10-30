@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { BrandMark } from "@/components/brand/BrandMark";
+import { UpgradeChip } from "@/components/subscription/UpgradeChip";
 import { Avatar } from "@/components/ui/Avatar";
 import { useAppSelector } from "@/store/hooks";
 
@@ -14,9 +15,12 @@ export function TopBar() {
         <Link to="/home" aria-label="Home">
           <BrandMark size="sm" />
         </Link>
-        <Link to="/profile" aria-label="Profile" className="rounded-full transition-opacity hover:opacity-80">
-          <Avatar name={user?.fullName} email={user?.email} src={user?.avatarUrl} size={36} />
-        </Link>
+        <div className="flex items-center gap-3">
+          <UpgradeChip />
+          <Link to="/profile" aria-label="Profile" className="rounded-full transition-opacity hover:opacity-80">
+            <Avatar name={user?.fullName} email={user?.email} src={user?.avatarUrl} size={36} />
+          </Link>
+        </div>
       </div>
     </header>
   );

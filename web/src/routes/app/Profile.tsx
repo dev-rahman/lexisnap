@@ -3,12 +3,14 @@ import { Link, useNavigate } from "react-router-dom";
 import {
   Bell,
   ChevronRight,
+  Crown,
   Globe,
   GraduationCap,
   HelpCircle,
   Info,
   LogOut,
   Palette,
+  Sparkles,
   Target,
 } from "lucide-react";
 
@@ -19,6 +21,7 @@ import { SegmentedControl } from "@/components/ui/SegmentedControl";
 import { Sheet } from "@/components/ui/Sheet";
 import { Toggle } from "@/components/ui/Toggle";
 import { APP_LOCALES, type AppLocale } from "@/lib/i18n";
+import { CURRENT_TIER, planById } from "@/lib/data/plans";
 import { signOut } from "@/lib/auth/authService";
 import { isDemo } from "@/lib/demo";
 import { setUser } from "@/store/slices/authSlice";
@@ -160,6 +163,35 @@ export function Profile() {
           </div>
           <ChevronRight className="text-ink-muted" />
         </Card>
+      </Link>
+
+      {/* Subscription */}
+      <Link to="/subscription" className="block">
+        <div
+          className={cn(
+            "hover-lift relative flex items-center gap-4 overflow-hidden rounded-2xl p-5 text-white shadow-card",
+            CURRENT_TIER === "free"
+              ? "bg-gradient-to-br from-coral to-flame"
+              : "bg-gradient-to-br from-hue-violet to-coral",
+          )}
+        >
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-white/20">
+            {CURRENT_TIER === "free" ? <Sparkles size={22} /> : <Crown size={22} />}
+          </span>
+          <div className="min-w-0 flex-1">
+            <h2 className="font-display text-lg font-bold">
+              {CURRENT_TIER === "free"
+                ? t("subscription_card_free_title")
+                : t("subscription_card_paid_title", { name: t(planById(CURRENT_TIER).nameKey) })}
+            </h2>
+            <p className="truncate text-sm text-white/80">
+              {CURRENT_TIER === "free"
+                ? t("subscription_card_free_body")
+                : t("subscription_card_paid_body")}
+            </p>
+          </div>
+          <ChevronRight className="shrink-0 text-white/80" />
+        </div>
       </Link>
 
       {/* Reminder */}
