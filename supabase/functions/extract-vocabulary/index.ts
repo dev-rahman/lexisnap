@@ -101,7 +101,20 @@ function buildSystemPrompt(uiLanguage?: string): string {
   );
 }
 
+// Allow the browser web app to call this function cross-origin. The old Flutter
+// client used native HTTP (no CORS enforcement); the web client needs these
+// headers on every response, plus an OPTIONS preflight answer below.
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
+
 Deno.serve(async (req) => {
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: CORS_HEADERS });
+  }
   if (req.method !== "POST") {
     return jsonResponse({ error: "Method not allowed" }, 405);
   }
@@ -321,6 +334,6 @@ function validateWords(parsed: unknown): Array<{
 function jsonResponse(body: unknown, status: number): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...CORS_HEADERS },
   });
 }
