@@ -396,5 +396,13 @@
   "plan_feature_early": "Früher Zugang zu neuen Funktionen",
   "plan_coming_soon_title": "Bald verfügbar",
   "plan_coming_soon_body": "Wir legen gerade letzte Hand an die Bezahlung. Du kannst bald direkt hier auf {name} upgraden – danke für deine Geduld!",
-  "plan_coming_soon_ok": "Verstanden"
+  "plan_coming_soon_ok": "Verstanden",
+  "card_detail_examples_title": "Beispiele",
+  "card_detail_generate_example": "Beispiel erzeugen",
+  "card_detail_example_added": "Beispiel hinzugefügt.",
+  "card_detail_example_error": "Beispiel konnte nicht erstellt werden. Bitte versuche es erneut.",
+  "card_detail_example_limit": "Du hast dein heutiges Beispiel-Limit erreicht. Versuche es morgen erneut.",
+  "card_detail_copy": "Kopieren",
+  "card_detail_copied": "In die Zwischenablage kopiert.",
+  "card_detail_share": "Teilen"
 }

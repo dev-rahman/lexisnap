@@ -396,5 +396,13 @@
   "plan_feature_early": "새 기능 우선 체험",
   "plan_coming_soon_title": "곧 제공됩니다",
   "plan_coming_soon_body": "결제 기능을 마무리하고 있어요. 곧 여기서 바로 {name}(으)로 업그레이드할 수 있습니다. 기다려 주셔서 감사해요!",
-  "plan_coming_soon_ok": "확인"
+  "plan_coming_soon_ok": "확인",
+  "card_detail_examples_title": "예문",
+  "card_detail_generate_example": "예문 생성",
+  "card_detail_example_added": "예문을 추가했어요.",
+  "card_detail_example_error": "예문을 생성하지 못했어요. 다시 시도해 주세요.",
+  "card_detail_example_limit": "오늘의 예문 한도에 도달했습니다. 내일 다시 시도해 주세요.",
+  "card_detail_copy": "복사",
+  "card_detail_copied": "클립보드에 복사했어요.",
+  "card_detail_share": "공유"
 }

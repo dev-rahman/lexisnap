@@ -397,5 +397,13 @@
   "plan_feature_early": "Early access to new features",
   "plan_coming_soon_title": "Coming soon",
   "plan_coming_soon_body": "We're putting the finishing touches on billing. You'll be able to upgrade to {name} right here very soon — thanks for your patience!",
-  "plan_coming_soon_ok": "Got it"
+  "plan_coming_soon_ok": "Got it",
+  "card_detail_examples_title": "Examples",
+  "card_detail_generate_example": "Generate example",
+  "card_detail_example_added": "Example added.",
+  "card_detail_example_error": "Couldn't generate an example. Please try again.",
+  "card_detail_example_limit": "You've reached today's example limit. Try again tomorrow.",
+  "card_detail_copy": "Copy",
+  "card_detail_copied": "Copied to clipboard.",
+  "card_detail_share": "Share"
 }

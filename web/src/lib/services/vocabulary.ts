@@ -98,3 +98,27 @@ export async function translateWords(args: {
   }
   return map;
 }
+
+/** Generates a single natural example sentence for a word, in the word's own
+ *  language. Used by the card detail view. */
+export async function generateExampleSentence(args: {
+  word: string;
+  language: string | null;
+  level: string | null;
+}): Promise<string> {
+  const { data, error } = await getSupabaseBrowserClient().functions.invoke(
+    "generate-example",
+    {
+      body: {
+        word: args.word,
+        language: args.language ?? undefined,
+        level: args.level ?? undefined,
+      },
+    },
+  );
+  if (error) await throwForEdgeError(error);
+
+  const sentence = ((data as { sentence?: string })?.sentence ?? "").trim();
+  if (!sentence) throw new Error("No example sentence returned");
+  return sentence;
+}

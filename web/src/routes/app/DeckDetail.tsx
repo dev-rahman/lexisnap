@@ -399,6 +399,7 @@ export function DeckDetail() {
       {/* Card detail + edit */}
       <CardDetailSheet
         card={detailCard}
+        deckId={id}
         open={detailCard != null}
         onClose={() => setDetailCard(null)}
         onEdit={() => {

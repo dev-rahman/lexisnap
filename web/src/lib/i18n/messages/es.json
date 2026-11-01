@@ -396,5 +396,13 @@
   "plan_feature_early": "Acceso anticipado a novedades",
   "plan_coming_soon_title": "Muy pronto",
   "plan_coming_soon_body": "Estamos dando los últimos retoques a los pagos. Pronto podrás cambiar a {name} aquí mismo. ¡Gracias por tu paciencia!",
-  "plan_coming_soon_ok": "Entendido"
+  "plan_coming_soon_ok": "Entendido",
+  "card_detail_examples_title": "Ejemplos",
+  "card_detail_generate_example": "Generar ejemplo",
+  "card_detail_example_added": "Ejemplo añadido.",
+  "card_detail_example_error": "No se pudo generar un ejemplo. Inténtalo de nuevo.",
+  "card_detail_example_limit": "Has alcanzado el límite de ejemplos de hoy. Inténtalo de nuevo mañana.",
+  "card_detail_copy": "Copiar",
+  "card_detail_copied": "Copiado al portapapeles.",
+  "card_detail_share": "Compartir"
 }
