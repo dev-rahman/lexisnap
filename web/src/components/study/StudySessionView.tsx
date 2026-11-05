@@ -43,7 +43,7 @@ export function StudySessionView({
       <div className="flex items-center gap-3 px-4 py-3">
         <button
           onClick={() => setConfirmLeave(true)}
-          aria-label={t("common_cancel")}
+          aria-label={t("common_close")}
           className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-ink/5"
         >
           <X size={22} />

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Copy, Pencil, Share2, Sparkles, Trash2, Volume2, X } from "lucide-react";
+import { Copy, Pencil, Share2, Sparkles, Trash2, Volume2 } from "lucide-react";
 
 import type { Flashcard } from "@/lib/data/models";
 import { languageByCode } from "@/lib/data/languages";
@@ -152,17 +152,23 @@ export function CardDetailSheet({
           <Button variant="secondary" fullWidth leftIcon={<Pencil size={18} />} onClick={onEdit}>
             {t("card_detail_edit")}
           </Button>
-          <Button
-            variant="danger"
-            aria-label={t("card_delete_confirm")}
-            leftIcon={<Trash2 size={18} />}
-            onClick={onDelete}
-          />
+          <Button variant="secondary" onClick={onClose}>
+            {t("common_close")}
+          </Button>
         </div>
       }
     >
       <div className="space-y-5">
         <div className="flex items-center justify-between">
+          <button
+            type="button"
+            aria-label={t("card_delete_confirm")}
+            title={t("card_delete_confirm")}
+            onClick={onDelete}
+            className="grid h-9 w-9 place-items-center rounded-full text-error transition-colors hover:bg-error/10"
+          >
+            <Trash2 size={18} />
+          </button>
           <div className="flex items-center gap-1">
             <IconButton label={t("card_detail_copy")} onClick={onCopy}>
               <Copy size={18} />
@@ -173,9 +179,6 @@ export function CardDetailSheet({
               </IconButton>
             )}
           </div>
-          <IconButton label="Close" onClick={onClose}>
-            <X size={20} />
-          </IconButton>
         </div>
 
         {/* Word + translation */}

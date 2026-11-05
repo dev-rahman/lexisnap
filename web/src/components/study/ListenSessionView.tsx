@@ -67,7 +67,7 @@ export function ListenSessionView({ cards }: { cards: Flashcard[] }) {
         </span>
         <button
           onClick={() => navigate(-1)}
-          aria-label={t("common_cancel")}
+          aria-label={t("common_close")}
           className="grid h-10 w-10 place-items-center rounded-full text-ink-soft hover:bg-ink/5"
         >
           <X size={22} />
