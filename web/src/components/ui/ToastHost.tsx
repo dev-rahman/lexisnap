@@ -11,17 +11,31 @@ const TONE: Record<ToastTone, { icon: typeof Info; cls: string }> = {
   info: { icon: Info, cls: "text-hue-sky" },
 };
 
-/** Listens to the module-level toast emitter and renders stacked toasts. */
+const VISIBLE_MS = 3400;
+const EXIT_MS = 240;
+
+/** Listens to the module-level toast emitter and renders stacked toasts, each
+ *  sliding in from the top and sliding back out when it expires. */
 export function ToastHost() {
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [leaving, setLeaving] = useState<Set<number>>(new Set());
 
   useEffect(
     () =>
       onToast((toast) => {
         setToasts((prev) => [...prev, toast]);
+        // Play the exit animation, then drop the toast from the list.
         setTimeout(() => {
-          setToasts((prev) => prev.filter((t) => t.id !== toast.id));
-        }, 3600);
+          setLeaving((prev) => new Set(prev).add(toast.id));
+          setTimeout(() => {
+            setToasts((prev) => prev.filter((t) => t.id !== toast.id));
+            setLeaving((prev) => {
+              const next = new Set(prev);
+              next.delete(toast.id);
+              return next;
+            });
+          }, EXIT_MS);
+        }, VISIBLE_MS);
       }),
     [],
   );
@@ -35,7 +49,7 @@ export function ToastHost() {
             key={toast.id}
             className={cn(
               "pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 shadow-card-lift",
-              "animate-[pop-in_0.25s_ease-out]",
+              leaving.has(toast.id) ? "animate-toast-out" : "animate-toast-in",
             )}
           >
             <Icon className={cn("shrink-0", cls)} size={22} />

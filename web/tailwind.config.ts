@@ -66,6 +66,38 @@ const config: Config = {
           "0%": { transform: "translateY(10px)", opacity: "0" },
           "100%": { transform: "translateY(0)", opacity: "1" },
         },
+        "soft-in": {
+          "0%": { transform: "scale(0.98)", opacity: "0" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "soft-out": {
+          "0%": { transform: "scale(1)", opacity: "1" },
+          "100%": { transform: "scale(0.98)", opacity: "0" },
+        },
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "fade-out": {
+          "0%": { opacity: "1" },
+          "100%": { opacity: "0" },
+        },
+        "sheet-in": {
+          "0%": { transform: "translateY(100%)" },
+          "100%": { transform: "translateY(0)" },
+        },
+        "sheet-out": {
+          "0%": { transform: "translateY(0)" },
+          "100%": { transform: "translateY(100%)" },
+        },
+        "toast-in": {
+          "0%": { transform: "translateY(-10px)", opacity: "0" },
+          "100%": { transform: "translateY(0)", opacity: "1" },
+        },
+        "toast-out": {
+          "0%": { transform: "translateY(0)", opacity: "1" },
+          "100%": { transform: "translateY(-6px)", opacity: "0" },
+        },
         shake: {
           "0%,100%": { transform: "translateX(0)" },
           "20%,60%": { transform: "translateX(-7px)" },
@@ -91,7 +123,15 @@ const config: Config = {
       },
       animation: {
         "pop-in": "pop-in 0.3s cubic-bezier(0.34,1.56,0.64,1) both",
+        "soft-in": "soft-in 0.26s cubic-bezier(0.4,0,0.2,1) both",
+        "soft-out": "soft-out 0.2s cubic-bezier(0.4,0,0.2,1) both",
         "rise-in": "rise-in 0.4s ease-out both",
+        "fade-in": "fade-in 0.28s cubic-bezier(0.4,0,0.2,1) both",
+        "fade-out": "fade-out 0.24s cubic-bezier(0.4,0,0.2,1) both",
+        "sheet-in": "sheet-in 0.34s cubic-bezier(0.4,0,0.2,1) both",
+        "sheet-out": "sheet-out 0.26s cubic-bezier(0.4,0,0.2,1) both",
+        "toast-in": "toast-in 0.3s cubic-bezier(0.4,0,0.2,1) both",
+        "toast-out": "toast-out 0.24s cubic-bezier(0.4,0,0.2,1) both",
         shake: "shake 0.4s ease-in-out",
         "flame-flicker": "flame-flicker 1.6s ease-in-out infinite",
         float: "float 3.5s ease-in-out infinite",
