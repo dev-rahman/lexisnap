@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Volume2, X } from "lucide-react";
+import { Volume2 } from "lucide-react";
 
 import type { Flashcard, StudyMode } from "@/lib/data/models";
 import { speak } from "@/lib/services/tts";
@@ -39,24 +39,28 @@ export function StudySessionView({
 
   return (
     <div className="flex min-h-dvh flex-col bg-paper safe-top">
-      {/* Progress bar */}
-      <div className="flex items-center gap-3 px-4 py-3">
-        <button
-          onClick={() => setConfirmLeave(true)}
-          aria-label={t("common_close")}
-          className="grid h-10 w-10 shrink-0 place-items-center rounded-full text-ink-soft hover:bg-ink/5"
-        >
-          <X size={22} />
-        </button>
-        <div className="h-3 flex-1 overflow-hidden rounded-full bg-ink/10">
+      {/* Progress header — constrained to the card column so the bar never
+          stretches the full screen. Close + count sit on their own line, with
+          Close on the left (a little out of thumb's reach, to avoid
+          accidental exits). */}
+      <div className="mx-auto w-full max-w-focus px-4 py-4">
+        <div className="h-2 w-full overflow-hidden rounded-full bg-ink/10">
           <div
             className="h-full rounded-full bg-gradient-to-r from-coral to-flame transition-[width] duration-500"
             style={{ width: `${Math.round(session.progress * 100)}%` }}
           />
         </div>
-        <span className="shrink-0 font-display text-sm font-bold text-ink-muted">
-          {session.retiredCount}/{session.plannedTotal}
-        </span>
+        <div className="mt-3 flex items-center justify-between">
+          <button
+            onClick={() => setConfirmLeave(true)}
+            className="-ml-2 rounded-full px-3 py-1.5 text-sm font-semibold text-ink-soft transition-colors hover:bg-ink/5 hover:text-ink"
+          >
+            {t("common_close")}
+          </button>
+          <span className="font-display text-sm font-bold tabular-nums text-ink-muted">
+            {session.retiredCount}/{session.plannedTotal}
+          </span>
+        </div>
       </div>
 
       <div className="mx-auto flex w-full max-w-focus flex-1 flex-col px-4 pb-8">
@@ -93,8 +97,11 @@ type Session = ReturnType<typeof useStudySession>;
 function SpeakButton({ text, lang }: { text: string; lang: string | null }) {
   return (
     <button
-      onClick={() => speak(text, lang)}
-      className="grid h-10 w-10 place-items-center rounded-full bg-ink/5 text-ink-soft hover:bg-coral-soft hover:text-coral"
+      onClick={(e) => {
+        e.stopPropagation(); // don't flip the card when tapping the speaker
+        speak(text, lang);
+      }}
+      className="grid h-10 w-10 place-items-center rounded-full bg-ink/5 text-ink-soft transition-colors hover:bg-coral-soft hover:text-coral"
       aria-label="Listen"
     >
       <Volume2 size={20} />
@@ -120,12 +127,25 @@ function ChoiceStep({ step, session }: { step: NonNullable<Session["step"]>; ses
     setTimeout(() => session.answer(correct, elapsed), correct ? 650 : 1100);
   }
 
+  // Keyboard: press 1-4 to pick an option.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (locked) return;
+      const n = Number(e.key);
+      if (Number.isInteger(n) && n >= 1 && n <= step.options.length) {
+        e.preventDefault();
+        choose(n - 1);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [locked, step.card.id]);
+
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="flex flex-1 flex-col items-center justify-center text-center">
-        <p className="mb-3 text-sm font-medium text-ink-muted">
-          {t("study_choice_prompt")}
-        </p>
+    <div className="flex flex-1 flex-col items-center justify-center gap-8 py-6">
+      <div className="flex flex-col items-center text-center">
+        <p className="mb-3 text-sm font-medium text-ink-muted">{t("study_choice_prompt")}</p>
         <div className="flex items-center gap-3">
           <h2 className="font-display text-4xl font-bold text-ink">{step.card.word}</h2>
           <SpeakButton text={step.card.word} lang={step.card.sourceLanguage} />
@@ -137,7 +157,7 @@ function ChoiceStep({ step, session }: { step: NonNullable<Session["step"]>; ses
         )}
       </div>
 
-      <div className="grid gap-3">
+      <div className="grid w-full max-w-md gap-3">
         {step.options.map((opt, i) => {
           const isAnswer = i === step.answerIndex;
           const state = !locked
@@ -147,21 +167,30 @@ function ChoiceStep({ step, session }: { step: NonNullable<Session["step"]>; ses
               : i === chosen
                 ? "wrong"
                 : "dim";
+          const colored = state === "correct" || state === "wrong";
           return (
             <button
               key={i}
               onClick={() => choose(i)}
               disabled={locked}
               className={cn(
-                "btn3d h-auto min-h-[3.5rem] justify-start px-5 py-3 text-left text-[17px] font-bold",
+                "btn3d h-auto min-h-[3.5rem] items-center justify-start gap-3 px-4 py-3 text-left text-[17px] font-bold transition-colors",
                 state === "idle" &&
-                  "bg-card text-ink border border-border shadow-soft hover:border-coral/40",
+                  "bg-card text-ink border border-border shadow-soft hover:border-coral/50 hover:bg-coral-soft/30",
                 state === "correct" && "bg-success text-white animate-pop-in",
                 state === "wrong" && "bg-error text-white animate-shake",
                 state === "dim" && "bg-card text-ink-muted border border-border opacity-50",
               )}
             >
-              {opt}
+              <span
+                className={cn(
+                  "hidden h-7 w-7 shrink-0 place-items-center rounded-lg text-sm font-bold sm:grid",
+                  colored ? "bg-white/25 text-white" : "bg-ink/10 text-ink-muted",
+                )}
+              >
+                {i + 1}
+              </span>
+              <span className="min-w-0 flex-1">{opt}</span>
             </button>
           );
         })}
@@ -184,53 +213,98 @@ function RecallStep({ step, session }: { step: NonNullable<Session["step"]>; ses
     session.answer(recalled, performance.now() - start.current);
   }
 
+  // Keyboard: space/enter flips; then ← / 1 = forgot, → / 2 = got it.
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!revealed) {
+        if (e.key === " " || e.key === "Enter" || e.key === "ArrowUp") {
+          e.preventDefault();
+          setRevealed(true);
+        }
+        return;
+      }
+      if (e.key === "ArrowLeft" || e.key === "1") {
+        e.preventDefault();
+        grade(false);
+      } else if (["ArrowRight", "2", " ", "Enter"].includes(e.key)) {
+        e.preventDefault();
+        grade(true);
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [revealed, step.card.id]);
+
   return (
-    <div className="flex flex-1 flex-col">
-      <button
+    <div className="flex flex-1 flex-col items-center justify-center gap-6 py-6">
+      {/* Flip card — tap (or press space) to reveal the translation. */}
+      <div
+        role="button"
+        tabIndex={0}
+        aria-label={revealed ? step.card.translation : t("study_tap_to_reveal")}
         onClick={() => !revealed && setRevealed(true)}
-        className="group flex flex-1 items-center justify-center py-4"
-        style={{ perspective: 1200 }}
+        onKeyDown={(e) => {
+          if (!revealed && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            setRevealed(true);
+          }
+        }}
+        className={cn(
+          "w-full max-w-md [perspective:1600px]",
+          !revealed && "cursor-pointer",
+        )}
       >
         <div
           className={cn(
-            "relative w-full max-w-sm rounded-[2rem] border-2 border-border bg-card p-8 text-center shadow-card transition-transform duration-500",
+            "relative h-60 w-full transition-transform duration-500 [transform-style:preserve-3d] sm:h-72",
+            revealed && "[transform:rotateY(180deg)]",
           )}
         >
-          <div className="flex items-center justify-center gap-3">
-            <h2 className="font-display text-4xl font-bold text-ink">{step.card.word}</h2>
-            <SpeakButton text={step.card.word} lang={step.card.sourceLanguage} />
-          </div>
-          {!revealed ? (
-            <p className="mt-6 text-sm font-semibold text-ink-muted">
-              {t("study_tap_to_reveal")}
-            </p>
-          ) : (
-            <div className="mt-6 animate-[rise-in_0.3s_ease-out] border-t border-border pt-5">
-              <p className="font-display text-2xl font-bold text-coral">
-                {step.card.translation}
-              </p>
-              {step.card.wordDescription && (
-                <p className="mt-2 text-sm text-ink-muted">{step.card.wordDescription}</p>
-              )}
+          {/* Front — the word to recall */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 rounded-[2rem] border-2 border-border bg-card p-6 text-center shadow-card [backface-visibility:hidden]">
+            {step.card.level && (
+              <span className="rounded-full bg-coral-soft px-3 py-0.5 text-xs font-bold text-coral">
+                {step.card.level}
+              </span>
+            )}
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-4xl font-bold text-ink">{step.card.word}</h2>
+              <SpeakButton text={step.card.word} lang={step.card.sourceLanguage} />
             </div>
-          )}
-        </div>
-      </button>
+            <p className="mt-1 text-sm font-semibold text-ink-muted">{t("study_tap_to_reveal")}</p>
+          </div>
 
-      {revealed ? (
-        <div className="grid grid-cols-2 gap-3">
-          <Button variant="danger" size="lg" onClick={() => grade(false)}>
-            {t("study_forgot")}
-          </Button>
-          <Button variant="success" size="lg" onClick={() => grade(true)}>
-            {t("study_got_it")}
-          </Button>
+          {/* Back — the translation + meaning */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-[2rem] border-2 border-coral/40 bg-gradient-to-br from-coral-soft to-card p-6 text-center shadow-card [backface-visibility:hidden] [transform:rotateY(180deg)]">
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-3xl font-bold text-coral">{step.card.translation}</h2>
+              <SpeakButton text={step.card.translation} lang={step.card.targetLanguage} />
+            </div>
+            {step.card.wordDescription && (
+              <p className="line-clamp-3 text-sm text-ink-muted">{step.card.wordDescription}</p>
+            )}
+          </div>
         </div>
-      ) : (
-        <Button fullWidth size="lg" onClick={() => setRevealed(true)}>
-          {t("study_tap_to_reveal")}
-        </Button>
-      )}
+      </div>
+
+      {/* Controls sit right under the card, centered — no empty void. */}
+      <div className="w-full max-w-md">
+        {revealed ? (
+          <div className="grid grid-cols-2 gap-3">
+            <Button variant="danger" size="lg" onClick={() => grade(false)}>
+              {t("study_forgot")}
+            </Button>
+            <Button variant="success" size="lg" onClick={() => grade(true)}>
+              {t("study_got_it")}
+            </Button>
+          </div>
+        ) : (
+          <Button fullWidth size="lg" onClick={() => setRevealed(true)}>
+            {t("study_tap_to_reveal")}
+          </Button>
+        )}
+      </div>
     </div>
   );
 }
