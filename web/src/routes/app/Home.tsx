@@ -1,12 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowRight, ScanLine, ChevronRight } from "lucide-react";
+import { ArrowRight, Check, ChevronRight, Flame, ScanLine } from "lucide-react";
 
 import { DeckTile, DeckTileSkeleton } from "@/components/decks/DeckTile";
-import { StreakFlame } from "@/components/streak/StreakFlame";
-import { WeekStrip } from "@/components/streak/WeekStrip";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { ProgressRing } from "@/components/ui/ProgressRing";
+import { Skeleton } from "@/components/ui/Skeleton";
 import { useStreakView } from "@/lib/hooks/useStreakView";
 import { useT } from "@/providers/I18nProvider";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -18,13 +16,24 @@ export function Home() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.auth.user);
-  const { streak, week, goalMet, goalProgress } = useStreakView();
+  const { streak, goalMet } = useStreakView();
 
   const { data: due, isLoading: dueLoading } = useGetDueCardsQuery();
   const { data: decks, isLoading: decksLoading } = useGetDecksQuery(10);
 
   const dueCount = due?.length ?? 0;
   const firstName = user?.fullName?.split(" ")[0];
+  const practiceLeft = Math.max(1, streak.dailyGoal - streak.reviewsToday);
+
+  // Shared streak + progress line, shown inside the coloured action card.
+  const streakLine = (
+    <div className="mt-3 flex items-center gap-2 text-sm font-medium text-white/85">
+      <Flame size={15} className="shrink-0" />
+      <span>{t("home_streak_days", { count: streak.current })}</span>
+      <span className="text-white/40">·</span>
+      <span>{t("home_today_count", { done: streak.reviewsToday, goal: streak.dailyGoal })}</span>
+    </div>
+  );
 
   return (
     <div className="space-y-8">
@@ -36,66 +45,58 @@ export function Home() {
         <p className="mt-1 text-ink-muted">{t("home_subtitle")}</p>
       </header>
 
-      {/* Today + Scan — two columns on large screens so wide layouts fill well */}
+      {/* Today's action + Scan — the one thing to do, up top */}
       <section className="grid gap-5 lg:grid-cols-3">
-        {/* Today hero: calm deep-navy panel, coral accent */}
-        <div className="rounded-2xl bg-panel p-6 text-white shadow-card lg:col-span-2 lg:p-7">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
-            <ProgressRing
-              progress={goalProgress}
-              size={116}
-              stroke={10}
-              barClassName="text-coral"
-              trackClassName="text-white/15"
+        <div className="lg:col-span-2">
+          {dueLoading ? (
+            <Skeleton className="h-full min-h-[132px] w-full rounded-2xl" />
+          ) : dueCount > 0 ? (
+            // Primary: tap the whole card to start reviewing.
+            <button
+              onClick={() => navigate("/study?mixed=1")}
+              className="group flex h-full w-full items-center justify-between gap-4 rounded-2xl bg-gradient-to-br from-coral to-coral-dark p-6 text-left text-white shadow-pop transition-transform active:scale-[0.99] sm:p-7"
             >
-              <div className="text-center">
-                <div className="font-display text-3xl font-bold leading-none">
-                  {streak.reviewsToday}
-                  <span className="text-lg font-semibold text-white/55">/{streak.dailyGoal}</span>
+              <div>
+                <div className="flex items-baseline gap-2.5">
+                  <span className="font-display text-5xl font-bold leading-none">{dueCount}</span>
+                  <span className="text-lg font-semibold text-white/90">
+                    {dueCount === 1 ? t("home_due_today_one") : t("home_due_today")}
+                  </span>
                 </div>
-                <div className="mt-0.5 text-xs font-medium text-white/60">{t("decks_stat_words")}</div>
+                {streakLine}
               </div>
-            </ProgressRing>
-
-            <div className="flex-1">
-              <div className="flex items-center gap-3">
-                <StreakFlame count={streak.current} size={38} />
-                <div>
-                  <div className="font-display text-3xl font-bold leading-none">{streak.current}</div>
-                  <div className="text-sm text-white/55">{t("home_streak_best", { count: streak.longest })}</div>
-                </div>
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-coral shadow-sm transition-transform group-hover:translate-x-0.5">
+                <ArrowRight size={22} />
+              </span>
+            </button>
+          ) : goalMet ? (
+            // Caught up: nothing due, goal met.
+            <div className="flex h-full items-center justify-between gap-4 rounded-2xl bg-gradient-to-br from-success to-success-dark p-6 text-white shadow-card sm:p-7">
+              <div>
+                <div className="font-display text-2xl font-bold">{t("home_caught_up_today")}</div>
+                {streakLine}
               </div>
-              <div className="mt-5">
-                <WeekStrip days={week} tone="onColor" />
-              </div>
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white/20 text-white">
+                <Check size={24} />
+              </span>
             </div>
-          </div>
-
-          <div className="mt-6">
-            {dueLoading ? (
-              // White-tinted shimmer so it reads on the dark navy panel.
-              <div className="h-[52px] w-full animate-shimmer rounded-2xl bg-[length:200%_100%] bg-[linear-gradient(90deg,rgba(255,255,255,0.08)_25%,rgba(255,255,255,0.18)_50%,rgba(255,255,255,0.08)_75%)]" />
-            ) : dueCount > 0 ? (
-              <Button fullWidth size="lg" onClick={() => navigate("/study?mixed=1")} rightIcon={<ArrowRight size={18} />}>
-                {dueCount === 1 ? t("home_review_cta_one") : t("home_review_cta", { count: dueCount })}
-              </Button>
-            ) : goalMet ? (
-              <div className="flex items-center justify-center gap-2 rounded-2xl bg-white/10 py-3 font-display text-base font-semibold">
-                {t("home_caught_up_today")}
+          ) : (
+            // Nothing due but goal not met — offer optional extra practice.
+            <button
+              onClick={() => navigate("/study?mixed=1&practice=1")}
+              className="group flex h-full w-full items-center justify-between gap-4 rounded-2xl bg-gradient-to-br from-coral to-coral-dark p-6 text-left text-white shadow-pop transition-transform active:scale-[0.99] sm:p-7"
+            >
+              <div>
+                <div className="font-display text-2xl font-bold">
+                  {t("home_practice_cta", { count: practiceLeft })}
+                </div>
+                {streakLine}
               </div>
-            ) : (
-              <Button
-                fullWidth
-                size="lg"
-                onClick={() => navigate("/study?mixed=1&practice=1")}
-                rightIcon={<ArrowRight size={18} />}
-              >
-                {t("home_practice_cta", {
-                  count: Math.max(1, streak.dailyGoal - streak.reviewsToday),
-                })}
-              </Button>
-            )}
-          </div>
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-white text-coral shadow-sm transition-transform group-hover:translate-x-0.5">
+                <ArrowRight size={22} />
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Scan card */}
